@@ -1,40 +1,36 @@
 package com.ving.kvxroid
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
-import android.content.Intent
 
-
-
-class MainActivity : AppCompatActivity() {
+class ItemDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_item_detail)
         initView()
     }
 
     private fun initView() {
-        listRecyclerView.layoutManager = GridLayoutManager(this@MainActivity,2)
+        recyclerView.layoutManager = GridLayoutManager(this@ItemDetailActivity,2)
 
 //        //This will for default android divider
 //        recyclerViewMovies.addItemDecoration(GridItemDecoration(10, 2))
 
-        val itemListAdapter = ItemListGridRecyclerAdapter().apply {
+        val itemDetailAdapter = ItemDetailRecyclerAdapter().apply {
             onItemClick = ::handleItemClick
         }
-        listRecyclerView.adapter = itemListAdapter
+        recyclerView.adapter = itemDetailAdapter
 
 //        movieListAdapter.setMovieList(generateDummyData())
-        itemListAdapter.setList()
     }
 
     private fun handleItemClick() {
-        println("Hello")
-        val intent = Intent(this, ItemDetailActivity::class.java)
-        startActivity(intent)
-    }
+        println("Hello Detail")
 
+    }
 }

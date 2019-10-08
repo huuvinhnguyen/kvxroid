@@ -6,18 +6,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 
-
-class ItemListGridRecyclerAdapter: RecyclerView.Adapter<ItemListGridRecyclerAdapter.ItemViewHolder>() {
-//    private var listOfMovies = listOf<MovieModel>()
+class ItemDetailRecyclerAdapter: RecyclerView.Adapter<ItemDetailRecyclerAdapter.ItemViewHolder>() {
+    //    private var listOfMovies = listOf<MovieModel>()
     var onItemClick: (() -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_grid_movie, parent, false))
+        return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_detail_view_holder, parent, false))
     }
 
 
 
-//    override fun getItemCount(): Int = listOfMovies.size
+    //    override fun getItemCount(): Int = listOfMovies.size
     override fun getItemCount(): Int = 5
 
 
