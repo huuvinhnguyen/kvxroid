@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -16,7 +17,9 @@ class ItemDetailActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        recyclerView.layoutManager = GridLayoutManager(this@ItemDetailActivity,2)
+//        recyclerView.layoutManager = GridLayoutManager(this@ItemDetailActivity,2)
+        recyclerView.layoutManager =  LinearLayoutManager(this@ItemDetailActivity)
+
 
 //        //This will for default android divider
 //        recyclerViewMovies.addItemDecoration(GridItemDecoration(10, 2))
