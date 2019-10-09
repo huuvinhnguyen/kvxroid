@@ -1,4 +1,4 @@
-package com.ving.kvxroid
+package com.ving.kvxroid.Detail
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

@@ -1,9 +1,11 @@
-package com.ving.kvxroid
+package com.ving.kvxroid.ItemList.Detail
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ving.kvxroid.R
+import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 
 

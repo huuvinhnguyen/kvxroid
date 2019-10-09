@@ -1,19 +1,36 @@
-package com.ving.kvxroid
+package com.ving.kvxroid.ItemList.Detail
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ving.kvxroid.Detail.ItemDetailActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import android.content.Intent
+import com.ving.kvxroid.R
+import com.ving.kvxroid.Redux.AppState
+import com.ving.kvxroid.Redux.CounterActionIncrease
+import com.ving.kvxroid.Redux.mainStore
+import org.rekotlin.StoreSubscriber
 
 
+class MainActivity : AppCompatActivity(), StoreSubscriber<AppState> {
+    override fun newState(state: AppState) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val counting = "${state.counter}"
+        println(counting)
 
-class MainActivity : AppCompatActivity() {
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
+
+        mainStore.dispatch(CounterActionIncrease())
+
+        // subscribe to state changes
+        mainStore.subscribe(this)
+
     }
 
     private fun initView() {
@@ -33,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleItemClick() {
         println("Hello")
+        mainStore.dispatch(CounterActionIncrease())
+
         val intent = Intent(this, ItemDetailActivity::class.java)
         startActivity(intent)
     }

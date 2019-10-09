@@ -1,4 +1,4 @@
-package com.ving.kvxroid
+package com.ving.kvxroid.ItemList.Detail
 
 
 import android.view.View

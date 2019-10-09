@@ -1,12 +1,10 @@
-package com.ving.kvxroid
+package com.ving.kvxroid.Detail
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ving.kvxroid.R
 import kotlinx.android.synthetic.main.activity_item_detail.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class ItemDetailActivity : AppCompatActivity() {
 
