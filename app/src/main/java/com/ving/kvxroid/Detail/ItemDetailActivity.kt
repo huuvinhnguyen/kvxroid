@@ -22,10 +22,12 @@ class ItemDetailActivity : AppCompatActivity() {
 //        //This will for default android divider
 //        recyclerViewMovies.addItemDecoration(GridItemDecoration(10, 2))
 
-        val itemDetailAdapter = ItemDetailRecyclerAdapter().apply {
+        val itemDetailAdapter = ItemDetailRecyclerAdapter(ArrayList()).apply {
             onItemClick = ::handleItemClick
         }
         recyclerView.adapter = itemDetailAdapter
+
+        itemDetailAdapter.setItems()
 
 //        movieListAdapter.setMovieList(generateDummyData())
     }
