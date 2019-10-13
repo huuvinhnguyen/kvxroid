@@ -19,6 +19,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url "https://repo.eclipse.org/content/repositories/paho-releases/"
+        }
         
     }
 }
@@ -26,3 +29,4 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
