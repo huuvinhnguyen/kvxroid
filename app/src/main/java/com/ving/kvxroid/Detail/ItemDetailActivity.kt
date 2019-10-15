@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_item_detail.*
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import android.R.attr.password
+import android.content.Intent
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 
 
@@ -64,6 +65,8 @@ class ItemDetailActivity : AppCompatActivity() {
     private fun handlePlusClick(information: String) {
 
         println("Plus Button")
+        val intent = Intent(this, ItemTopicActivity::class.java)
+        startActivity(intent)
     }
 
     fun connect(applicationContext : Context) {
