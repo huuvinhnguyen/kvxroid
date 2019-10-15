@@ -47,6 +47,7 @@ class ItemDetailActivity : AppCompatActivity() {
 
         val itemDetailAdapter = ItemDetailRecyclerAdapter(ArrayList()).apply {
             onItemClick = ::handleItemClick
+            onItemPlusClick = ::handlePlusClick
         }
         recyclerView.adapter = itemDetailAdapter
 
@@ -58,6 +59,11 @@ class ItemDetailActivity : AppCompatActivity() {
     private fun handleItemClick() {
         println("Hello Detail")
 
+    }
+
+    private fun handlePlusClick(information: String) {
+
+        println("Plus Button")
     }
 
     fun connect(applicationContext : Context) {

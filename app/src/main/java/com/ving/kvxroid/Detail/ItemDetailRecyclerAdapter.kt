@@ -9,13 +9,15 @@ import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import com.ving.kvxroid.AnyObject
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
+import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 
 class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<ItemDetailBaseViewHolder<*>>() {
 
     companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_SWITCH = 1
-        private const val TYPE_FOOTER = 2
+        private const val TYPE_PLUS   = 2
+        private const val TYPE_FOOTER = 3
 
     }
 
@@ -24,6 +26,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
 
     //    private var listOfMovies = listOf<MovieModel>()
     var onItemClick: (() -> Unit)? = null
+    var onItemPlusClick: ((String) -> Unit)? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemDetailBaseViewHolder<*> {
         return when (viewType) {
@@ -36,6 +40,11 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_detail_switch_view_holder, parent, false)
                 return SwitchViewHolder(view)
+            }
+            TYPE_PLUS -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_detail_plus_view_holder, parent, false)
+                return PlusViewHolder(view)
             }
             else -> throw IllegalArgumentException("Invalid view type")
 
@@ -50,6 +59,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         when (viewHolder) {
             is HeaderViewHolder -> viewHolder.bind(element as ItemDetailHeaderViewModel)
             is SwitchViewHolder -> viewHolder.bind(element as ItemDetailSwitchViewModel)
+            is PlusViewHolder ->   viewHolder.bind(element as ItemDetailPlusViewModel)
             else -> throw IllegalArgumentException()
         }
     }
@@ -59,6 +69,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         return when (comparable) {
             is ItemDetailHeaderViewModel -> TYPE_HEADER
             is ItemDetailSwitchViewModel -> TYPE_SWITCH
+            is ItemDetailPlusViewModel -> TYPE_PLUS
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
@@ -67,6 +78,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         items.add(ItemDetailHeaderViewModel("Header abc"))
         items.add(ItemDetailSwitchViewModel("switch 1"))
         items.add(ItemDetailSwitchViewModel("switch 2"))
+        items.add(ItemDetailPlusViewModel())
 
         notifyDataSetChanged()
     }
@@ -103,4 +115,19 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             itemView.textView.text = viewModel.name
         }
     }
+
+    inner class PlusViewHolder(
+        override val containerView: View
+
+    ) : ItemDetailBaseViewHolder<ItemDetailPlusViewModel>(containerView), LayoutContainer {
+
+        init {
+            containerView.imageButton.setOnSafeClickListener {
+                onItemPlusClick?.invoke("Click Plus")
+            }
+        }
+
+        override fun bind(viewModel: ItemDetailPlusViewModel) {}
+    }
+
 }
