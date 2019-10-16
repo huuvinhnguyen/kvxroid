@@ -75,10 +75,10 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     }
 
     fun setItems() {
-        items.add(ItemDetailHeaderViewModel("Header abc"))
-        items.add(ItemDetailSwitchViewModel("switch 1"))
-        items.add(ItemDetailSwitchViewModel("switch 2"))
-        items.add(ItemDetailPlusViewModel())
+//        items.add(ItemDetailHeaderViewModel("Header abc"))
+//        items.add(ItemDetailSwitchViewModel("switch 1"))
+//        items.add(ItemDetailSwitchViewModel("switch 2"))
+//        items.add(ItemDetailPlusViewModel())
 
         notifyDataSetChanged()
     }

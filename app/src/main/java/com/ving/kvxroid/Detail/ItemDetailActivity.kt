@@ -11,13 +11,31 @@ import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import android.R.attr.password
 import android.content.Intent
+import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Redux.AppState
+import com.ving.kvxroid.Redux.CounterActionIncrease
+import com.ving.kvxroid.Redux.ItemListStateLoad
+import com.ving.kvxroid.Redux.mainStore
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
+import org.rekotlin.StoreSubscriber
 
 
+class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
+
+    override fun newState(state: AppState) {
+
+        val itemDetailAdapter = ItemDetailRecyclerAdapter(state.itemDetailList as ArrayList<AnyObject>).apply {
+            onItemClick = ::handleItemClick
+            onItemPlusClick = ::handlePlusClick
+        }
+        recyclerView.adapter = itemDetailAdapter
+
+        itemDetailAdapter.setItems()
+
+//        movieListAdapter.setMovieList(generateDummyData())
 
 
-
-class ItemDetailActivity : AppCompatActivity() {
+    }
 
     private lateinit var mqttAndroidClient: MqttAndroidClient
 
@@ -25,6 +43,12 @@ class ItemDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(com.ving.kvxroid.R.layout.activity_item_detail)
         initView()
+
+        mainStore.dispatch(ItemListStateLoad())
+
+        // subscribe to state changes
+        mainStore.subscribe(this)
+
         connect(this@ItemDetailActivity)
 //        disconnectClient()
 
@@ -43,18 +67,7 @@ class ItemDetailActivity : AppCompatActivity() {
         recyclerView.layoutManager =  LinearLayoutManager(this@ItemDetailActivity)
 
 
-//        //This will for default android divider
-//        recyclerViewMovies.addItemDecoration(GridItemDecoration(10, 2))
 
-        val itemDetailAdapter = ItemDetailRecyclerAdapter(ArrayList()).apply {
-            onItemClick = ::handleItemClick
-            onItemPlusClick = ::handlePlusClick
-        }
-        recyclerView.adapter = itemDetailAdapter
-
-        itemDetailAdapter.setItems()
-
-//        movieListAdapter.setMovieList(generateDummyData())
     }
 
     private fun handleItemClick() {
