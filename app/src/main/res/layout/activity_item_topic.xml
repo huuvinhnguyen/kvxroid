@@ -63,10 +63,14 @@
         android:layout_height="50dp"
         android:text="Connect">
 
+
     </Button>
 
-
-
+    <Button
+        android:id="@+id/btnSelect"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Select"/>
 
 
 </LinearLayout>
