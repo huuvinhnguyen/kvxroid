@@ -1,0 +1,4 @@
+open class TypeRealm : RealmObject() {
+    var name: String? = null
+
+}
