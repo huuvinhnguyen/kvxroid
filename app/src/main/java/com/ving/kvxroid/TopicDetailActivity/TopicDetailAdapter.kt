@@ -1,4 +1,9 @@
-package com.ving.kvxroid.Detail
+package com.ving.kvxroid.TopicDetailActivity
+
+import com.ving.kvxroid.Detail.ItemDetailBaseViewHolder
+import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
+import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
+import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +15,13 @@ import kotlinx.android.extensions.LayoutContainer
 import com.ving.kvxroid.AnyObject
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
-import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.*
 
 class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<ItemDetailBaseViewHolder<*>>() {
 
     companion object {
-        private const val TYPE_HEADER = 0
-        private const val TYPE_SWITCH = 1
-        private const val TYPE_PLUS   = 2
-        private const val TYPE_FOOTER = 3
+        private const val TYPE_TOPIC = 0
+        private const val TYPE_SERVER = 1
+
 
     }
 
@@ -28,26 +31,19 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     //    private var listOfMovies = listOf<MovieModel>()
     var onItemClick: (() -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
-    var onInfoClick: ((String) -> Unit)? = null
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemDetailBaseViewHolder<*> {
         return when (viewType) {
-            TYPE_HEADER -> {
+            TYPE_TOPIC -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_detail_header_view_holder, parent, false)
                 return HeaderViewHolder(view)
             }
-            TYPE_SWITCH -> {
+            TYPE_SERVER -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_detail_switch_view_holder, parent, false)
                 return SwitchViewHolder(view)
-            }
-            TYPE_PLUS -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_detail_plus_view_holder, parent, false)
-                return PlusViewHolder(view)
             }
             else -> throw IllegalArgumentException("Invalid view type")
 
@@ -62,17 +58,15 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         when (viewHolder) {
             is HeaderViewHolder -> viewHolder.bind(element as ItemDetailHeaderViewModel)
             is SwitchViewHolder -> viewHolder.bind(element as ItemDetailSwitchViewModel)
-            is PlusViewHolder ->   viewHolder.bind(element as ItemDetailPlusViewModel)
             else -> throw IllegalArgumentException()
         }
     }
-//
+    //
     override fun getItemViewType(position: Int): Int {
         val comparable = items[position]
         return when (comparable) {
-            is ItemDetailHeaderViewModel -> TYPE_HEADER
-            is ItemDetailSwitchViewModel -> TYPE_SWITCH
-            is ItemDetailPlusViewModel -> TYPE_PLUS
+            is ItemDetailHeaderViewModel -> TYPE_TOPIC
+            is ItemDetailSwitchViewModel -> TYPE_SERVER
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
@@ -95,7 +89,6 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             containerView.setOnSafeClickListener {
                 onItemClick?.invoke()
             }
-
         }
 
     }
@@ -114,13 +107,6 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     }
 
     inner class SwitchViewHolder(itemView: View) : ItemDetailBaseViewHolder<ItemDetailSwitchViewModel>(itemView) {
-
-        init {
-
-            itemView.btnInfo.setOnSafeClickListener {
-                onInfoClick?.invoke("Oninfo")
-            }
-        }
 
         override fun bind(viewModel: ItemDetailSwitchViewModel) {
             itemView.textView.text = viewModel.name

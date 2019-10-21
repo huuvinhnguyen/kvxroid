@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Selection.SelectionActivity"></activity>
+        <activity android:name=".TopicDetailActivity.TopicDetailActivity"></activity>
+        <activity android:name=".Selection.SelectionActivity" />
         <activity android:name=".Detail.Selection" />
         <activity
             android:name=".Detail.ItemTopicActivity"

@@ -16,6 +16,7 @@ import com.ving.kvxroid.Redux.AppState
 import com.ving.kvxroid.Redux.CounterActionIncrease
 import com.ving.kvxroid.Redux.ItemListStateLoad
 import com.ving.kvxroid.Redux.mainStore
+import com.ving.kvxroid.TopicDetailActivity.TopicDetailActivity
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.rekotlin.StoreSubscriber
 
@@ -27,6 +28,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         val itemDetailAdapter = ItemDetailRecyclerAdapter(state.itemDetailList as ArrayList<AnyObject>).apply {
             onItemClick = ::handleItemClick
             onItemPlusClick = ::handlePlusClick
+            onInfoClick = ::handleInfoClick
         }
         recyclerView.adapter = itemDetailAdapter
 
@@ -80,6 +82,14 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         println("Plus Button")
         val intent = Intent(this, ItemTopicActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun handleInfoClick(information: String) {
+
+        println("Info Button")
+        val intent = Intent(this, TopicDetailActivity::class.java)
+        startActivity(intent)
+
     }
 
     fun connect(applicationContext : Context) {
