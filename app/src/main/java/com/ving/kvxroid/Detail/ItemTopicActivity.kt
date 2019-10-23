@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.Gravity
 import android.widget.Toast
 import com.ving.kvxroid.R
+import com.ving.kvxroid.Redux.ConnectionActionAdd
+import com.ving.kvxroid.Redux.ConnectionActionLoad
+import com.ving.kvxroid.Redux.mainStore
 import com.ving.kvxroid.Selection.SelectionActivity
 import com.ving.kvxroid.Selection.ServerRealm
 import com.ving.kvxroid.setOnSafeClickListener
@@ -27,7 +30,9 @@ class ItemTopicActivity : AppCompatActivity() {
 
             toast.show()
 
-//            connectRealm()
+            mainStore.dispatch(ConnectionActionAdd())
+
+
         }
 
         btnSelect.setOnSafeClickListener {

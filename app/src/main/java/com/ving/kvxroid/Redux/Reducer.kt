@@ -1,10 +1,13 @@
 package com.ving.kvxroid.Redux
 
+import android.content.Context
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Common.BaseApplication
 import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
+import com.ving.kvxroid.Selection.SelectionServerViewModel
+import com.ving.kvxroid.Selection.SelectionTypeViewModel
 import com.ving.kvxroid.Selection.ServerRealm
 import org.rekotlin.Action
 import io.realm.Realm
@@ -38,11 +41,18 @@ fun counterReducer(action: Action, state: AppState?): AppState {
 
         is ConnectionActionAdd -> {
             val items: ArrayList<AnyObject> = ArrayList()
+
+            val realmInteractor = RealmInteractor()
+            realmInteractor.connectRealm()
+
         }
 
         is ConnectionActionLoad -> {
             val items: ArrayList<AnyObject> = ArrayList()
-            
+
+            items.add(SelectionTypeViewModel("Type here"))
+            items.add(SelectionServerViewModel("Server here"))
+            items.add(SelectionServerViewModel("Server here aaaa"))
 
             state = state.copy(connectionList = items)
 
@@ -52,12 +62,12 @@ fun counterReducer(action: Action, state: AppState?): AppState {
     return state
 }
 
-class A {
+class RealmInteractor {
 
     @Suppress("NAME_SHADOWING")
     fun connectRealm() {
 
-        val context = BaseApplication().applicationContext
+        val context = BaseApplication.INSTANCE.applicationContext
 
         Realm.init(context)
 
@@ -108,6 +118,9 @@ class A {
 
             println(person)
         }
+
+        mainStore.dispatch(ConnectionActionLoad())
+
     }
 }
 
