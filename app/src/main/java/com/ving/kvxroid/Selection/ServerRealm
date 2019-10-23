@@ -1,4 +1,0 @@
-open class ServerRealm : RealmObject() {
-    var name: String? = null
-
-}

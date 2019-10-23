@@ -29,7 +29,7 @@
         android:layout_marginTop="10dp"
         android:background="@null"
         android:padding="10dp"
-        app:srcCompat="@drawable/ic_avengers_2" />
+        app:srcCompat="@android:drawable/ic_lock_power_off" />
 
     <ImageButton
         android:id="@+id/btnInfo"
