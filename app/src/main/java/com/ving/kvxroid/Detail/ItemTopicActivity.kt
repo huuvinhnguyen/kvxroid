@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.ConnectionActionAdd
 import com.ving.kvxroid.Redux.ConnectionActionLoad
+import com.ving.kvxroid.Redux.TopicActionAdd
 import com.ving.kvxroid.Redux.mainStore
 import com.ving.kvxroid.Selection.SelectionActivity
 import com.ving.kvxroid.Selection.ServerRealm
@@ -38,6 +39,11 @@ class ItemTopicActivity : AppCompatActivity() {
         btnSelect.setOnSafeClickListener {
             val intent = Intent(this, SelectionActivity::class.java)
             startActivity(intent)
+        }
+
+        btnTopic.setOnSafeClickListener {
+            mainStore.dispatch(TopicActionAdd())
+
         }
 
 

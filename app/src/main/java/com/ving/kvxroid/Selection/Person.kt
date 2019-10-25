@@ -42,3 +42,11 @@ open class ConnectionRealm : RealmObject() {
 
 }
 
+open class TopicRealm : RealmObject() {
+
+    @PrimaryKey
+    var id: String? = null
+    var name: String? = null
+
+}
+

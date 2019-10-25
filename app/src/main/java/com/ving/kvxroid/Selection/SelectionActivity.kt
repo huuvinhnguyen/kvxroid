@@ -33,6 +33,8 @@ class SelectionActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
         recyclerView.adapter = itemListAdapter
 
+        print("new state SelectionActivity")
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

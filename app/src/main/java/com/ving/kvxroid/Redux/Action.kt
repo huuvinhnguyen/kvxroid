@@ -7,3 +7,4 @@ data class ItemListStateLoad(val unit: Unit = Unit): Action
 data class ItemDetailLoad(val unit: Unit = Unit): Action
 data class ConnectionActionAdd(val unit: Unit = Unit): Action
 data class ConnectionActionLoad(val unit: Unit = Unit): Action
+data class TopicActionAdd(val unit: Unit = Unit): Action

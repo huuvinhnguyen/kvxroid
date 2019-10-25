@@ -34,9 +34,6 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
         itemDetailAdapter.setItems()
 
-//        movieListAdapter.setMovieList(generateDummyData())
-
-
     }
 
     private lateinit var mqttAndroidClient: MqttAndroidClient
