@@ -72,6 +72,11 @@
         android:layout_height="50dp"
         android:text="Select"/>
 
+    <Button
+        android:id="@+id/btnTopic"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Add Item"/>
 
 </LinearLayout>
 

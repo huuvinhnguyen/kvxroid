@@ -14,6 +14,8 @@ import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.*
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
+import kotlinx.android.synthetic.main.selection_server_view_holder.view.*
+import kotlinx.android.synthetic.main.selection_type_view_holder.view.*
 
 class SelectionAdapter(private val items: ArrayList<AnyObject>) :
     RecyclerView.Adapter<SelectionBaseViewHolder<*>>() {
@@ -72,41 +74,36 @@ class SelectionAdapter(private val items: ArrayList<AnyObject>) :
     }
 
     fun setItems() {
-        items.add(SelectionTypeViewModel("Type here"))
-        items.add(SelectionServerViewModel("Server here"))
-
 
         notifyDataSetChanged()
     }
 
-    inner class SelectionTypeViewHolder(view: View) :
-        SelectionBaseViewHolder<SelectionTypeViewModel>(view) {
+    inner class SelectionTypeViewHolder(itemView: View) :
+        SelectionBaseViewHolder<SelectionTypeViewModel>(itemView) {
 
         init {
-            view.setOnSafeClickListener {
+            itemView.setOnSafeClickListener {
                 onItemClick?.invoke()
             }
         }
 
         override fun bind(item: SelectionTypeViewModel) {
-
-
+            itemView.tvType.text = item.title
         }
 
     }
 
-    inner class SelectionServerViewHolder(view: View) :
-        SelectionBaseViewHolder<SelectionServerViewModel>(view) {
+    inner class SelectionServerViewHolder(itemView: View) :
+        SelectionBaseViewHolder<SelectionServerViewModel>(itemView) {
 
         init {
-            view.setOnSafeClickListener {
+            itemView.setOnSafeClickListener {
                 onItemClick?.invoke()
             }
         }
 
         override fun bind(item: SelectionServerViewModel) {
-
-
+            itemView.tvServer.text = item.title
         }
     }
 
