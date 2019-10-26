@@ -1,95 +1,26 @@
-package com.ving.kvxroid.Detail
-
+package com.ving.kvxroid.Services
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.ving.kvxroid.R
-import kotlinx.android.synthetic.main.activity_item_detail.*
+import com.ving.kvxroid.Common.BaseApplication
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
-import android.R.attr.password
-import android.content.Intent
-import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.Redux.*
-import com.ving.kvxroid.TopicDetailActivity.TopicDetailActivity
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
-import org.rekotlin.StoreSubscriber
 
-
-class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
-
-    override fun newState(state: AppState) {
-
-        val itemDetailAdapter = ItemDetailRecyclerAdapter(state.itemDetailList as ArrayList<AnyObject>).apply {
-            onItemClick = ::handleItemClick
-            onItemPlusClick = ::handlePlusClick
-            onInfoClick = ::handleInfoClick
-        }
-        recyclerView.adapter = itemDetailAdapter
-
-        itemDetailAdapter.setItems()
-
-    }
+class TopicConnector {
 
     private lateinit var mqttAndroidClient: MqttAndroidClient
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(com.ving.kvxroid.R.layout.activity_item_detail)
-        initView()
 
-        mainStore.dispatch(ItemListStateLoad())
 
-        // subscribe to state changes
-        mainStore.subscribe(this)
-
-//        connect(this@ItemDetailActivity)
-//        disconnectClient()
-
-//        subscribe("test1")
-//        receiveMessages()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    fun disconnect() {
         mqttAndroidClient.unregisterResources()
         mqttAndroidClient.close()
     }
 
-    private fun initView() {
-//        recyclerView.layoutManager = GridLayoutManager(this@ItemDetailActivity,2)
-        recyclerView.layoutManager =  LinearLayoutManager(this@ItemDetailActivity)
+    fun connect() {
 
+        val context = BaseApplication.INSTANCE.applicationContext
 
-
-    }
-
-    private fun handleItemClick() {
-        println("Hello Detail")
-
-    }
-
-    private fun handlePlusClick(information: String) {
-
-        println("Plus Button")
-        val intent = Intent(this, ItemTopicActivity::class.java)
-        startActivity(intent)
-
-        mainStore.dispatch(TopicActionConnect())
-    }
-
-    private fun handleInfoClick(information: String) {
-
-        println("Info Button")
-        val intent = Intent(this, TopicDetailActivity::class.java)
-        startActivity(intent)
-
-    }
-
-    fun connect(applicationContext : Context) {
-        mqttAndroidClient = MqttAndroidClient ( applicationContext,"tcp://m24.cloudmqtt.com:14029","1234234" )
+        mqttAndroidClient = MqttAndroidClient ( context,"tcp://m24.cloudmqtt.com:14029","1234234" )
         try {
             val mqttConnectOptions = MqttConnectOptions()
             mqttConnectOptions.isAutomaticReconnect = true
@@ -97,7 +28,6 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
             mqttConnectOptions.userName = "plefajkt"
             mqttConnectOptions.password = "i5DuqlA-kT2q".toCharArray()
             mqttConnectOptions.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1)
-
 
             val token = mqttAndroidClient.connect(mqttConnectOptions)
             token.actionCallback = object : IMqttActionListener {
@@ -119,7 +49,6 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
             e.printStackTrace()
         }
     }
-
 
     fun subscribe(topic: String) {
         val qos = 2 // Mention your qos value
@@ -192,30 +121,4 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         }
     }
 
-    fun disconnect() {
-        try {
-            val disconToken = mqttAndroidClient.disconnect()
-            disconToken.actionCallback = object : IMqttActionListener {
-                override fun onSuccess(asyncActionToken: IMqttToken) {
-                    //connectionStatus = false
-                    // Give Callback on disconnection here
-                }
-                override fun onFailure(
-                    asyncActionToken: IMqttToken,
-                    exception: Throwable
-                ) {
-                    // Give Callback on error here
-                }
-            }
-        } catch (e: MqttException) {
-            // Give Callback on error here
-        }
-    }
-
-    private fun disconnectClient() {
-        if (mqttAndroidClient != null) {
-            mqttAndroidClient.unregisterResources()
-            mqttAndroidClient.close()
-        }
-    }
 }

@@ -22,6 +22,13 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
                 //                it.value += " Second Middleware"
                 next(action)
                 dispatch(ItemListStateLoad())
+//            }
+//
+//
+//            (action as? TopicActionConnect)?.let {
+//                //                it.value += " Second Middleware"
+//                next(action)
+//                dispatch(ItemListStateLoad())
             } ?: next(action)
         }
     }
