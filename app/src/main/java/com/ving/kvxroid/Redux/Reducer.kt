@@ -1,7 +1,6 @@
 package com.ving.kvxroid.Redux
 
 import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.Common.BaseApplication
 import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
@@ -9,8 +8,6 @@ import com.ving.kvxroid.Selection.*
 import com.ving.kvxroid.Services.RealmInteractor
 import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.Action
-import io.realm.Realm
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -69,14 +66,20 @@ fun counterReducer(action: Action, state: AppState?): AppState {
 
         is TopicActionAdd -> {
             val realmInteractor = RealmInteractor()
-            state.tasks.put("three", realmInteractor)
             realmInteractor.addTopic()
 
         }
 
         is TopicActionConnect -> {
             val connector = TopicConnector()
+            state.tasks.put("abc", connector)
+
             connector.connect()
+            connector.receiveMessages()
+        }
+
+        is TopicActionUpdate -> {
+
         }
     }
 

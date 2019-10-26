@@ -1,5 +1,6 @@
 package com.ving.kvxroid.Redux
 
+import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.StateType
 
 data class AppState(
@@ -7,6 +8,6 @@ data class AppState(
     val itemList: List<Any> = emptyList(),
     var itemDetailList: List<Any> = emptyList(),
     var connectionList: List<Any> = emptyList(),
-    val tasks: MutableMap<String, Any> = mutableMapOf<String, Any>()
+    val tasks: MutableMap<String, TopicConnector> = mutableMapOf<String, TopicConnector>()
 
 ): StateType

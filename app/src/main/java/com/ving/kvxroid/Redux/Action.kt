@@ -9,3 +9,4 @@ data class ConnectionActionAdd(val unit: Unit = Unit): Action
 data class ConnectionActionLoad(val unit: Unit = Unit): Action
 data class TopicActionAdd(val unit: Unit = Unit): Action
 data class TopicActionConnect(val unit: Unit = Unit): Action
+data class TopicActionUpdate(val unit: Unit = Unit): Action

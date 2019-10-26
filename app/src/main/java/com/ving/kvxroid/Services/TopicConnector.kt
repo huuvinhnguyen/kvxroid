@@ -9,6 +9,7 @@ class TopicConnector {
 
     private lateinit var mqttAndroidClient: MqttAndroidClient
 
+    var listener: (()->Unit)? = null
 
 
     fun disconnect() {
@@ -96,6 +97,7 @@ class TopicConnector {
                     val data = String(message.payload, charset("UTF-8"))
                     // data is the desired received message
                     // Give your callback on message received here
+                    listener?.invoke()
                 } catch (e: Exception) {
                     // Give your callback on error here
                 }
