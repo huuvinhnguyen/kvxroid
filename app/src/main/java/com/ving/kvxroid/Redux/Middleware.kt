@@ -1,5 +1,6 @@
 package com.ving.kvxroid.Redux
 
+import com.ving.kvxroid.Services.RealmInteractor
 import org.rekotlin.Middleware
 
 internal val connectionMiddleware: Middleware<AppState> = { dispatch, getState ->
@@ -21,7 +22,11 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
             (action as? TopicActionAdd)?.let {
                 //                it.value += " Second Middleware"
                 next(action)
-                dispatch(ItemListStateLoad())
+                val realmInteractor = RealmInteractor()
+                realmInteractor.addTopic {
+                    dispatch(ItemListStateLoad())
+
+                }
             }
 
             (action as? TopicActionConnect)?.let {

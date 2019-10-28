@@ -65,8 +65,10 @@ fun counterReducer(action: Action, state: AppState?): AppState {
         }
 
         is TopicActionAdd -> {
-            val realmInteractor = RealmInteractor()
-            realmInteractor.addTopic()
+//            val realmInteractor = RealmInteractor()
+//            realmInteractor.addTopic {
+//
+//            }
 
         }
 

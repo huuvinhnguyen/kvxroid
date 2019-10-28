@@ -90,7 +90,7 @@ class RealmInteractor {
 
     }
 
-    fun addTopic() {
+    fun addTopic(finished: () -> Unit) {
 
         val context = BaseApplication.INSTANCE.applicationContext
 
@@ -98,12 +98,27 @@ class RealmInteractor {
 
         val realm = Realm.getDefaultInstance()
 
-        realm.executeTransaction { realm ->
-            // Add a person
+//        realm.executeTransaction { realm ->
+//            // Add a person
+//            var uniqueID = UUID.randomUUID().toString()
+//            val topicRealm = realm.createObject(TopicRealm::class.java, uniqueID)
+//            topicRealm.name = "Item 1"
+//            finished("ass")
+//
+//        }
+
+
+
+        realm.executeTransactionAsync({ realm ->
             var uniqueID = UUID.randomUUID().toString()
             val topicRealm = realm.createObject(TopicRealm::class.java, uniqueID)
             topicRealm.name = "Item 1"
-        }
+
+        }, {
+            finished()
+            realm.close() },
+            { realm.close() })
+
     }
 
     fun getTopics():  List<TopicRealm> {
