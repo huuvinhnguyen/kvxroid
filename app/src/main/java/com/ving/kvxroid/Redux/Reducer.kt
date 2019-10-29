@@ -80,9 +80,13 @@ fun counterReducer(action: Action, state: AppState?): AppState {
             connector.receiveMessages()
         }
 
-        is TopicActionUpdate -> {
-
-        }
+//        is TopicActionUpdate -> {
+//
+//        }
+//
+//        is ItemActionLoad -> {
+//
+//        }
     }
 
     return state

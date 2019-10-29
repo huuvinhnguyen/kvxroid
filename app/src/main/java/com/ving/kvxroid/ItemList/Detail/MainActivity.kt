@@ -4,7 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailActivity
+import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
+import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
+import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.AppState
@@ -39,8 +43,15 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 //        //This will for default android divider
 //        recyclerViewMovies.addItemDecoration(GridItemDecoration(10, 2))
 
-        val itemListAdapter = ItemListGridRecyclerAdapter().apply {
+
+        val items: ArrayList<AnyObject> = ArrayList()
+        items.add(ItemViewModel("bye bye 1"))
+        items.add(ItemViewModel("hello helo 2"))
+        items.add(ItemDetailPlusViewModel())
+        val itemListAdapter = ItemListGridRecyclerAdapter(items).apply {
             onItemClick = ::handleItemClick
+            onItemPlusClick = ::handlePlusClick
+
         }
         listRecyclerView.adapter = itemListAdapter
 
@@ -54,6 +65,10 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
         val intent = Intent(this, ItemDetailActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun handlePlusClick(information: String) {
+        println("Handle Plus click")
     }
 
 }

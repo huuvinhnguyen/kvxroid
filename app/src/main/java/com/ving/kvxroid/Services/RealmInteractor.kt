@@ -2,6 +2,7 @@ package com.ving.kvxroid.Services
 
 import com.ving.kvxroid.Common.BaseApplication
 import com.ving.kvxroid.Selection.ConnectionRealm
+import com.ving.kvxroid.Selection.ItemRealm
 import com.ving.kvxroid.Selection.ServerRealm
 import com.ving.kvxroid.Selection.TopicRealm
 import io.realm.Realm
@@ -98,21 +99,10 @@ class RealmInteractor {
 
         val realm = Realm.getDefaultInstance()
 
-//        realm.executeTransaction { realm ->
-//            // Add a person
-//            var uniqueID = UUID.randomUUID().toString()
-//            val topicRealm = realm.createObject(TopicRealm::class.java, uniqueID)
-//            topicRealm.name = "Item 1"
-//            finished("ass")
-//
-//        }
-
-
-
         realm.executeTransactionAsync({ realm ->
             var uniqueID = UUID.randomUUID().toString()
-            val topicRealm = realm.createObject(TopicRealm::class.java, uniqueID)
-            topicRealm.name = "Item 1"
+            val item = realm.createObject(TopicRealm::class.java, uniqueID)
+            item.name = "Item 1"
 
         }, {
             finished()
@@ -130,5 +120,35 @@ class RealmInteractor {
         val list = realm.where(TopicRealm::class.java).findAll()
         return list
 
+    }
+
+    fun getItems(): List<ItemRealm> {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+
+        val list = realm.where(ItemRealm::class.java).findAll()
+        return list
+    }
+
+    fun addItem(finished: (ItemRealm) -> Unit) {
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+//        var topic: ItemRealm = ItemRealm()
+        realm.executeTransactionAsync({ realm ->
+            var uniqueID = UUID.randomUUID().toString()
+            val item = realm.createObject(ItemRealm::class.java, uniqueID)
+            item.name = "Item 1"
+//            topic = item
+
+        }, {
+//            finished(topic)
+            realm.close() },
+            { realm.close() })
     }
 }
