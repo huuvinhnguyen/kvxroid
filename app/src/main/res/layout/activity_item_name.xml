@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical">
+    <!--        <android.support.design.widget.TextInputLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+    <!--            -->
+    <!--        </android.support.design.widget.TextInputLayout>-->
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ZZZZZZ"
+        android:imeActionId="7"
+        android:imeActionLabel="Sing"
+        android:imeOptions="actionUnspecified"
+        android:inputType="textPassword"
+        android:maxLines="2"
+        android:singleLine="true" />
+
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="sssss" />
+
+    <Button
+        android:id="@+id/btnImage"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="ACSDFS">
+
+    </Button>
+
+</LinearLayout>
