@@ -12,6 +12,7 @@ import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
+import kotlinx.android.synthetic.main.list_item_grid_movie.view.*
 
 
 class ItemListGridRecyclerAdapter(
@@ -62,9 +63,13 @@ class ItemListGridRecyclerAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(viewHolder:  RecyclerView.ViewHolder, position: Int) {
-//        val viewHolder = viewHolder as ItemListViewHolder
-//        movieViewHolder.bindView(listOfMovies[position])
-//        viewHolder.bindView()
+
+         when (viewHolder) {
+            is ItemViewHolder -> {
+                val viewModel = items[position] as ItemViewModel
+                viewHolder.bindView(viewModel)
+            }
+        }
     }
 
     fun setList() {
@@ -76,6 +81,10 @@ class ItemListGridRecyclerAdapter(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
+        fun bindView(viewModel: ItemViewModel) {
+            itemView.textTitle.text = viewModel.name
+
+        }
 
         init {
 
@@ -88,7 +97,6 @@ class ItemListGridRecyclerAdapter(
     inner class PlusViewHolder(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
-
 
         init {
 

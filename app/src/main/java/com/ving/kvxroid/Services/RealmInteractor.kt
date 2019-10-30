@@ -132,22 +132,21 @@ class RealmInteractor {
         return list
     }
 
-    fun addItem(finished: (ItemRealm) -> Unit) {
+    fun addItem(item: ItemRealm, finished: (ItemRealm) -> Unit) {
+
         val context = BaseApplication.INSTANCE.applicationContext
 
         Realm.init(context)
 
         val realm = Realm.getDefaultInstance()
 
-//        var topic: ItemRealm = ItemRealm()
         realm.executeTransactionAsync({ realm ->
-            var uniqueID = UUID.randomUUID().toString()
-            val item = realm.createObject(ItemRealm::class.java, uniqueID)
-            item.name = "Item 1"
-//            topic = item
+
+            val itemRef = realm.createObject(ItemRealm::class.java, item.id)
+            itemRef.name = item.name
 
         }, {
-//            finished(topic)
+            finished(item)
             realm.close() },
             { realm.close() })
     }

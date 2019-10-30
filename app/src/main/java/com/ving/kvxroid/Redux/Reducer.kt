@@ -4,6 +4,7 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
+import com.ving.kvxroid.ItemList.Detail.ItemViewModel
 import com.ving.kvxroid.Selection.*
 import com.ving.kvxroid.Services.RealmInteractor
 import com.ving.kvxroid.Services.TopicConnector
@@ -84,9 +85,27 @@ fun counterReducer(action: Action, state: AppState?): AppState {
 //
 //        }
 //
-//        is ItemActionLoad -> {
+        is ItemActionLoad -> {
+            val items: ArrayList<AnyObject> = ArrayList()
+//            items.add(ItemViewModel("bye bye 1"))
+//            items.add(ItemViewModel("hello helo 2"))
+//            items.add(ItemViewModel("hello helo 2"))
 //
-//        }
+//            items.add(ItemDetailPlusViewModel())
+
+            val interactor = RealmInteractor()
+
+            val list = interactor.getItems().map { itemRealm ->
+                ItemViewModel(itemRealm.name ?: "")
+            }
+
+            items.addAll(list)
+            items.add(ItemDetailPlusViewModel())
+
+            state = state.copy(itemList = items)
+
+
+        }
     }
 
     return state
