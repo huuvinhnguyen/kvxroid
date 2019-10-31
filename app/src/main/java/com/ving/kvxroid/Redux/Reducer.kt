@@ -4,8 +4,10 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
+import com.ving.kvxroid.ItemList.Detail.ItemImageViewModel
 import com.ving.kvxroid.ItemList.Detail.ItemViewModel
 import com.ving.kvxroid.Selection.*
+import com.ving.kvxroid.Services.FirestoreService
 import com.ving.kvxroid.Services.RealmInteractor
 import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.Action
@@ -104,6 +106,25 @@ fun counterReducer(action: Action, state: AppState?): AppState {
 
             state = state.copy(itemList = items)
 
+        }
+
+        is ItemImageActionLoad -> {
+
+            val items: ArrayList<AnyObject> = ArrayList()
+            val service = FirestoreService()
+            service.getItems {
+
+            }
+
+            val item1 = ItemImageViewModel("1", "abcde", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
+            val item2 = ItemImageViewModel("2", "abcde", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
+            val item3 = ItemImageViewModel("3", "abcde", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
+
+            items.add(item1)
+            items.add(item2)
+            items.add(item3)
+
+            state = state.copy(itemImageList = items)
 
         }
     }

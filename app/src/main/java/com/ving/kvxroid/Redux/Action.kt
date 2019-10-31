@@ -14,3 +14,4 @@ data class ItemActionAdd(val unit: Unit = Unit): Action {
     var name: String? = null
 }
 data class ItemActionLoad(val unit: Unit = Unit): Action
+data class ItemImageActionLoad(val unit: Unit = Unit): Action

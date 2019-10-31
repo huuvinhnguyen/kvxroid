@@ -4,14 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
-import com.ving.kvxroid.Detail.ItemDetailRecyclerAdapter
-import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
 import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
+import kotlinx.android.synthetic.main.list_item_grid_movie.view.*
 
 
 class ItemImageAdapter(
@@ -32,6 +31,9 @@ class ItemImageAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(viewHolder:  RecyclerView.ViewHolder, position: Int) {
+        val viewModel = items[position] as ItemImageViewModel
+        val view = viewHolder as ItemViewHolder
+        view.bind(viewModel)
 
     }
 
@@ -44,12 +46,22 @@ class ItemImageAdapter(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
-
         init {
 
             containerView.setOnSafeClickListener {
                 onItemClick?.invoke()
             }
+        }
+
+        fun bind(viewModel: ItemImageViewModel) {
+
+            Glide.with(itemView)  //2
+                .load(viewModel.imageUrl) //3
+                .centerCrop() //4
+                .placeholder(R.drawable.ic_image_place_holder) //5
+                .error(R.drawable.ic_broken_image) //6
+                .fallback(R.drawable.ic_no_image) //7
+                .into(itemView.imageView) //8
         }
     }
 }

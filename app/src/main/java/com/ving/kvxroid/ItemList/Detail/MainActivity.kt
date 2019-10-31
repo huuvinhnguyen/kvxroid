@@ -13,6 +13,7 @@ import com.ving.kvxroid.Redux.AppState
 import com.ving.kvxroid.Redux.CounterActionIncrease
 import com.ving.kvxroid.Redux.ItemActionLoad
 import com.ving.kvxroid.Redux.mainStore
+import com.ving.kvxroid.Services.FirestoreService
 import org.rekotlin.StoreSubscriber
 
 
@@ -44,6 +45,11 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
         // subscribe to state changes
         mainStore.subscribe(this)
+
+        val service = FirestoreService()
+        service.getItems {
+
+        }
 
     }
 

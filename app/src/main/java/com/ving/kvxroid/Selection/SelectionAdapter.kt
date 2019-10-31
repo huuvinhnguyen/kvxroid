@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailBaseViewHolder
 import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
@@ -104,6 +105,7 @@ class SelectionAdapter(private val items: ArrayList<AnyObject>) :
 
         override fun bind(item: SelectionServerViewModel) {
             itemView.tvServer.text = item.title
+
         }
     }
 
