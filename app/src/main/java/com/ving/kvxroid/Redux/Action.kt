@@ -1,4 +1,5 @@
 package com.ving.kvxroid.Redux
+import com.ving.kvxroid.AnyObject
 import org.rekotlin.Action
 
 data class CounterActionIncrease(val unit: Unit = Unit): Action
@@ -15,3 +16,7 @@ data class ItemActionAdd(val unit: Unit = Unit): Action {
 }
 data class ItemActionLoad(val unit: Unit = Unit): Action
 data class ItemImageActionLoad(val unit: Unit = Unit): Action
+data class ItemImageActionFetch(val unit: Unit = Unit): Action {
+    var list: ArrayList<AnyObject> = ArrayList()
+}
+

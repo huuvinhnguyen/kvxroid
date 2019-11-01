@@ -1,7 +1,10 @@
 package com.ving.kvxroid.Redux
 
+import com.ving.kvxroid.ItemList.Detail.ItemImageViewModel
 import com.ving.kvxroid.Selection.ItemRealm
+import com.ving.kvxroid.Services.FirestoreService
 import com.ving.kvxroid.Services.RealmInteractor
+
 import org.rekotlin.Middleware
 import java.util.*
 
@@ -9,7 +12,7 @@ internal val connectionMiddleware: Middleware<AppState> = { dispatch, getState -
     { next ->
         { action ->
             (action as? ConnectionActionAdd)?.let {
-//                it.value += " Second Middleware"
+                //                it.value += " Second Middleware"
                 next(action)
                 dispatch(ConnectionActionLoad())
             } ?: next(action)
@@ -55,13 +58,34 @@ internal val itemMiddleware: Middleware<AppState> = { dispatch, getState ->
                 next(action)
                 val realmInteractor = RealmInteractor()
                 var item = ItemRealm()
-                item.id  = UUID.randomUUID().toString()
+                item.id = UUID.randomUUID().toString()
 
                 item.name = action.name
                 realmInteractor.addItem(item) {
                     dispatch(ItemActionLoad())
 
                 }
+            } ?: next(action)
+        }
+    }
+}
+
+internal val imagesMiddleware: Middleware<AppState> = { dispatch, getState ->
+    { next ->
+        { action ->
+            (action as? ItemImageActionLoad)?.let {
+                next(action)
+                val service = FirestoreService()
+                service.getItems { items ->
+                    val list = items.map { ItemImageViewModel(it.id, it.name, it.imageUrl) }
+
+                    val action = ItemImageActionFetch()
+                    action.list.clear()
+                    action.list.addAll(list)
+                    dispatch(action)
+
+                }
+
             } ?: next(action)
         }
     }

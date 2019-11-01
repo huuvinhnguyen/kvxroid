@@ -37,7 +37,8 @@ class ItemImageAdapter(
 
     }
 
-    fun setList() {
+    fun setList(list: ArrayList<AnyObject>) {
+        items.addAll(list)
         notifyDataSetChanged()
     }
 

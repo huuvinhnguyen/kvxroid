@@ -46,11 +46,6 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         // subscribe to state changes
         mainStore.subscribe(this)
 
-        val service = FirestoreService()
-        service.getItems {
-
-        }
-
     }
 
     private fun initView() {

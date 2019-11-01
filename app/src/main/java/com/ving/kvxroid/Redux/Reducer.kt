@@ -4,12 +4,17 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
+import com.ving.kvxroid.Detail.ItemDetailTrashViewModel
 import com.ving.kvxroid.ItemList.Detail.ItemImageViewModel
 import com.ving.kvxroid.ItemList.Detail.ItemViewModel
 import com.ving.kvxroid.Selection.*
 import com.ving.kvxroid.Services.FirestoreService
 import com.ving.kvxroid.Services.RealmInteractor
 import com.ving.kvxroid.Services.TopicConnector
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.rekotlin.Action
 import kotlin.collections.ArrayList
 
@@ -18,7 +23,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
     // if no state has been provided, create the default state
     var state = state ?: AppState()
 
-    when(action){
+    when (action) {
         is CounterActionIncrease -> {
             state = state.copy(counter = state.counter + 1)
         }
@@ -32,6 +37,8 @@ fun counterReducer(action: Action, state: AppState?): AppState {
             items.add(ItemDetailSwitchViewModel("switch 1"))
             items.add(ItemDetailSwitchViewModel("switch 2"))
             items.add(ItemDetailPlusViewModel())
+            items.add(ItemDetailTrashViewModel())
+
 
             val topicList = RealmInteractor().getTopics()
             val list = topicList.forEach { topicRealm ->
@@ -108,29 +115,17 @@ fun counterReducer(action: Action, state: AppState?): AppState {
 
         }
 
-        is ItemImageActionLoad -> {
-
-            val items: ArrayList<AnyObject> = ArrayList()
-            val service = FirestoreService()
-            service.getItems {
-
-            }
-
-            val item1 = ItemImageViewModel("1", "abcde", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
-            val item2 = ItemImageViewModel("2", "abcde", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
-            val item3 = ItemImageViewModel("3", "abcde", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
-
-            items.add(item1)
-            items.add(item2)
-            items.add(item3)
-
-            state = state.copy(itemImageList = items)
-
+        is ItemImageActionFetch -> {
+            state = state.copy(itemImageList = action.list)
         }
+
     }
+
 
     return state
 }
+
+
 
 
 

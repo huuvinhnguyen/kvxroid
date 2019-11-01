@@ -6,26 +6,31 @@ class FirestoreService {
 
     private val db = FirebaseFirestore.getInstance()
 
-    inner class Item {
+    data class Item(
+        var id: String = "",
+        var name: String = "",
+        var imageUrl: String = ""
+    )
 
-        val imageUrl: String? = null
-    }
+    data class Collection (
+        var items: ArrayList<Item> = arrayListOf()
 
-    fun getItems(finished: (List<Item> ) -> Unit) {
-        val items = db.collection("items")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    print("#abcd")
-                    document.get("aaa")
-                    print("${document.id} => ${document.data}")
-//                    Log.d(TAG, "${document.id} => ${document.data}")
+    )
+
+    fun getItems(finished: (ArrayList<Item> ) -> Unit) {
+        val items = db.collection("items").document("list")
+            .addSnapshotListener()
+             { result, e ->
+
+                val collection = result?.toObject(Collection::class.java) ?: Collection()
+
+                collection.items.forEach {
+                    println(it.name)
                 }
+
+                finished(collection.items)
             }
-            .addOnFailureListener { exception ->
-                    print("Error 911")
-//                print("Error getting documents: ", exception)
-//                Log.d(TAG, "Error getting documents: ", exception)
-            }
+
+
     }
 }

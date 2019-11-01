@@ -5,5 +5,5 @@ import org.rekotlin.Store
 val mainStore = Store(
     reducer = ::counterReducer,
     state = null,
-    middleware = listOf(connectionMiddleware, topicMiddleware, itemMiddleware)
+    middleware = listOf(connectionMiddleware, topicMiddleware, itemMiddleware, imagesMiddleware)
 )

@@ -18,7 +18,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         private const val TYPE_HEADER = 0
         private const val TYPE_SWITCH = 1
         private const val TYPE_PLUS   = 2
-        private const val TYPE_FOOTER = 3
+        private const val TYPE_TRASH  = 3
+        private const val TYPE_FOOTER = 4
 
     }
 
@@ -49,6 +50,13 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
                     .inflate(R.layout.item_detail_plus_view_holder, parent, false)
                 return PlusViewHolder(view)
             }
+
+            TYPE_TRASH -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_detail_trash_view_holder, parent, false)
+                return TrashViewHolder(view)
+            }
+
             else -> throw IllegalArgumentException("Invalid view type")
 
         }
@@ -63,6 +71,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             is HeaderViewHolder -> viewHolder.bind(element as ItemDetailHeaderViewModel)
             is SwitchViewHolder -> viewHolder.bind(element as ItemDetailSwitchViewModel)
             is PlusViewHolder ->   viewHolder.bind(element as ItemDetailPlusViewModel)
+            is TrashViewHolder ->   viewHolder.bind(element as ItemDetailTrashViewModel)
             else -> throw IllegalArgumentException()
         }
     }
@@ -73,6 +82,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             is ItemDetailHeaderViewModel -> TYPE_HEADER
             is ItemDetailSwitchViewModel -> TYPE_SWITCH
             is ItemDetailPlusViewModel -> TYPE_PLUS
+            is ItemDetailTrashViewModel -> TYPE_TRASH
+
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
@@ -139,6 +150,20 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         }
 
         override fun bind(viewModel: ItemDetailPlusViewModel) {}
+    }
+
+    inner class TrashViewHolder(
+        override val containerView: View
+
+    ) : ItemDetailBaseViewHolder<ItemDetailTrashViewModel>(containerView), LayoutContainer {
+
+        init {
+            containerView.imageButton.setOnSafeClickListener {
+                onItemPlusClick?.invoke("Click Plus")
+            }
+        }
+
+        override fun bind(viewModel: ItemDetailTrashViewModel) {}
     }
 
 }
