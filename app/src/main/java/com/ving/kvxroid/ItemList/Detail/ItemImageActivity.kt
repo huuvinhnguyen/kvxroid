@@ -6,10 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.R
-import com.ving.kvxroid.Redux.AppState
-import com.ving.kvxroid.Redux.ItemImageActionFetch
-import com.ving.kvxroid.Redux.ItemImageActionLoad
-import com.ving.kvxroid.Redux.mainStore
+import com.ving.kvxroid.Redux.*
 import kotlinx.android.synthetic.main.activity_item_image.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.rekotlin.StoreSubscriber
@@ -17,7 +14,9 @@ import org.rekotlin.StoreSubscriber
 class ItemImageActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
     override fun newState(state: AppState) {
-        val itemListAdapter = ItemImageAdapter(state.itemImageList).apply {}
+        val itemListAdapter = ItemImageAdapter(state.itemImageList).apply {
+            onItemClick = ::handleItemClick
+        }
         recyclerView.adapter = itemListAdapter
 
     }
@@ -33,6 +32,18 @@ class ItemImageActivity : AppCompatActivity(), StoreSubscriber<AppState> {
     private fun initView() {
 
         recyclerView.layoutManager = GridLayoutManager(this@ItemImageActivity,2)
+
+    }
+
+    private fun handleItemClick(viewModel: ItemImageViewModel) {
+        val action = ItemImageActionSelect()
+        action.id = viewModel.id
+        mainStore.dispatch(action)
+
+
+        val action2 = ItemNameActionLoad()
+        action2.itemNameViewModel = ItemNameViewModel("avc", viewModel.imageUrl)
+        mainStore.dispatch(action2)
 
     }
 }

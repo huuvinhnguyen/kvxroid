@@ -9,8 +9,7 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
-import kotlinx.android.synthetic.main.list_item_grid_movie.view.*
+import kotlinx.android.synthetic.main.item_image_view_holder.view.*
 
 
 class ItemImageAdapter(
@@ -19,13 +18,13 @@ class ItemImageAdapter(
 
 
 
-    var onItemClick: (() -> Unit)? = null
+    var onItemClick: ((ItemImageViewModel) -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
 
-        ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_grid_movie, parent, false))
+        ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_image_view_holder, parent, false))
 
 
     override fun getItemCount(): Int = items.size
@@ -47,14 +46,20 @@ class ItemImageAdapter(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
+        private lateinit var viewModel: ItemImageViewModel
+
         init {
 
             containerView.setOnSafeClickListener {
-                onItemClick?.invoke()
+                onItemClick?.invoke(viewModel)
             }
+
         }
 
         fun bind(viewModel: ItemImageViewModel) {
+
+            this.viewModel = viewModel
+            itemView.checkBox.isChecked = viewModel.isSelected
 
             Glide.with(itemView)  //2
                 .load(viewModel.imageUrl) //3

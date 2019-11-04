@@ -90,17 +90,8 @@ fun counterReducer(action: Action, state: AppState?): AppState {
             connector.receiveMessages()
         }
 
-//        is TopicActionUpdate -> {
-//
-//        }
-//
         is ItemActionLoad -> {
             val items: ArrayList<AnyObject> = ArrayList()
-//            items.add(ItemViewModel("bye bye 1"))
-//            items.add(ItemViewModel("hello helo 2"))
-//            items.add(ItemViewModel("hello helo 2"))
-//
-//            items.add(ItemDetailPlusViewModel())
 
             val interactor = RealmInteractor()
 
@@ -117,6 +108,10 @@ fun counterReducer(action: Action, state: AppState?): AppState {
 
         is ItemImageActionFetch -> {
             state = state.copy(itemImageList = action.list)
+        }
+
+        is ItemNameActionLoad -> {
+            state = state.copy(itemNameViewModel = action.itemNameViewModel)
         }
 
     }

@@ -1,5 +1,6 @@
 package com.ving.kvxroid.Redux
 
+import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.ItemList.Detail.ItemImageViewModel
 import com.ving.kvxroid.Selection.ItemRealm
 import com.ving.kvxroid.Services.FirestoreService
@@ -7,6 +8,7 @@ import com.ving.kvxroid.Services.RealmInteractor
 
 import org.rekotlin.Middleware
 import java.util.*
+import kotlin.collections.ArrayList
 
 internal val connectionMiddleware: Middleware<AppState> = { dispatch, getState ->
     { next ->
@@ -77,16 +79,55 @@ internal val imagesMiddleware: Middleware<AppState> = { dispatch, getState ->
                 next(action)
                 val service = FirestoreService()
                 service.getItems { items ->
-                    val list = items.map { ItemImageViewModel(it.id, it.name, it.imageUrl) }
+                    val list = items.map {
+                        ItemImageViewModel(
+                            it.id,
+                            it.name,
+                            it.imageUrl,
+                            isSelected = false
+                        )
+                    }
 
                     val action = ItemImageActionFetch()
-                    action.list.clear()
                     action.list.addAll(list)
                     dispatch(action)
 
                 }
+            }
 
-            } ?: next(action)
+            (action as? ItemImageActionSelect)?.let {
+                //                next(action)
+                val itemImageList = getState()?.itemImageList ?: arrayListOf()
+
+                val newItems = itemImageList.map {
+                    if (it is ItemImageViewModel) {
+                        if (it.id == action.id) {
+                            ItemImageViewModel(
+                                it.id,
+                                it.name,
+                                it.imageUrl,
+                                isSelected = true
+                            )
+                        } else {
+                            ItemImageViewModel(
+                                it.id,
+                                it.name,
+                                it.imageUrl,
+                                isSelected = false
+                            )
+                        }
+
+                    } else { null }
+                } as? ArrayList<AnyObject> ?: arrayListOf()
+
+                val action = ItemImageActionFetch()
+                action.list.addAll(newItems ?: ArrayList())
+                dispatch(action)
+
+
+            }
+
+                ?: next(action)
         }
     }
 }
