@@ -14,6 +14,10 @@ data class TopicActionUpdate(val unit: Unit = Unit): Action
 data class ItemActionAdd(val unit: Unit = Unit): Action {
     var name: String? = null
 }
+
+data class ItemActionRemove(val unit: Unit = Unit): Action {
+    var id: String = ""
+}
 data class ItemNameActionLoad(val unit: Unit = Unit): Action {
     var itemNameViewModel: ItemNameViewModel? = null
 }

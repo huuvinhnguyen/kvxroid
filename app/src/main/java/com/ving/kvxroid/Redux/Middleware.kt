@@ -67,6 +67,17 @@ internal val itemMiddleware: Middleware<AppState> = { dispatch, getState ->
                     dispatch(ItemActionLoad())
 
                 }
+            }
+
+            (action as? ItemActionRemove)?.let {
+
+                val realmInteractor = RealmInteractor()
+
+                realmInteractor.deleteItem(action.id) {
+                    dispatch(ItemActionLoad())
+
+                }
+
             } ?: next(action)
         }
     }
@@ -117,7 +128,9 @@ internal val imagesMiddleware: Middleware<AppState> = { dispatch, getState ->
                             )
                         }
 
-                    } else { null }
+                    } else {
+                        null
+                    }
                 } as? ArrayList<AnyObject> ?: arrayListOf()
 
                 val action = ItemImageActionFetch()

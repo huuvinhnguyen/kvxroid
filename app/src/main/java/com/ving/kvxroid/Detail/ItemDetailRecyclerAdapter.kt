@@ -30,6 +30,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     var onItemClick: (() -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
     var onInfoClick: ((String) -> Unit)? = null
+    var onItemTrashClick: ((String) -> Unit)? = null
+
 
 
 
@@ -101,7 +103,6 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         override val containerView: View
     ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-
         init {
             containerView.setOnSafeClickListener {
                 onItemClick?.invoke()
@@ -125,6 +126,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     }
 
     inner class SwitchViewHolder(itemView: View) : ItemDetailBaseViewHolder<ItemDetailSwitchViewModel>(itemView) {
+
 
         init {
 
@@ -159,11 +161,12 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
 
         init {
             containerView.imageButton.setOnSafeClickListener {
-                onItemPlusClick?.invoke("Click Plus")
+                onItemTrashClick?.invoke("Trash")
             }
         }
 
-        override fun bind(viewModel: ItemDetailTrashViewModel) {}
+        override fun bind(viewModel: ItemDetailTrashViewModel) {
+        }
     }
 
 }

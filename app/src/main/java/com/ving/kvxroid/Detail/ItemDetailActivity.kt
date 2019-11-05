@@ -25,6 +25,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         val itemDetailAdapter = ItemDetailRecyclerAdapter(state.itemDetailList as ArrayList<AnyObject>).apply {
             onItemClick = ::handleItemClick
             onItemPlusClick = ::handlePlusClick
+            onItemTrashClick = ::handleTrashClick
             onInfoClick = ::handleInfoClick
         }
         recyclerView.adapter = itemDetailAdapter
@@ -80,12 +81,31 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         mainStore.dispatch(TopicActionConnect())
     }
 
+    private fun handleTrashClick(information: String) {
+
+        intent?.getStringExtra("ITEM_ID")?.also {
+            val action = ItemActionRemove()
+            action.id = it
+
+            mainStore.dispatch(action)
+
+        }
+        finish()
+
+    }
+
+
     private fun handleInfoClick(information: String) {
 
         println("Info Button")
         val intent = Intent(this, TopicDetailActivity::class.java)
         startActivity(intent)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainStore.unsubscribe(this)
     }
 
 //    fun connect(applicationContext : Context) {

@@ -74,19 +74,19 @@ class RealmInteractor {
             println(person)
         }
 
-        val listStrings = list.map { serverRealm ->  serverRealm.name }
+        val listStrings = list.map { serverRealm -> serverRealm.name }
 
 
     }
 
-    fun getConnections():  List<ConnectionRealm> {
+    fun getConnections(): List<ConnectionRealm> {
 
         val context = BaseApplication.INSTANCE.applicationContext
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
 
         val list = realm.where(ConnectionRealm::class.java).findAll()
-        val listStrings = list.map { conenctionRealm ->  conenctionRealm.server }
+        val listStrings = list.map { conenctionRealm -> conenctionRealm.server }
         return list
 
     }
@@ -106,12 +106,13 @@ class RealmInteractor {
 
         }, {
             finished()
-            realm.close() },
+            realm.close()
+        },
             { realm.close() })
 
     }
 
-    fun getTopics():  List<TopicRealm> {
+    fun getTopics(): List<TopicRealm> {
 
         val context = BaseApplication.INSTANCE.applicationContext
         Realm.init(context)
@@ -147,7 +148,26 @@ class RealmInteractor {
 
         }, {
             finished(item)
-            realm.close() },
+            realm.close()
+        },
             { realm.close() })
+    }
+
+    fun deleteItem(id: String, finished: (String) -> Unit) {
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        realm.executeTransaction { realm ->
+
+            val results = realm.where(ItemRealm::class.java).equalTo("id", id).findAll()
+            results.deleteAllFromRealm()
+
+        }
+
+        finished(id)
+
     }
 }

@@ -20,7 +20,7 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         val counting = "${state.counter}"
         println(counting)
-        Glide.with(imageView.context)  //2
+        Glide.with(this)  //2
             .load(state.itemNameViewModel?.imageUrl) //3
             .centerCrop() //4
             .placeholder(R.drawable.ic_image_place_holder) //5
@@ -61,4 +61,9 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mainStore.unsubscribe(this)
+
+    }
 }

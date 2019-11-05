@@ -74,13 +74,6 @@ fun counterReducer(action: Action, state: AppState?): AppState {
 
         }
 
-        is TopicActionAdd -> {
-//            val realmInteractor = RealmInteractor()
-//            realmInteractor.addTopic {
-//
-//            }
-
-        }
 
         is TopicActionConnect -> {
             val connector = TopicConnector()
@@ -96,7 +89,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
             val interactor = RealmInteractor()
 
             val list = interactor.getItems().map { itemRealm ->
-                ItemViewModel(itemRealm.name ?: "")
+                ItemViewModel(itemRealm.id ?: "", itemRealm.name ?: "")
             }
 
             items.addAll(list)
