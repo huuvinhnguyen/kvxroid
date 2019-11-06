@@ -3,6 +3,7 @@ package com.ving.kvxroid.Redux
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.ItemList.Detail.ItemImageViewModel
 import com.ving.kvxroid.Selection.ItemRealm
+import com.ving.kvxroid.Selection.TopicRealm
 import com.ving.kvxroid.Services.FirestoreService
 import com.ving.kvxroid.Services.RealmInteractor
 
@@ -30,9 +31,22 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
                 //                it.value += " Second Middleware"
                 next(action)
                 val realmInteractor = RealmInteractor()
-                realmInteractor.addTopic {
-                    dispatch(ItemListStateLoad())
+                val topic = TopicRealm()
+                topic.id = UUID.randomUUID().toString()
+                topic.name = "Item 1"
 
+                realmInteractor.addTopic(topic) {
+                    dispatch(TopicActionLoad())
+
+                }
+            }
+
+            (action as? TopicActionRemove)?.let {
+
+                val realmInteractor = RealmInteractor()
+
+                realmInteractor.deleteTopic(action.id) {
+                    dispatch(TopicActionLoad())
                 }
             }
 
@@ -41,6 +55,7 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
                 next(action)
 
                 val appState = getState()
+
 
                 val task = appState?.tasks?.get("abc")
                 task?.listener = {

@@ -30,6 +30,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     var onItemClick: (() -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
     var onInfoClick: ((String) -> Unit)? = null
+    var onTrashClick: ((String) -> Unit)? = null
     var onItemTrashClick: ((String) -> Unit)? = null
 
 
@@ -127,15 +128,22 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
 
     inner class SwitchViewHolder(itemView: View) : ItemDetailBaseViewHolder<ItemDetailSwitchViewModel>(itemView) {
 
+        private lateinit var viewModel: ItemDetailSwitchViewModel
+
 
         init {
 
             itemView.btnInfo.setOnSafeClickListener {
                 onInfoClick?.invoke("Oninfo")
             }
+
+            itemView.btnTrash.setOnSafeClickListener {
+                onTrashClick?.invoke(viewModel.id)
+            }
         }
 
         override fun bind(viewModel: ItemDetailSwitchViewModel) {
+            this.viewModel = viewModel
             itemView.textView.text = viewModel.name
         }
     }

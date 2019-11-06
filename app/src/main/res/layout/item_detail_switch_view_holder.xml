@@ -38,6 +38,14 @@
         android:layout_gravity="right"
         android:src="@android:drawable/ic_dialog_info" />
 
+    <ImageButton
+        android:id="@+id/btnTrash"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="right"
+        android:src="@android:drawable/ic_delete"
+        tools:src="@android:drawable/ic_delete" />
+
 
 
 

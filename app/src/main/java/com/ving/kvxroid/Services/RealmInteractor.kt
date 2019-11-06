@@ -1,5 +1,6 @@
 package com.ving.kvxroid.Services
 
+import android.content.Context
 import com.ving.kvxroid.Common.BaseApplication
 import com.ving.kvxroid.Selection.ConnectionRealm
 import com.ving.kvxroid.Selection.ItemRealm
@@ -9,6 +10,8 @@ import io.realm.Realm
 import java.util.*
 
 class RealmInteractor {
+
+    private lateinit var context: Context
 
     @Suppress("NAME_SHADOWING")
     fun connectRealm() {
@@ -91,7 +94,7 @@ class RealmInteractor {
 
     }
 
-    fun addTopic(finished: () -> Unit) {
+    fun addTopic(topic: TopicRealm, finished: () -> Unit) {
 
         val context = BaseApplication.INSTANCE.applicationContext
 
@@ -100,9 +103,8 @@ class RealmInteractor {
         val realm = Realm.getDefaultInstance()
 
         realm.executeTransactionAsync({ realm ->
-            var uniqueID = UUID.randomUUID().toString()
-            val item = realm.createObject(TopicRealm::class.java, uniqueID)
-            item.name = "Item 1"
+            val item = realm.createObject(TopicRealm::class.java, topic.id)
+            item.name = topic.name
 
         }, {
             finished()
@@ -110,6 +112,24 @@ class RealmInteractor {
         },
             { realm.close() })
 
+    }
+
+    fun deleteTopic(id: String, finished: (String) ->Unit) {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        realm.executeTransaction { realm ->
+
+            val results = realm.where(TopicRealm::class.java).equalTo("id", id).findAll()
+            results.deleteAllFromRealm()
+
+        }
+
+        finished(id)
     }
 
     fun getTopics(): List<TopicRealm> {

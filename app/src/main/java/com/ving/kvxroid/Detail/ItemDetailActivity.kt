@@ -27,6 +27,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
             onItemPlusClick = ::handlePlusClick
             onItemTrashClick = ::handleTrashClick
             onInfoClick = ::handleInfoClick
+            onTrashClick = ::handleTopicRemoveClick
         }
         recyclerView.adapter = itemDetailAdapter
 
@@ -41,7 +42,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         setContentView(com.ving.kvxroid.R.layout.activity_item_detail)
         initView()
 
-        mainStore.dispatch(ItemListStateLoad())
+        mainStore.dispatch(TopicActionLoad())
 
         // subscribe to state changes
         mainStore.subscribe(this)
@@ -93,6 +94,15 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         finish()
 
     }
+
+    private fun handleTopicRemoveClick(information: String) {
+
+        val action = TopicActionRemove()
+        action.id = information
+        mainStore.dispatch(action)
+
+    }
+
 
 
     private fun handleInfoClick(information: String) {

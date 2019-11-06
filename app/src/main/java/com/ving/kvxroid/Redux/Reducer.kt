@@ -30,21 +30,23 @@ fun counterReducer(action: Action, state: AppState?): AppState {
         is CounterActionDecrease -> {
             state = state.copy(counter = state.counter - 1)
         }
-        is ItemListStateLoad -> {
+        is TopicActionLoad -> {
 
             val items: ArrayList<AnyObject> = ArrayList()
-            items.add(ItemDetailHeaderViewModel("Header abc"))
-            items.add(ItemDetailSwitchViewModel("switch 1"))
-            items.add(ItemDetailSwitchViewModel("switch 2"))
-            items.add(ItemDetailPlusViewModel())
-            items.add(ItemDetailTrashViewModel())
+//            items.add(ItemDetailHeaderViewModel("Header abc"))
+//            items.add(ItemDetailSwitchViewModel("switch 1"))
+//            items.add(ItemDetailSwitchViewModel("switch 2"))
+
 
 
             val topicList = RealmInteractor().getTopics()
-            val list = topicList.forEach { topicRealm ->
-                val viewModel = ItemDetailSwitchViewModel("sffffff")
+            val list = topicList.forEach {
+                val viewModel = ItemDetailSwitchViewModel(it.id ?:"", it.name ?:"")
                 items.add(viewModel)
             }
+
+            items.add(ItemDetailPlusViewModel())
+            items.add(ItemDetailTrashViewModel())
 
             state = state.copy(itemDetailList = items)
 
