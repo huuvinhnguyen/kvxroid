@@ -47,10 +47,13 @@ open class TopicRealm : RealmObject() {
     @PrimaryKey
     var id: String? = null
     var name: String? = null
+    var type: String? = null
+    var value: String? = null
+    var connectionId: String? = null
 
 }
 
-open class ItemRealm : RealmObject() {
+open class ItemRealm() : RealmObject() {
 
     @PrimaryKey
     var id: String? = null

@@ -25,7 +25,7 @@ class ItemListGridRecyclerAdapter(
 
     }
 
-    var onItemClick: (() -> Unit)? = null
+    var onItemClick: ((String) -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
 
 
@@ -81,7 +81,10 @@ class ItemListGridRecyclerAdapter(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
+        private lateinit var viewModel: ItemViewModel
+
         fun bindView(viewModel: ItemViewModel) {
+            this.viewModel = viewModel
             itemView.textTitle.text = viewModel.name
 
         }
@@ -89,7 +92,7 @@ class ItemListGridRecyclerAdapter(
         init {
 
             containerView.setOnSafeClickListener {
-                onItemClick?.invoke()
+                onItemClick?.invoke(viewModel.id)
             }
         }
     }

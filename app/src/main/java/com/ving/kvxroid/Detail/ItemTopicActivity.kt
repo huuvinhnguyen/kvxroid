@@ -19,6 +19,8 @@ import java.util.*
 
 class ItemTopicActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: ItemTopicViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_topic)
@@ -42,10 +44,9 @@ class ItemTopicActivity : AppCompatActivity() {
         }
 
         btnTopic.setOnSafeClickListener {
-            mainStore.dispatch(TopicActionAdd())
-
+            val action = TopicActionAdd()
+//            action.viewModel = viewModel
+            mainStore.dispatch(action)
         }
-
-
     }
 }

@@ -18,7 +18,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         private const val TYPE_HEADER = 0
         private const val TYPE_SWITCH = 1
         private const val TYPE_PLUS   = 2
-        private const val TYPE_FOOTER = 3
+        private const val TYPE_TRASH  = 3
+        private const val TYPE_FOOTER = 4
 
     }
 
@@ -29,6 +30,9 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     var onItemClick: (() -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
     var onInfoClick: ((String) -> Unit)? = null
+    var onTrashClick: ((String) -> Unit)? = null
+    var onItemTrashClick: ((String) -> Unit)? = null
+
 
 
 
@@ -49,6 +53,13 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
                     .inflate(R.layout.item_detail_plus_view_holder, parent, false)
                 return PlusViewHolder(view)
             }
+
+            TYPE_TRASH -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_detail_trash_view_holder, parent, false)
+                return TrashViewHolder(view)
+            }
+
             else -> throw IllegalArgumentException("Invalid view type")
 
         }
@@ -63,6 +74,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             is HeaderViewHolder -> viewHolder.bind(element as ItemDetailHeaderViewModel)
             is SwitchViewHolder -> viewHolder.bind(element as ItemDetailSwitchViewModel)
             is PlusViewHolder ->   viewHolder.bind(element as ItemDetailPlusViewModel)
+            is TrashViewHolder ->   viewHolder.bind(element as ItemDetailTrashViewModel)
             else -> throw IllegalArgumentException()
         }
     }
@@ -73,6 +85,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             is ItemDetailHeaderViewModel -> TYPE_HEADER
             is ItemDetailSwitchViewModel -> TYPE_SWITCH
             is ItemDetailPlusViewModel -> TYPE_PLUS
+            is ItemDetailTrashViewModel -> TYPE_TRASH
+
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
@@ -89,7 +103,6 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     inner class ItemViewHolder(
         override val containerView: View
     ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-
 
         init {
             containerView.setOnSafeClickListener {
@@ -115,14 +128,22 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
 
     inner class SwitchViewHolder(itemView: View) : ItemDetailBaseViewHolder<ItemDetailSwitchViewModel>(itemView) {
 
+        private lateinit var viewModel: ItemDetailSwitchViewModel
+
+
         init {
 
             itemView.btnInfo.setOnSafeClickListener {
                 onInfoClick?.invoke("Oninfo")
             }
+
+            itemView.btnTrash.setOnSafeClickListener {
+                onTrashClick?.invoke(viewModel.id)
+            }
         }
 
         override fun bind(viewModel: ItemDetailSwitchViewModel) {
+            this.viewModel = viewModel
             itemView.textView.text = viewModel.name
         }
     }
@@ -139,6 +160,21 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         }
 
         override fun bind(viewModel: ItemDetailPlusViewModel) {}
+    }
+
+    inner class TrashViewHolder(
+        override val containerView: View
+
+    ) : ItemDetailBaseViewHolder<ItemDetailTrashViewModel>(containerView), LayoutContainer {
+
+        init {
+            containerView.imageButton.setOnSafeClickListener {
+                onItemTrashClick?.invoke("Trash")
+            }
+        }
+
+        override fun bind(viewModel: ItemDetailTrashViewModel) {
+        }
     }
 
 }

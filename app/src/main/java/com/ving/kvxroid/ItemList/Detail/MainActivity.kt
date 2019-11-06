@@ -13,6 +13,7 @@ import com.ving.kvxroid.Redux.AppState
 import com.ving.kvxroid.Redux.CounterActionIncrease
 import com.ving.kvxroid.Redux.ItemActionLoad
 import com.ving.kvxroid.Redux.mainStore
+import com.ving.kvxroid.Services.FirestoreService
 import org.rekotlin.StoreSubscriber
 
 
@@ -68,11 +69,13 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
     }
 
-    private fun handleItemClick() {
+    private fun handleItemClick(id: String) {
         println("Hello")
         mainStore.dispatch(CounterActionIncrease())
 
         val intent = Intent(this, ItemDetailActivity::class.java)
+        intent.putExtra("ITEM_ID", id)
+
         startActivity(intent)
     }
 

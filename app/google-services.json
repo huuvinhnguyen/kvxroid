@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "442582091227",
+    "firebase_url": "https://kvxa-e1524.firebaseio.com",
+    "project_id": "kvxa-e1524",
+    "storage_bucket": "kvxa-e1524.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442582091227:android:316033855fcafc148413fe",
+        "android_client_info": {
+          "package_name": "com.ving.kvxroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442582091227-6uaom7lqohj9blhsho2t73sihqcpre5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBb-i29v69HvSyIa8d2OeWhBy-gJl1OCv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442582091227-6uaom7lqohj9blhsho2t73sihqcpre5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
