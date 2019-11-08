@@ -6,14 +6,12 @@ import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailActivity
-import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.AppState
 import com.ving.kvxroid.Redux.CounterActionIncrease
-import com.ving.kvxroid.Redux.ItemActionLoad
+import com.ving.kvxroid.Redux.ItemListAction
 import com.ving.kvxroid.Redux.mainStore
-import com.ving.kvxroid.Services.FirestoreService
 import org.rekotlin.StoreSubscriber
 
 
@@ -41,7 +39,7 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
 //        mainStore.dispatch(CounterActionIncrease())
 
-        mainStore.dispatch(ItemActionLoad())
+        mainStore.dispatch(ItemListAction())
 
         // subscribe to state changes
         mainStore.subscribe(this)

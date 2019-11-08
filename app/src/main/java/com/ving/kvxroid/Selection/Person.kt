@@ -58,6 +58,7 @@ open class ItemRealm() : RealmObject() {
     @PrimaryKey
     var id: String? = null
     var name: String? = null
+    var imageUrl: String? = null
 
 }
 

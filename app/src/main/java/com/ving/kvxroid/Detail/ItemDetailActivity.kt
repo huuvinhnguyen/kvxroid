@@ -1,20 +1,13 @@
 package com.ving.kvxroid.Detail
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ving.kvxroid.R
 import kotlinx.android.synthetic.main.activity_item_detail.*
-import org.eclipse.paho.android.service.MqttAndroidClient
-import org.eclipse.paho.client.mqttv3.*
-import android.R.attr.password
 import android.content.Intent
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Redux.*
 import com.ving.kvxroid.TopicDetailActivity.TopicDetailActivity
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.rekotlin.StoreSubscriber
 
 
@@ -42,7 +35,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         setContentView(com.ving.kvxroid.R.layout.activity_item_detail)
         initView()
 
-        mainStore.dispatch(TopicActionLoad())
+        mainStore.dispatch(TopicListLoadAction())
 
         // subscribe to state changes
         mainStore.subscribe(this)
@@ -79,7 +72,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         val intent = Intent(this, ItemTopicActivity::class.java)
         startActivity(intent)
 
-        mainStore.dispatch(TopicActionConnect())
+        mainStore.dispatch(TopicListConnectAction())
     }
 
     private fun handleTrashClick(information: String) {

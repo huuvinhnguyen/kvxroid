@@ -5,5 +5,6 @@ import com.ving.kvxroid.extensions.empty
 
 data class ItemViewModel(
     var id: String,
-    val name: String = String.empty()
+    val name: String = String.empty(),
+    val imageUrl: String = ""
 ) : AnyObject

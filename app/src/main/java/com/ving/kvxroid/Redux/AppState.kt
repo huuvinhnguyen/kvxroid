@@ -2,6 +2,7 @@ package com.ving.kvxroid.Redux
 
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.ItemList.Detail.ItemNameViewModel
+import com.ving.kvxroid.ItemList.Detail.ItemViewModel
 import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.StateType
 
@@ -12,6 +13,7 @@ data class AppState(
     var connectionList: List<Any> = emptyList(),
     val tasks: MutableMap<String, TopicConnector> = mutableMapOf<String, TopicConnector>(),
     val itemImageList: ArrayList<AnyObject> = arrayListOf(),
-    val itemNameViewModel: ItemNameViewModel? = null
+    val itemNameViewModel: ItemNameViewModel? = null,
+    val itemViewModel: ItemViewModel? = null
 
 ): StateType

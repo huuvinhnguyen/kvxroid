@@ -1,20 +1,13 @@
 package com.ving.kvxroid.Redux
 
 import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.Detail.ItemDetailHeaderViewModel
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
 import com.ving.kvxroid.Detail.ItemDetailTrashViewModel
-import com.ving.kvxroid.ItemList.Detail.ItemImageViewModel
 import com.ving.kvxroid.ItemList.Detail.ItemViewModel
 import com.ving.kvxroid.Selection.*
-import com.ving.kvxroid.Services.FirestoreService
 import com.ving.kvxroid.Services.RealmInteractor
 import com.ving.kvxroid.Services.TopicConnector
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.rekotlin.Action
 import kotlin.collections.ArrayList
 
@@ -30,7 +23,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
         is CounterActionDecrease -> {
             state = state.copy(counter = state.counter - 1)
         }
-        is TopicActionLoad -> {
+        is TopicListLoadAction -> {
 
             val items: ArrayList<AnyObject> = ArrayList()
 //            items.add(ItemDetailHeaderViewModel("Header abc"))
@@ -62,11 +55,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
         }
 
         is ConnectionActionLoad -> {
-//            val items: ArrayList<AnyObject> = ArrayList()
 
-//            items.add(SelectionTypeViewModel("Type here"))
-//            items.add(SelectionServerViewModel("Server here"))
-//            items.add(SelectionServerViewModel("Server here aaaa"))
             val connectionList = RealmInteractor().getConnections()
             val items = connectionList.map { connectionRealm ->
                 SelectionServerViewModel("sffffff")
@@ -77,7 +66,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
         }
 
 
-        is TopicActionConnect -> {
+        is TopicListConnectAction -> {
             val connector = TopicConnector()
             state.tasks.put("abc", connector)
 
@@ -85,7 +74,12 @@ fun counterReducer(action: Action, state: AppState?): AppState {
             connector.receiveMessages()
         }
 
-        is ItemActionLoad -> {
+        is ItemLoadAction -> {
+            state = state.copy(itemViewModel = action.itemViewModel)
+
+        }
+
+        is ItemListAction -> {
             val items: ArrayList<AnyObject> = ArrayList()
 
             val interactor = RealmInteractor()

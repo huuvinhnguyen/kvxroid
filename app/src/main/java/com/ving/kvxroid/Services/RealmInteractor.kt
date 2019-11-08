@@ -7,6 +7,7 @@ import com.ving.kvxroid.Selection.ItemRealm
 import com.ving.kvxroid.Selection.ServerRealm
 import com.ving.kvxroid.Selection.TopicRealm
 import io.realm.Realm
+import io.realm.kotlin.where
 import java.util.*
 
 class RealmInteractor {
@@ -40,14 +41,7 @@ class RealmInteractor {
 //            val server = realm.createObject(Dog::class.java, "fsdfdsfs".toString())
 //        }
 //
-//        realm.executeTransaction { realm ->
-//            // Add a person
-//            var uniqueID = UUID.randomUUID().toString()
-//            val server = realm.createObject(ServerRealm::class.java, uniqueID)
-//            server.name =  ""
-//
-//            server.port = "123"
-//        }
+
 
         realm.executeTransaction { realm ->
             // Add a person
@@ -143,6 +137,13 @@ class RealmInteractor {
 
     }
 
+    fun getTopic(id: String, finished: (String) -> Unit) {
+
+    }
+
+    fun updateTopic(id: String, finished: (String) -> Unit) {}
+
+
     fun getItems(): List<ItemRealm> {
 
         val context = BaseApplication.INSTANCE.applicationContext
@@ -171,6 +172,25 @@ class RealmInteractor {
             realm.close()
         },
             { realm.close() })
+    }
+
+    fun updateItem(item: ItemRealm, finished: (String) -> Unit) {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        val itemRef = realm.where<ItemRealm>().equalTo("id", item.id).findFirst()!!
+
+        realm.executeTransaction { _ ->
+            itemRef.name = item.name
+            itemRef.imageUrl = item.imageUrl
+
+        }
+
+        finished(itemRef.id ?: "")
     }
 
     fun deleteItem(id: String, finished: (String) -> Unit) {

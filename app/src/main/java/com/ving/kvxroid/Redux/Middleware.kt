@@ -36,7 +36,7 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
                 topic.name = "Item 1"
 
                 realmInteractor.addTopic(topic) {
-                    dispatch(TopicActionLoad())
+                    dispatch(TopicListLoadAction())
 
                 }
             }
@@ -46,11 +46,11 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
                 val realmInteractor = RealmInteractor()
 
                 realmInteractor.deleteTopic(action.id) {
-                    dispatch(TopicActionLoad())
+                    dispatch(TopicListLoadAction())
                 }
             }
 
-            (action as? TopicActionConnect)?.let {
+            (action as? TopicListConnectAction)?.let {
                 //                it.value += " Second Middleware"
                 next(action)
 
@@ -59,7 +59,7 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
 
                 val task = appState?.tasks?.get("abc")
                 task?.listener = {
-                    dispatch(TopicActionUpdate())
+                    dispatch(TopicListUpdateAction())
 
                 }
             } ?: next(action)
@@ -79,7 +79,7 @@ internal val itemMiddleware: Middleware<AppState> = { dispatch, getState ->
 
                 item.name = action.name
                 realmInteractor.addItem(item) {
-                    dispatch(ItemActionLoad())
+                    dispatch(ItemListAction())
 
                 }
             }
@@ -89,7 +89,18 @@ internal val itemMiddleware: Middleware<AppState> = { dispatch, getState ->
                 val realmInteractor = RealmInteractor()
 
                 realmInteractor.deleteItem(action.id) {
-                    dispatch(ItemActionLoad())
+                    dispatch(ItemListAction())
+
+                }
+
+            }
+
+            (action as? ItemUpdateAction)?.let {
+
+                val realmInteractor = RealmInteractor()
+
+                realmInteractor.updateItem(ItemRealm()) {
+                    dispatch(ItemListAction())
 
                 }
 
