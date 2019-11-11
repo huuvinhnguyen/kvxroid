@@ -1,6 +1,7 @@
 package com.ving.kvxroid.Redux
 
 import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Detail.ItemDetailChartViewModel
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
 import com.ving.kvxroid.Detail.ItemDetailTrashViewModel
@@ -38,6 +39,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
                 items.add(viewModel)
             }
 
+            items.add(ItemDetailChartViewModel())
             items.add(ItemDetailPlusViewModel())
             items.add(ItemDetailTrashViewModel())
 
