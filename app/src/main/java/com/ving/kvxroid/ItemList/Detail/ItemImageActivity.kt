@@ -41,8 +41,10 @@ class ItemImageActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         mainStore.dispatch(action)
 
 
-        val action2 = ItemNameActionLoad()
-        action2.itemNameViewModel = ItemNameViewModel("avc", viewModel.imageUrl)
+        val action2 = ItemLoadAction()
+        val itemRef = ItemViewModel("1", "hello helli", viewModel.imageUrl)
+
+        action2.itemViewModel = itemRef
         mainStore.dispatch(action2)
 
     }
