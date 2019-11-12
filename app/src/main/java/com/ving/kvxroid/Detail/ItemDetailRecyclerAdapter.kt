@@ -29,7 +29,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
         private const val TYPE_PLUS   = 2
         private const val TYPE_TRASH  = 3
         private const val TYPE_CHART  = 4
-        private const val TYPE_FOOTER = 5
+        private const val TYPE_CHART_LINE = 5
+        private const val TYPE_FOOTER = 6
 
     }
 
@@ -71,9 +72,11 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             }
 
             TYPE_CHART -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_detail_chart_view_holder, parent, false)
-                return ChartViewHolder(view)
+                ChartViewHolder.renderView(parent)
+            }
+
+            TYPE_CHART_LINE -> {
+                ChartLineViewHolder.renderView(parent)
             }
 
             else -> throw IllegalArgumentException("Invalid view type")
@@ -92,6 +95,7 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             is PlusViewHolder ->   viewHolder.bind(element as ItemDetailPlusViewModel)
             is TrashViewHolder ->   viewHolder.bind(element as ItemDetailTrashViewModel)
             is ChartViewHolder ->   viewHolder.bind(element as ItemDetailChartViewModel)
+            is ChartLineViewHolder -> viewHolder.bind(element as ItemLineChartViewModel)
 
             else -> throw IllegalArgumentException()
         }
@@ -105,6 +109,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
             is ItemDetailPlusViewModel -> TYPE_PLUS
             is ItemDetailTrashViewModel -> TYPE_TRASH
             is ItemDetailChartViewModel -> TYPE_CHART
+            is ItemLineChartViewModel -> TYPE_CHART_LINE
+
 
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
