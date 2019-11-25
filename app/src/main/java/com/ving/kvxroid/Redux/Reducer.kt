@@ -1,9 +1,7 @@
 package com.ving.kvxroid.Redux
 
 import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
-import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
-import com.ving.kvxroid.Detail.ItemDetailTrashViewModel
+import com.ving.kvxroid.Detail.*
 import com.ving.kvxroid.ItemList.Detail.ItemViewModel
 import com.ving.kvxroid.Selection.*
 import com.ving.kvxroid.Services.RealmInteractor
@@ -37,6 +35,9 @@ fun counterReducer(action: Action, state: AppState?): AppState {
                 val viewModel = ItemDetailSwitchViewModel(it.id ?:"", it.name ?:"")
                 items.add(viewModel)
             }
+
+            items.add(ItemDetailChartViewModel())
+            items.add(ItemLineChartViewModel())
 
             items.add(ItemDetailPlusViewModel())
             items.add(ItemDetailTrashViewModel())
