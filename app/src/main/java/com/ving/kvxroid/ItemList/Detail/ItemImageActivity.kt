@@ -4,17 +4,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
+import com.ving.kvxroid.Models.Image
+import com.ving.kvxroid.Models.Item
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.*
 import kotlinx.android.synthetic.main.activity_item_image.*
-import kotlinx.android.synthetic.main.activity_main.*
 import org.rekotlin.StoreSubscriber
 
-class ItemImageActivity : AppCompatActivity(), StoreSubscriber<AppState> {
+class ItemImageActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
-    override fun newState(state: AppState) {
-        val itemListAdapter = ItemImageAdapter(state.itemImageList).apply {
+    override fun newState(state: ItemState) {
+        var items = state.images.map {
+            it as Image
+            ItemImageAdapter.ViewModel(it.id,it.name, it.imageUrl, it.isSelected)
+        } as ArrayList<AnyObject>
+        val itemListAdapter = ItemImageAdapter(items).apply {
             onItemClick = ::handleItemClick
         }
         recyclerView.adapter = itemListAdapter
@@ -25,8 +29,12 @@ class ItemImageActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_image)
         initView()
-        mainStore.subscribe(this)
-        mainStore.dispatch(ItemImageActionLoad())
+        // subscribe to state changes
+        mainStore.subscribe(this){
+            it.select { it.itemState }
+//                .skipRepeats()
+        }
+        mainStore.dispatch(ItemState.LoadImagesAction())
     }
 
     private fun initView() {
@@ -35,14 +43,15 @@ class ItemImageActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
     }
 
-    private fun handleItemClick(viewModel: ItemImageViewModel) {
-        val action = ItemImageActionSelect()
+    private fun handleItemClick(viewModel: ItemImageAdapter.ViewModel) {
+//        val action = ItemImageActionSelect()
+        val action = ItemState.SelectImageAction()
         action.id = viewModel.id
         mainStore.dispatch(action)
 
 
         val action2 = ItemLoadAction()
-        val itemRef = ItemViewModel("1", "hello helli", viewModel.imageUrl)
+        val itemRef = Item("1", "hello helli", viewModel.imageUrl)
 
         action2.itemViewModel = itemRef
         mainStore.dispatch(action2)

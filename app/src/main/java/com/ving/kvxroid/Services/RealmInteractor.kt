@@ -143,6 +143,10 @@ class RealmInteractor {
 
     fun updateTopic(id: String, finished: (String) -> Unit) {}
 
+    fun getItem(id: String, finished: (ItemRealm) -> Unit) {
+
+    }
+
 
     fun getItems(): List<ItemRealm> {
 

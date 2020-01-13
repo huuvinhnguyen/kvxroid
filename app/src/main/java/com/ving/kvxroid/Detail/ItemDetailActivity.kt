@@ -9,6 +9,9 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Redux.*
 import com.ving.kvxroid.TopicDetailActivity.TopicDetailActivity
 import org.rekotlin.StoreSubscriber
+import org.rekotlinrouter.Route
+import org.rekotlinrouter.SetRouteAction
+import org.rekotlinrouter.SetRouteSpecificData
 
 
 class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
@@ -17,6 +20,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
         val itemDetailAdapter = ItemDetailRecyclerAdapter(state.itemDetailList as ArrayList<AnyObject>).apply {
             onItemClick = ::handleItemClick
+            onItemEditClick = ::handleEditClick
             onItemPlusClick = ::handlePlusClick
             onItemTrashClick = ::handleTrashClick
             onInfoClick = ::handleInfoClick
@@ -66,6 +70,23 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
     }
 
+    private fun handleEditClick(information: String) {
+
+        println("Edit Button")
+
+        val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute, itemNameActivityRoute)
+
+        intent?.getStringExtra("ITEM_ID")?.also {
+            val actionData =  SetRouteSpecificData(route = routes as Route, data = it)
+            mainStore.dispatch(actionData)
+        }
+
+
+        val action = SetRouteAction(route = routes)
+        mainStore.dispatch(action)
+
+    }
+
     private fun handlePlusClick(information: String) {
 
         println("Plus Button")
@@ -78,12 +99,17 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
     private fun handleTrashClick(information: String) {
 
         intent?.getStringExtra("ITEM_ID")?.also {
-            val action = ItemActionRemove()
+            val action = ItemState.ItemRemoveAction()
             action.id = it
 
             mainStore.dispatch(action)
 
         }
+
+        val routes = arrayListOf(itemActivityRoute)
+        val routeAction = SetRouteAction(route = routes)
+        mainStore.dispatch(routeAction)
+
         finish()
 
     }
@@ -109,6 +135,14 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
     override fun onDestroy() {
         super.onDestroy()
         mainStore.unsubscribe(this)
+    }
+
+    override fun onBackPressed() {
+
+        val routes = arrayListOf(itemActivityRoute)
+        val action = SetRouteAction(route = routes)
+        mainStore.dispatch(action)
+        super.onBackPressed()
     }
 
 //    fun connect(applicationContext : Context) {

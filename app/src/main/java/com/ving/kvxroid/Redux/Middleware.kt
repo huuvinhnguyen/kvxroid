@@ -1,7 +1,7 @@
 package com.ving.kvxroid.Redux
 
 import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.ItemList.Detail.ItemImageViewModel
+import com.ving.kvxroid.Models.Image
 import com.ving.kvxroid.Selection.ItemRealm
 import com.ving.kvxroid.Selection.TopicRealm
 import com.ving.kvxroid.Services.FirestoreService
@@ -70,30 +70,30 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
 internal val itemMiddleware: Middleware<AppState> = { dispatch, getState ->
     { next ->
         { action ->
-            (action as? ItemActionAdd)?.let {
-                //                it.value += " Second Middleware"
-                next(action)
-                val realmInteractor = RealmInteractor()
-                var item = ItemRealm()
-                item.id = UUID.randomUUID().toString()
+//            (action as? ItemActionAdd)?.let {
+//                //                it.value += " Second Middleware"
+//                next(action)
+//                val realmInteractor = RealmInteractor()
+//                var item = ItemRealm()
+//                item.id = UUID.randomUUID().toString()
+//
+//                item.name = action.name
+//                realmInteractor.addItem(item) {
+//                    dispatch(ItemListAction())
+//
+//                }
+//            }
 
-                item.name = action.name
-                realmInteractor.addItem(item) {
-                    dispatch(ItemListAction())
-
-                }
-            }
-
-            (action as? ItemActionRemove)?.let {
-
-                val realmInteractor = RealmInteractor()
-
-                realmInteractor.deleteItem(action.id) {
-                    dispatch(ItemListAction())
-
-                }
-
-            }
+//            (action as? ItemActionRemove)?.let {
+//
+//                val realmInteractor = RealmInteractor()
+//
+//                realmInteractor.deleteItem(action.id) {
+//                    dispatch(ItemListAction())
+//
+//                }
+//
+//            }
 
             (action as? ItemUpdateAction)?.let {
 
@@ -117,7 +117,7 @@ internal val imagesMiddleware: Middleware<AppState> = { dispatch, getState ->
                 val service = FirestoreService()
                 service.getItems { items ->
                     val list = items.map {
-                        ItemImageViewModel(
+                        Image(
                             it.id,
                             it.name,
                             it.imageUrl,
@@ -132,39 +132,7 @@ internal val imagesMiddleware: Middleware<AppState> = { dispatch, getState ->
                 }
             }
 
-            (action as? ItemImageActionSelect)?.let {
-                //                next(action)
-                val itemImageList = getState()?.itemImageList ?: arrayListOf()
 
-                val newItems = itemImageList.map {
-                    if (it is ItemImageViewModel) {
-                        if (it.id == action.id) {
-                            ItemImageViewModel(
-                                it.id,
-                                it.name,
-                                it.imageUrl,
-                                isSelected = true
-                            )
-                        } else {
-                            ItemImageViewModel(
-                                it.id,
-                                it.name,
-                                it.imageUrl,
-                                isSelected = false
-                            )
-                        }
-
-                    } else {
-                        null
-                    }
-                } as? ArrayList<AnyObject> ?: arrayListOf()
-
-                val action = ItemImageActionFetch()
-                action.list.addAll(newItems ?: ArrayList())
-                dispatch(action)
-
-
-            }
 
                 ?: next(action)
         }

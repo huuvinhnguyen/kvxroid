@@ -1,8 +1,8 @@
-package com.ving.kvxroid.ItemList.Detail
+package com.ving.kvxroid.Models
 
 import com.ving.kvxroid.AnyObject
 
-data class ItemImageViewModel (
+data class Image (
     val id: String,
     val name: String,
     val imageUrl: String,

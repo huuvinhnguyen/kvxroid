@@ -10,12 +10,13 @@ import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.synthetic.main.activity_item_name.*
 import kotlinx.android.synthetic.main.item_image_view_holder.view.*
 import org.rekotlin.StoreSubscriber
+import org.rekotlinrouter.Route
+import org.rekotlinrouter.SetRouteAction
 
-class ItemNameActivity : AppCompatActivity(), StoreSubscriber<AppState> {
+class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
-
-    override fun newState(state: AppState) {
-        state.itemViewModel?.imageUrl.also {
+    override fun newState(state: ItemState) {
+        state.item?.imageUrl.also {
 
             Glide.with(this)  //2
                 .load(it) //3
@@ -27,9 +28,15 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
         }
 
-        etName.hint = state.itemViewModel?.name ?: "Name"
+        etName.hint = state.item?.name ?: "Name"
 
     }
+
+    enum class Mode {
+        edit, addnew
+    }
+
+    lateinit var mode: Mode
 
     private lateinit var viewModel: ItemNameViewModel
 
@@ -43,22 +50,54 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         }
 
         btnSave.setOnSafeClickListener {
-            val action = ItemActionAdd()
+            val action = ItemState.ItemAddAction()
             action.name = etName.text.toString()
             mainStore.dispatch(action)
+
+
+            val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute)
+            val routeAction = SetRouteAction(route = routes)
+            mainStore.dispatch(routeAction)
             finish()
+        }
+
+        imageView.setOnSafeClickListener {
+            val intent = Intent(this, ItemImageActivity::class.java)
+            startActivity(intent)
         }
 
     }
 
     private fun initView() {
 
-        mainStore.subscribe(this)
+        mainStore.subscribe(this){
+            it.select { it.itemState }
+                .skipRepeats()
+        }
+
 //        val action = ItemNameActionLoad()
 //        action.itemNameViewModel = ItemNameViewModel("avc", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
 //        mainStore.dispatch(action)
-        mainStore.dispatch(ItemLoadAction())
+        mainStore.dispatch(ItemState.ItemLoadAction())
 
+
+    }
+
+    private fun updateItem() {
+
+    }
+
+    private fun addItem() {
+
+        val action = ItemState.ItemAddAction()
+        action.name = etName.text.toString()
+        mainStore.dispatch(action)
+
+
+        val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute)
+        val routeAction = SetRouteAction(route = routes)
+        mainStore.dispatch(routeAction)
+        finish()
 
     }
 
@@ -67,4 +106,16 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         mainStore.unsubscribe(this)
 
     }
+
+    override fun onBackPressed() {
+        val currentRoute: Route = mainStore.state.navigationState.route.clone() as Route
+        if(currentRoute.last() == itemNameActivityRoute) {
+            currentRoute.remove(itemNameActivityRoute)
+        }
+        val action = SetRouteAction(route = currentRoute)
+        mainStore.dispatch(action)
+        super.onBackPressed()
+    }
+
+
 }

@@ -18,7 +18,7 @@ class ItemImageAdapter(
 
 
 
-    var onItemClick: ((ItemImageViewModel) -> Unit)? = null
+    var onItemClick: ((ViewModel) -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
 
 
@@ -30,7 +30,7 @@ class ItemImageAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(viewHolder:  RecyclerView.ViewHolder, position: Int) {
-        val viewModel = items[position] as ItemImageViewModel
+        val viewModel = items[position] as ViewModel
         val view = viewHolder as ItemViewHolder
         view.bind(viewModel)
 
@@ -46,7 +46,7 @@ class ItemImageAdapter(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
-        private lateinit var viewModel: ItemImageViewModel
+        private lateinit var viewModel: ViewModel
 
         init {
 
@@ -56,7 +56,7 @@ class ItemImageAdapter(
 
         }
 
-        fun bind(viewModel: ItemImageViewModel) {
+        fun bind(viewModel: ViewModel) {
 
             this.viewModel = viewModel
             itemView.checkBox.isChecked = viewModel.isSelected
@@ -70,5 +70,12 @@ class ItemImageAdapter(
                 .into(itemView.imageView) //8
         }
     }
+
+    data class ViewModel (
+        val id: String,
+        val name: String,
+        val imageUrl: String,
+        var isSelected: Boolean
+    ) : AnyObject
 }
 

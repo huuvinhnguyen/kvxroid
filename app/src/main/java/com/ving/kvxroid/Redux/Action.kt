@@ -2,7 +2,7 @@ package com.ving.kvxroid.Redux
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemTopicViewModel
 import com.ving.kvxroid.ItemList.Detail.ItemNameViewModel
-import com.ving.kvxroid.ItemList.Detail.ItemViewModel
+import com.ving.kvxroid.Models.Item
 import org.rekotlin.Action
 
 data class CounterActionIncrease(val unit: Unit = Unit): Action
@@ -21,29 +21,27 @@ data class TopicListUpdateAction(val unit: Unit = Unit): Action
 data class TopicListAddAction(val unit: Unit = Unit): Action
 data class TopicListGetItemAction(val unit: Unit = Unit): Action
 
-data class ItemActionAdd(val unit: Unit = Unit): Action {
-    var name: String? = null
-}
+//data class ItemActionAdd(val unit: Unit = Unit): Action {
+//    var name: String? = null
+//}
 
-data class ItemActionRemove(val unit: Unit = Unit): Action {
-    var id: String = ""
-}
+//data class ItemActionRemove(val unit: Unit = Unit): Action {
+//    var id: String = ""
+//}
 data class ItemNameActionLoad(val unit: Unit = Unit): Action {
     var itemNameViewModel: ItemNameViewModel? = null
 }
 data class ItemListAction(val unit: Unit = Unit): Action
 data class ItemLoadAction(val unit: Unit = Unit): Action {
-    var itemViewModel: ItemViewModel? = null
+    var itemViewModel: Item? = null
 }
 data class ItemUpdateAction(val unit: Unit = Unit): Action {
-    var itemViewModel: ItemViewModel? = null
+    var itemViewModel: Item? = null
 }
 data class ItemImageActionLoad(val unit: Unit = Unit): Action
 data class ItemImageActionFetch(val unit: Unit = Unit): Action {
     var list: ArrayList<AnyObject> = ArrayList()
 }
-data class ItemImageActionSelect(val unit: Unit = Unit): Action {
-    var id: String = ""
-}
+
 
 

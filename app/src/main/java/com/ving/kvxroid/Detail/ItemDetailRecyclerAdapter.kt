@@ -43,6 +43,8 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
     var onInfoClick: ((String) -> Unit)? = null
     var onTrashClick: ((String) -> Unit)? = null
     var onItemTrashClick: ((String) -> Unit)? = null
+    var onItemEditClick: ((String) -> Unit)? = null
+
 
 
 
@@ -138,11 +140,12 @@ class ItemDetailRecyclerAdapter(private val items: ArrayList<AnyObject>): Recycl
 
     }
 
-    inner class HeaderViewHolder(itemView: View) : ItemDetailBaseViewHolder<ItemDetailHeaderViewModel>(itemView) {
+    inner class HeaderViewHolder(
+        override val containerView: View) : ItemDetailBaseViewHolder<ItemDetailHeaderViewModel>(containerView), LayoutContainer {
 
         init {
-            itemView.setOnSafeClickListener {
-                onItemClick?.invoke()
+            containerView.imageButton.setOnSafeClickListener {
+                onItemEditClick?.invoke("Edit")
             }
         }
 

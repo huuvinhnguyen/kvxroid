@@ -2,25 +2,27 @@ package com.ving.kvxroid.Redux
 
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.*
-import com.ving.kvxroid.ItemList.Detail.ItemViewModel
+import com.ving.kvxroid.Models.Item
 import com.ving.kvxroid.Selection.*
 import com.ving.kvxroid.Services.RealmInteractor
 import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.Action
+import org.rekotlinrouter.NavigationReducer
 import kotlin.collections.ArrayList
 
 
-fun counterReducer(action: Action, state: AppState?): AppState {
+fun appReducer(action: Action, state: AppState?): AppState {
     // if no state has been provided, create the default state
     var state = state ?: AppState()
 
+    state.navigationState = NavigationReducer.reduce(action = action, oldState = state.navigationState)
+
+//    state.itemState = ItemState.reducer(action = action,state = state.itemState)
+    state.topicState = TopicState.reducer(action = action,state = state.topicState)
+
+
     when (action) {
-        is CounterActionIncrease -> {
-            state = state.copy(counter = state.counter + 1)
-        }
-        is CounterActionDecrease -> {
-            state = state.copy(counter = state.counter - 1)
-        }
+
         is TopicListLoadAction -> {
 
             val items: ArrayList<AnyObject> = ArrayList()
@@ -35,6 +37,9 @@ fun counterReducer(action: Action, state: AppState?): AppState {
                 val viewModel = ItemDetailSwitchViewModel(it.id ?:"", it.name ?:"")
                 items.add(viewModel)
             }
+
+            items.add(ItemDetailHeaderViewModel("Header abc"))
+
 
             items.add(ItemDetailChartViewModel())
             items.add(ItemLineChartViewModel())
@@ -86,7 +91,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
             val interactor = RealmInteractor()
 
             val list = interactor.getItems().map { itemRealm ->
-                ItemViewModel(itemRealm.id ?: "", itemRealm.name ?: "")
+                Item(itemRealm.id ?: "", itemRealm.name ?: "")
             }
 
             items.addAll(list)
@@ -97,7 +102,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
         }
 
         is ItemImageActionFetch -> {
-            state = state.copy(itemImageList = action.list)
+            state.itemState = state.itemState.copy(images = action.list)
         }
 
         is ItemNameActionLoad -> {
@@ -107,7 +112,7 @@ fun counterReducer(action: Action, state: AppState?): AppState {
     }
 
 
-    return state
+    return state.copy(itemState = ItemState.reducer(action = action,state = state.itemState))
 }
 
 

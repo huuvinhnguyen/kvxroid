@@ -4,15 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
-import com.ving.kvxroid.Detail.ItemDetailRecyclerAdapter
-import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
+import com.ving.kvxroid.Models.Item
 import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 import kotlinx.android.synthetic.main.list_item_grid_movie.view.*
+import kotlinx.android.synthetic.main.list_item_grid_movie.view.imageView
 
 
 class ItemListGridRecyclerAdapter(
@@ -54,7 +55,7 @@ class ItemListGridRecyclerAdapter(
     override fun getItemViewType(position: Int): Int {
         val comparable = items[position]
         return when (comparable) {
-            is ItemViewModel -> TYPE_ITEM
+            is Item -> TYPE_ITEM
             is ItemDetailPlusViewModel -> TYPE_PLUS
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
@@ -66,7 +67,7 @@ class ItemListGridRecyclerAdapter(
 
          when (viewHolder) {
             is ItemViewHolder -> {
-                val viewModel = items[position] as ItemViewModel
+                val viewModel = items[position] as Item
                 viewHolder.bindView(viewModel)
             }
         }
@@ -81,11 +82,19 @@ class ItemListGridRecyclerAdapter(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
-        private lateinit var viewModel: ItemViewModel
+        private lateinit var viewModel: Item
 
-        fun bindView(viewModel: ItemViewModel) {
+        fun bindView(viewModel: Item) {
             this.viewModel = viewModel
             itemView.textTitle.text = viewModel.name
+
+            Glide.with(itemView)  //2
+                .load(viewModel.imageUrl) //3
+                .centerCrop() //4
+                .placeholder(R.drawable.ic_image_place_holder) //5
+                .error(R.drawable.ic_broken_image) //6
+                .fallback(R.drawable.ic_no_image) //7
+                .into(itemView.imageView) //8
 
         }
 
