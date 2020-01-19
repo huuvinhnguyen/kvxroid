@@ -16,12 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ItemList.Detail.ItemImageActivity"></activity>
+        <activity android:name=".Topic.TopicTypeActivity"></activity>
+        <activity android:name=".Topic.AddServerActivity" />
+        <activity android:name=".ItemList.Detail.ItemImageActivity" />
         <activity android:name=".ItemList.Detail.ItemNameActivity" />
         <activity android:name=".TopicDetailActivity.TopicDetailActivity" />
         <activity android:name=".Selection.SelectionActivity" />
         <activity
-            android:name=".Detail.ItemTopicActivity"
+            android:name=".Topic.AddTopicActivity"
             android:windowSoftInputMode="adjustUnspecified" />
         <activity android:name=".Detail.ItemDetailActivity" />
         <activity android:name=".ItemList.Detail.MainActivity">

@@ -48,7 +48,7 @@ class SelectionAdapter(private val items: ArrayList<AnyObject>) :
                     .inflate(R.layout.selection_server_view_holder, parent, false)
                 return SelectionServerViewHolder(view)
             }
-            else -> throw IllegalArgumentException("Invalid view type")
+            else -> throw IllegalArgumentException("Invalid view kind")
 
         }
     }
@@ -70,7 +70,7 @@ class SelectionAdapter(private val items: ArrayList<AnyObject>) :
         return when (comparable) {
             is SelectionTypeViewModel -> TYPE_TYPE
             is SelectionServerViewModel -> TYPE_SERVER
-            else -> throw IllegalArgumentException("Invalid type of data " + position)
+            else -> throw IllegalArgumentException("Invalid kind of data " + position)
         }
     }
 

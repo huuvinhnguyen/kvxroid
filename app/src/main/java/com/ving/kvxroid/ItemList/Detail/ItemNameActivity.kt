@@ -6,9 +6,9 @@ import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.*
+import com.ving.kvxroid.extensions.onChange
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.synthetic.main.activity_item_name.*
-import kotlinx.android.synthetic.main.item_image_view_holder.view.*
 import org.rekotlin.StoreSubscriber
 import org.rekotlinrouter.Route
 import org.rekotlinrouter.SetRouteAction
@@ -69,6 +69,10 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
     }
 
     private fun initView() {
+
+        etName.onChange {
+            print(it.toString())
+        }
 
         mainStore.subscribe(this){
             it.select { it.itemState }
