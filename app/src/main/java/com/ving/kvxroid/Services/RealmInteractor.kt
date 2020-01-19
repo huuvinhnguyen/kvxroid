@@ -21,7 +21,7 @@ class RealmInteractor {
 
         Realm.init(context)
 
-//        Realm.init(this@ItemTopicActivity)
+//        Realm.init(this@AddTopicActivity)
 
         val realm = Realm.getDefaultInstance()
 

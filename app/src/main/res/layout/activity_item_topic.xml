@@ -9,106 +9,91 @@
     <!--            -->
     <!--        </android.support.design.widget.TextInputLayout>-->
 
-    <EditText
-        android:id="@+id/etServer"
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Server"
-        android:imeActionId="7"
-        android:imeActionLabel="Sing"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="2"
-        android:singleLine="true" />
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerView"/>
 
-    <EditText
-        android:id="@+id/etUser"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="User"
-        android:imeActionId="6"
-        android:imeActionLabel="Sing"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true" />
+<!--    <EditText-->
+<!--        android:id="@+id/etServer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Server"-->
+<!--        android:imeActionId="7"-->
+<!--        android:imeActionLabel="Sing"-->
+<!--        android:imeOptions="actionUnspecified"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:maxLines="2"-->
+<!--        android:singleLine="true" />-->
 
-    <EditText
-        android:id="@+id/etPass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Pass"
-        android:imeActionId="6"
-        android:imeActionLabel="Sing"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true" />
+<!--    <EditText-->
+<!--        android:id="@+id/etUser"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="User"-->
+<!--        android:imeActionId="6"-->
+<!--        android:imeActionLabel="Sing"-->
+<!--        android:imeOptions="actionUnspecified"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:maxLines="1"-->
+<!--        android:singleLine="true" />-->
 
-    <EditText
-        android:id="@+id/etPort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Port"
-        android:imeActionId="6"
-        android:imeActionLabel="Sing"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true" />
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:text="Header 1 "
-        android:gravity="left"
-        />
+<!--    <EditText-->
+<!--        android:id="@+id/etPass"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Pass"-->
+<!--        android:imeActionId="6"-->
+<!--        android:imeActionLabel="Sing"-->
+<!--        android:imeOptions="actionUnspecified"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:maxLines="1"-->
+<!--        android:singleLine="true" />-->
 
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <RadioButton android:id="@+id/radio_pirates"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  1  " />
-<!--            android:onClick="onRadioButtonClicked"/>-->
-        <RadioButton android:id="@+id/radio_ninjas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  2  " />
-<!--            android:onClick="onRadioButtonClicked"/>-->
+<!--    <EditText-->
+<!--        android:id="@+id/etPort"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Port"-->
+<!--        android:imeActionId="6"-->
+<!--        android:imeActionLabel="Sing"-->
+<!--        android:imeOptions="actionUnspecified"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:maxLines="1"-->
+<!--        android:singleLine="true" />-->
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="textEmailAddress"-->
+<!--        android:text="Header 1 "-->
+<!--        android:gravity="left"-->
+<!--        />-->
 
-        <RadioButton android:id="@+id/radio_ninjas2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  3  " />
-    </RadioGroup>
+<!--    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center">-->
+<!--        <RadioButton android:id="@+id/radio_pirates"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="  1  " />-->
+<!--&lt;!&ndash;            android:onClick="onRadioButtonClicked"/>&ndash;&gt;-->
+<!--        <RadioButton android:id="@+id/radio_ninjas"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="  2  " />-->
+<!--&lt;!&ndash;            android:onClick="onRadioButtonClicked"/>&ndash;&gt;-->
+
+<!--        <RadioButton android:id="@+id/radio_ninjas2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="  3  " />-->
+<!--    </RadioGroup>-->
 
 
-    <Button
-        android:id="@+id/btnConnect"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Connect">
-
-
-    </Button>
-
-    <Button
-        android:id="@+id/btnSelect"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Select"/>
-
-    <Button
-        android:id="@+id/btnTopic"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Add Item"/>
 
 </LinearLayout>
 

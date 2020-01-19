@@ -105,7 +105,6 @@ class ItemNameActivityRoutable(val context: Context) : Routable {
     }
 
     override fun popRouteSegment(routeElementIdentifier: RouteElementIdentifier, animated: Boolean, completionHandler: RoutingCompletionHandler) {
-        TODO("not implemented")
     }
 
     override fun changeRouteSegment(from: RouteElementIdentifier, to: RouteElementIdentifier, animated: Boolean, completionHandler: RoutingCompletionHandler): Routable {

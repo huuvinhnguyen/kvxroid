@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.activity_item_detail.*
 import android.content.Intent
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Redux.*
+import com.ving.kvxroid.Topic.AddTopicActivity
 import com.ving.kvxroid.TopicDetailActivity.TopicDetailActivity
 import org.rekotlin.StoreSubscriber
 import org.rekotlinrouter.Route
@@ -14,11 +15,20 @@ import org.rekotlinrouter.SetRouteAction
 import org.rekotlinrouter.SetRouteSpecificData
 
 
-class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
+class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
-    override fun newState(state: AppState) {
+    override fun newState(state: TopicState) {
 
-        val itemDetailAdapter = ItemDetailRecyclerAdapter(state.itemDetailList as ArrayList<AnyObject>).apply {
+        val items: ArrayList<AnyObject> = ArrayList()
+        items.add(ItemDetailHeaderViewModel("header 13"))
+
+        val list = state.topics.map {
+            ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
+        }
+
+        items.addAll(list)
+
+        val itemDetailAdapter = ItemDetailAdapter(items as ArrayList<AnyObject>).apply {
             onItemClick = ::handleItemClick
             onItemEditClick = ::handleEditClick
             onItemPlusClick = ::handlePlusClick
@@ -26,6 +36,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
             onInfoClick = ::handleInfoClick
             onTrashClick = ::handleTopicRemoveClick
         }
+
         recyclerView.adapter = itemDetailAdapter
 
         itemDetailAdapter.setItems()
@@ -39,10 +50,12 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
         setContentView(com.ving.kvxroid.R.layout.activity_item_detail)
         initView()
 
-        mainStore.dispatch(TopicListLoadAction())
+        mainStore.dispatch(TopicState.LoadTopicsAction())
 
-        // subscribe to state changes
-        mainStore.subscribe(this)
+        mainStore.subscribe(this){
+            it.select { it.topicState }
+                .skipRepeats()
+        }
 
 //        connect(this@ItemDetailActivity)
 //        disconnectClient()
@@ -58,11 +71,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 //    }
 
     private fun initView() {
-//        recyclerView.layoutManager = GridLayoutManager(this@ItemDetailActivity,2)
         recyclerView.layoutManager =  LinearLayoutManager(this@ItemDetailActivity)
-
-
-
     }
 
     private fun handleItemClick() {
@@ -90,7 +99,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
     private fun handlePlusClick(information: String) {
 
         println("Plus Button")
-        val intent = Intent(this, ItemTopicActivity::class.java)
+        val intent = Intent(this, AddTopicActivity::class.java)
         startActivity(intent)
 
         mainStore.dispatch(TopicListConnectAction())
@@ -116,7 +125,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<AppState> {
 
     private fun handleTopicRemoveClick(information: String) {
 
-        val action = TopicActionRemove()
+        val action = TopicState.RemoveTopicAction()
         action.id = information
         mainStore.dispatch(action)
 

@@ -47,9 +47,12 @@ open class TopicRealm : RealmObject() {
     @PrimaryKey
     var id: String? = null
     var name: String? = null
-    var type: String? = null
     var value: String? = null
-    var connectionId: String? = null
+    var serverId: String? = null
+    var kind: String? = null
+    var topic: String? = null
+    var time: String? = null
+    var retain: String? = null
 
 }
 

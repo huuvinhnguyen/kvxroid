@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.list_item_grid_movie.view.*
 import kotlinx.android.synthetic.main.list_item_grid_movie.view.imageView
 
 
-class ItemListGridRecyclerAdapter(
+class ItemListAdapter(
     private val items: ArrayList<AnyObject>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -47,7 +47,7 @@ class ItemListGridRecyclerAdapter(
                     .inflate(R.layout.item_detail_plus_view_holder, parent, false)
                  PlusViewHolder(view)
             }
-            else -> throw IllegalArgumentException("Invalid view type")
+            else -> throw IllegalArgumentException("Invalid view kind")
         }
 
 
@@ -57,7 +57,7 @@ class ItemListGridRecyclerAdapter(
         return when (comparable) {
             is Item -> TYPE_ITEM
             is ItemDetailPlusViewModel -> TYPE_PLUS
-            else -> throw IllegalArgumentException("Invalid type of data " + position)
+            else -> throw IllegalArgumentException("Invalid kind of data " + position)
         }
     }
 
@@ -117,5 +117,17 @@ class ItemListGridRecyclerAdapter(
             }
         }
     }
+
+    data class ViewModel (
+        val id: String,
+        val name: String,
+        val imageUrl: String,
+        var isSelected: Boolean
+    ) : AnyObject
+
+    abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(item: T)
+    }
+
 }
 

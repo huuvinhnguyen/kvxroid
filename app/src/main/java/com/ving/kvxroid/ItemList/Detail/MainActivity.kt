@@ -18,7 +18,7 @@ import org.rekotlinrouter.SetRouteSpecificData
 class MainActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
     override fun newState(state: ItemState) {
 
-        val itemListAdapter = ItemListGridRecyclerAdapter(state.items as ArrayList<AnyObject>).apply {
+        val itemListAdapter = ItemListAdapter(state.items as ArrayList<AnyObject>).apply {
             onItemClick = ::handleItemClick
             onItemPlusClick = ::handlePlusClick
 
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 //        items.add(ItemViewModel("bye bye 1"))
 //        items.add(ItemViewModel("hello helo 2"))
 //        items.add(ItemDetailPlusViewModel())
-//        val itemListAdapter = ItemListGridRecyclerAdapter(items).apply {
+//        val itemListAdapter = ItemListAdapter(items).apply {
 //            onItemClick = ::handleItemClick
 //            onItemPlusClick = ::handlePlusClick
 //
