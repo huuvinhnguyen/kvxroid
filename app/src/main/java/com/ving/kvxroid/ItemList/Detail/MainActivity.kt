@@ -3,6 +3,9 @@ package com.ving.kvxroid.ItemList.Detail
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailActivity
@@ -16,6 +19,7 @@ import org.rekotlinrouter.SetRouteSpecificData
 
 
 class MainActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
+
     override fun newState(state: ItemState) {
 
         val itemListAdapter = ItemListAdapter(state.items as ArrayList<AnyObject>).apply {
@@ -60,22 +64,6 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
     private fun initView() {
         listRecyclerView.layoutManager = GridLayoutManager(this@MainActivity,2)
-
-//        //This will for default android divider
-//        recyclerViewMovies.addItemDecoration(GridItemDecoration(10, 2))
-
-
-//        val items: ArrayList<AnyObject> = ArrayList()
-//        items.add(ItemViewModel("bye bye 1"))
-//        items.add(ItemViewModel("hello helo 2"))
-//        items.add(ItemDetailPlusViewModel())
-//        val itemListAdapter = ItemListAdapter(items).apply {
-//            onItemClick = ::handleItemClick
-//            onItemPlusClick = ::handlePlusClick
-//
-//        }
-//
-//        listRecyclerView.adapter = itemListAdapter
 
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
+import com.ving.kvxroid.Models.Item
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.*
 import com.ving.kvxroid.extensions.onChange
@@ -16,6 +17,9 @@ import org.rekotlinrouter.SetRouteAction
 class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
     override fun newState(state: ItemState) {
+        state.item?.let {
+            item = it
+        }
         state.item?.imageUrl.also {
 
             Glide.with(this)  //2
@@ -38,20 +42,17 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
     lateinit var mode: Mode
 
-    private lateinit var viewModel: ItemNameViewModel
+    private lateinit var item: Item
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_name)
          initView()
-        btnImage.setOnSafeClickListener {
-            val intent = Intent(this, ItemImageActivity::class.java)
-            startActivity(intent)
-        }
 
         btnSave.setOnSafeClickListener {
             val action = ItemState.ItemAddAction()
-            action.name = etName.text.toString()
+            action.item = item
             mainStore.dispatch(action)
 
 
@@ -71,39 +72,21 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
     private fun initView() {
 
         etName.onChange {
-            print(it.toString())
+            item.name = it
         }
 
         mainStore.subscribe(this){
             it.select { it.itemState }
-                .skipRepeats()
         }
 
-//        val action = ItemNameActionLoad()
-//        action.itemNameViewModel = ItemNameViewModel("avc", "https://i.ibb.co/F6kzXGj/61665260-810273342690754-5099592851554041856-n.jpg")
-//        mainStore.dispatch(action)
+
+        val action = ItemState.ItemLoadAction()
+        action.id = ""
         mainStore.dispatch(ItemState.ItemLoadAction())
 
 
     }
 
-    private fun updateItem() {
-
-    }
-
-    private fun addItem() {
-
-        val action = ItemState.ItemAddAction()
-        action.name = etName.text.toString()
-        mainStore.dispatch(action)
-
-
-        val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute)
-        val routeAction = SetRouteAction(route = routes)
-        mainStore.dispatch(routeAction)
-        finish()
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -120,6 +103,4 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
         mainStore.dispatch(action)
         super.onBackPressed()
     }
-
-
 }

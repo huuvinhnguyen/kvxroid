@@ -8,7 +8,11 @@ import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
+import kotlinx.android.synthetic.main.topic_detail_footer_view_holder.view.*
+import kotlinx.android.synthetic.main.topic_detail_footer_view_holder.view.imageButton
+import kotlinx.android.synthetic.main.topic_detail_header_view_holder.view.*
 import kotlinx.android.synthetic.main.topic_detail_login_view_holder.view.*
+import kotlinx.android.synthetic.main.topic_detail_view_holder.view.*
 
 class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<TopicDetailBaseViewHolder<*>>() {
 
@@ -17,6 +21,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         private const val TYPE_TOPIC = 0
         private const val TYPE_SERVER = 1
         private const val TYPE_SIGNIN = 3
+        private const val TYPE_FOOTER = 4
     }
 
     private var data: List<Any> = emptyList()
@@ -25,6 +30,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
     var onItemClick: (() -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
     var onItemLoginClick: ((String) -> Unit)? = null
+    var onTrashClick: ((String) -> Unit)? = null
 
 
 
@@ -53,7 +59,13 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
                     .inflate(R.layout.topic_detail_login_view_holder, parent, false)
                 return TopicDetailLoginViewHolder(view)
             }
-            else -> throw IllegalArgumentException("Invalid view kind")
+
+            TYPE_FOOTER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.topic_detail_footer_view_holder, parent, false)
+                return TopicDetailFooterViewHolder(view)
+            }
+            else -> throw IllegalArgumentException("Invalid view type")
 
         }
     }
@@ -68,6 +80,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             is TopicDetailViewHolder -> viewHolder.bind(element as TopicDetailViewModel)
             is TopicDetailServerViewHolder -> viewHolder.bind(element as TopicDetailServerViewModel)
             is TopicDetailLoginViewHolder -> viewHolder.bind2(element as TopicDetailLoginViewModel, onItemLoginClick)
+            is TopicDetailFooterViewHolder -> viewHolder.bind(element as TopicDetailFooterViewModel)
             else -> throw IllegalArgumentException()
         }
     }
@@ -79,21 +92,20 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             is TopicDetailViewModel -> TYPE_TOPIC
             is TopicDetailServerViewModel -> TYPE_SERVER
             is TopicDetailLoginViewModel -> TYPE_SIGNIN
-            else -> throw IllegalArgumentException("Invalid kind of data " + position)
+            is TopicDetailFooterViewModel -> TYPE_FOOTER
+            else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
 
-    fun setItems() {
-        items.add(TopicDetailHeaderViewModel())
-        items.add(TopicDetailViewModel("Topic Detail"))
-        items.add(TopicDetailServerViewModel("Server 1 1"))
-        items.add(TopicDetailLoginViewModel(""))
-
+    fun setItems(list: ArrayList<AnyObject>) {
+        items.clear()
+        items.addAll(list)
         notifyDataSetChanged()
     }
 
     inner class TopicDetailViewHolder(itemView: View) :
         TopicDetailBaseViewHolder<TopicDetailViewModel>(itemView) {
+
 
         init {
             itemView.setOnSafeClickListener {
@@ -102,8 +114,13 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         }
 
         override fun bind(item: TopicDetailViewModel) {
-//            itemView.textView = item.name
-//            itemView.tvName.text = item.name
+
+
+            itemView.tvTopic.text  = item.topic
+            itemView.tvValue.text = item.value
+            itemView.tvTime.text = item.time
+            itemView.tvQos.text = item.qos
+            itemView.tvRetained.text = item.retained
         }
 
     }
@@ -133,12 +150,33 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         }
 
         override fun bind(item: TopicDetailHeaderViewModel) {
+            itemView.tvHeader.text = item.name
 
         }
     }
 
 
-    data class TopicDetailHeaderViewModel(val name: String = String.empty()) : AnyObject
+    data class TopicDetailHeaderViewModel(
+        val name: String = String.empty()
+    ) : AnyObject
+
+    inner class TopicDetailFooterViewHolder(itemView: View) : TopicDetailBaseViewHolder<TopicDetailFooterViewModel>(itemView) {
+        private lateinit var viewModel: TopicDetailFooterViewModel
+
+        init {
+            itemView.imageButton.setOnSafeClickListener {
+                onTrashClick?.invoke(viewModel.id)
+            }
+        }
+
+        override  fun bind(item: TopicDetailFooterViewModel) {
+            viewModel = item
+        }
+    }
+
+    data class TopicDetailFooterViewModel(
+        val id: String = String.empty()
+    ) : AnyObject
 
 
     inner class TopicDetailLoginViewHolder(itemView: View) :
@@ -161,7 +199,5 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
     }
 
     data class TopicDetailLoginViewModel(val name: String = String.empty()) : AnyObject
-
-
 
 }

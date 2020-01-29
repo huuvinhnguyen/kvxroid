@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/screen_padding"
+    android:paddingRight="@dimen/screen_padding">>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+
         >
         <EditText
             android:id="@+id/etName"
@@ -14,7 +17,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="Name" />
         <ImageButton
             android:id="@+id/btnSelect"
             android:layout_width="50dp"
@@ -26,26 +29,49 @@
 
 
     <EditText
-        android:id="@+id/etTopic"
+        android:id="@+id/etUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Topic" />
+        android:hint="User" />
     <EditText
-        android:id="@+id/etType"
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Type" />
+        android:hint="Password" />
+
+
+    <EditText
+        android:id="@+id/etServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Server" />
+    <EditText
+        android:id="@+id/etPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Port" />
+
+    <EditText
+        android:id="@+id/etSslPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="ssl port" />
 
     <ImageButton
         android:id="@+id/btnSave"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_gravity="center"
+        android:layout_gravity="right"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_save" />
 

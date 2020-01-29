@@ -113,6 +113,8 @@ class TopicSwitchViewHolder(
 ) : AddTopicBaseViewHolder<TopicSwitchViewModel>(containerView),
     LayoutContainer {
 
+    lateinit var viewModel: TopicSwitchViewModel
+
     companion object {
         fun renderView(parent: ViewGroup): TopicSwitchViewHolder {
 
@@ -122,7 +124,12 @@ class TopicSwitchViewHolder(
         }
     }
 
+    init {
+
+    }
+
     fun bind(viewModel: TopicSwitchViewModel) {
+
 //        itemView.btnSelect.setOnClickListener { clickListener?.invoke("abc")  }
 //        itemView.btnSelect .setOnClickListener { clickListener?.invoke("abc")}
 
@@ -130,7 +137,7 @@ class TopicSwitchViewHolder(
     }
 
 }
-data class TopicSwitchViewModel(val title: String = String.empty()) : AnyObject
+data class TopicSwitchViewModel(val type: String = String.empty()) : AnyObject
 
 
 

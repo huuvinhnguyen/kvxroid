@@ -19,8 +19,6 @@ class ItemImageAdapter(
 
 
     var onItemClick: ((ViewModel) -> Unit)? = null
-    var onItemPlusClick: ((String) -> Unit)? = null
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
 
@@ -36,7 +34,8 @@ class ItemImageAdapter(
 
     }
 
-    fun setList(list: ArrayList<AnyObject>) {
+    fun setItems(list: ArrayList<AnyObject>) {
+        items.clear()
         items.addAll(list)
         notifyDataSetChanged()
     }
@@ -51,6 +50,10 @@ class ItemImageAdapter(
         init {
 
             containerView.setOnSafeClickListener {
+                onItemClick?.invoke(viewModel)
+            }
+
+            itemView.checkBox.setOnSafeClickListener {
                 onItemClick?.invoke(viewModel)
             }
 

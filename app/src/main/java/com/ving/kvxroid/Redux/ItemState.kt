@@ -6,7 +6,7 @@ import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
 import com.ving.kvxroid.Detail.ItemDetailSwitchViewModel
 import com.ving.kvxroid.Models.Item
 import com.ving.kvxroid.Models.Image
-import com.ving.kvxroid.Selection.ItemRealm
+import com.ving.kvxroid.Services.ItemRealm
 import com.ving.kvxroid.Services.FirestoreService
 import com.ving.kvxroid.Services.RealmInteractor
 import org.rekotlin.Action
@@ -35,7 +35,7 @@ data class ItemState(
     data class ItemListAction(val unit: Unit = Unit) : Action
     data class ItemListStateLoad(val unit: Unit = Unit) : Action
     data class ItemAddAction(val unit: Unit = Unit) : Action {
-        var name: String? = null
+        var item: Item? = null
     }
 
     data class ItemRemoveAction(val unit: Unit = Unit): Action {
@@ -85,27 +85,14 @@ fun ItemState.Companion.reducer(action: Action, state: ItemState?): ItemState {
 
 
         is ItemState.ItemLoadAction -> {
-            val items: ArrayList<AnyObject> = ArrayList()
-//            items.add(ItemViewModel("bye bye 1"))
-//            items.add(ItemViewModel("hello helo 2"))
-//            items.add(ItemViewModel("hello helo 2"))
-//
-//            items.add(ItemDetailPlusViewModel())
 
             val interactor = RealmInteractor()
 
-            val list = interactor.getItems().map { itemRealm ->
-                Item(itemRealm.name ?: "")
+            interactor.getItem(action.id) {
+                val item = Item(it?.id ?: "", it?.name ?: "", it?.imageUrl ?: "")
+                state = state.copy(item = item)
+
             }
-
-            items.addAll(list)
-            items.add(ItemDetailPlusViewModel())
-
-
-
-//            state = state.copy(items = items)
-
-
         }
 
         is ItemState.ItemListAction -> {
@@ -114,7 +101,7 @@ fun ItemState.Companion.reducer(action: Action, state: ItemState?): ItemState {
             val interactor = RealmInteractor()
 
             val list = interactor.getItems().map { itemRealm ->
-                Item(itemRealm.id ?: "", itemRealm.name ?: "")
+                Item(itemRealm.id ?: "", itemRealm.name ?: "", itemRealm.imageUrl ?: "")
             }
 
             items.addAll(list)
@@ -125,8 +112,9 @@ fun ItemState.Companion.reducer(action: Action, state: ItemState?): ItemState {
         }
 
         is ItemState.UpdateItemImageAction -> {
-//            state = state.copy(itemViewModel = action.itemViewModel)
-
+            var item = state.item
+            item?.imageUrl = action.imageUrl
+            state = state.copy(item = item)
         }
     }
     return state
@@ -164,11 +152,17 @@ fun ItemState.Companion.middleware(): Middleware<AppState> = { dispatch, getStat
                 var item = ItemRealm()
                 item.id = UUID.randomUUID().toString()
 
-                item.name = action.name
-                realmInteractor.addItem(item) {
-                    dispatch(ItemState.ItemListAction())
+                action.item?.let {
+                    item.name = it.name
+                    item.imageUrl = it.imageUrl
+                    realmInteractor.addItem(item) {
+                        dispatch(ItemState.ItemListAction())
+
+                    }
 
                 }
+
+
             }
 
             (action as? ItemUpdateAction)?.let {

@@ -1,8 +1,7 @@
 package com.ving.kvxroid.Redux
 
-import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Models.Topic
-import com.ving.kvxroid.Selection.TopicRealm
+import com.ving.kvxroid.Services.TopicRealm
 import com.ving.kvxroid.Services.RealmInteractor
 import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.Action
@@ -25,6 +24,13 @@ data class TopicState(
     data class AddTopicAction(val unit: Unit = Unit): Action {
         var topic: Topic? = null
     }
+    data class LoadTopicAction(val unit: Unit = Unit): Action {
+        var id: String = ""
+    }
+
+    data class FetchTopicAction(val unit: Unit = Unit): Action {
+        var topic: Topic? = null
+    }
     data class RemoveTopicAction(val unit: Unit = Unit): Action {
         var id: String = ""
     }
@@ -43,6 +49,10 @@ fun TopicState.Companion.reducer(action: Action, state: TopicState?): TopicState
             state = state.copy(topics = action.topics)
         }
 
+        is TopicState.FetchTopicAction -> {
+            state = state.copy(topic = action.topic)
+        }
+
     }
     return state
 }
@@ -54,7 +64,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
             (action as? TopicState.LoadTopicsAction)?.let {
                 val topicList = RealmInteractor().getTopics()
                 val topics = topicList.map {
-                    Topic(it.id ?: "", it.name ?: "", it.topic ?: "", it.value ?: "", it.time ?: "", it.serverId ?: "", it.kind ?: "")
+                    Topic(it.id ?: "", it.name ?: "", it.topic ?: "", it.value ?: "", it.time ?: "", it.serverId ?: "", it.type ?: "")
                 }
 
                 val action = TopicState.FetchTopicsAction()
@@ -69,10 +79,36 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                 }
             }
 
+            (action as? TopicState.LoadTopicAction)?.let {
+                val interactor = RealmInteractor()
+                interactor.getTopic(it.id) {
+                    it?.let {
+                        val action = TopicState.FetchTopicAction()
+                        action.topic = Topic(it.id ?: "",
+                            it.name ?: "",
+                            it.topic?: "",
+                            it.value ?: "",
+                            it.time ?: "",
+                            it.serverId ?: "",
+                            it.type ?: "",
+                            "")
+                        dispatch(action)
+                    }
+                }
+            }
+
             (action as? TopicState.AddTopicAction)?.let {
                 next(action)
+                val itemRef = TopicRealm()
+                action.topic?.let {
+                    itemRef.id = it.id
+                    itemRef.name = it.name
+                    itemRef.topic = it.topic
+                    itemRef.type = it.type
+                }
+
                 val realmInteractor = RealmInteractor()
-                realmInteractor.addTopic(TopicRealm()) {
+                realmInteractor.addTopic(itemRef) {
                     dispatch(TopicState.LoadTopicsAction())
 //                    dispatch(TopicState.LoadTopicAction())
 

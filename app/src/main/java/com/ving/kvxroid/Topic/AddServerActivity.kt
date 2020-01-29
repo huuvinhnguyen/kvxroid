@@ -5,11 +5,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Models.Server
 import com.ving.kvxroid.R
-import com.ving.kvxroid.Selection.SelectionActivity
+import com.ving.kvxroid.Redux.ServerState
+import com.ving.kvxroid.Redux.mainStore
+import com.ving.kvxroid.Selection.ServerSelectionActivity
 
 import kotlinx.android.synthetic.main.activity_add_server.recyclerView
-import kotlinx.android.synthetic.main.activity_item_topic.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AddServerActivity : AppCompatActivity() {
 
@@ -22,11 +26,15 @@ class AddServerActivity : AppCompatActivity() {
 
     }
 
+    private var serverViewModel = AddServerAdapter.ServerViewModel()
+
+
     private fun initView() {
 
         val items: ArrayList<AnyObject> = ArrayList()
 
-        items.add(AddServerAdapter.ServerViewModel("4444"))
+        items.add(serverViewModel)
+        items.add(AddServerAdapter.ServerFooterViewModel(""))
 
         val adapter = AddServerAdapter(items as ArrayList<AnyObject>).apply {
             onSaveClick = ::handleSaveServer
@@ -43,14 +51,25 @@ class AddServerActivity : AppCompatActivity() {
     }
 
     private fun handleSelectServer() {
-        val intent = Intent(this, SelectionActivity::class.java)
+        val intent = Intent(this, ServerSelectionActivity::class.java)
         startActivity(intent)
 
     }
 
     private fun handleSaveServer() {
-        finish()
+        val action = ServerState.AddServerAction()
+        action.server = Server(
+            UUID.randomUUID().toString(),
+            serverViewModel.name,
+            serverViewModel.server,
+            serverViewModel.user,
+            serverViewModel.password,
+            serverViewModel.port,
+            serverViewModel.sslPort
+        )
 
+        mainStore.dispatch(action)
+        finish()
     }
 
 }

@@ -2,10 +2,6 @@ package com.ving.kvxroid.Services
 
 import android.content.Context
 import com.ving.kvxroid.Common.BaseApplication
-import com.ving.kvxroid.Selection.ConnectionRealm
-import com.ving.kvxroid.Selection.ItemRealm
-import com.ving.kvxroid.Selection.ServerRealm
-import com.ving.kvxroid.Selection.TopicRealm
 import io.realm.Realm
 import io.realm.kotlin.where
 import java.util.*
@@ -21,70 +17,116 @@ class RealmInteractor {
 
         Realm.init(context)
 
-//        Realm.init(this@AddTopicActivity)
-
         val realm = Realm.getDefaultInstance()
-
-//        realm.executeTransaction { realm ->
-//            realm.deleteAll()
-//        }
-
-//
-//        // All writes must be wrapped in a transaction to facilitate safe multi threading
-//        realm.executeTransaction { realm ->
-//            // Add a person
-//            val person = realm.createObject(Person::class.java, "fsdfdsfs".toString())
-//        }
-
-//        realm.executeTransaction { realm ->
-//            // Add a person
-//            val server = realm.createObject(Dog::class.java, "fsdfdsfs".toString())
-//        }
-//
-
 
         realm.executeTransaction { realm ->
             // Add a person
             var uniqueID = UUID.randomUUID().toString()
-            val connection = realm.createObject(ConnectionRealm::class.java, uniqueID)
-            connection.server = "server abcde"
-            connection.user = "suer asfdsfsd"
-            connection.port = "123"
+            val server = realm.createObject(ServerRealm::class.java, uniqueID)
+            server.url = "server abcde"
+            server.user = "suer asfdsfsd"
+            server.port = "123"
         }
 
-        // Find the first person (no query conditions) and read a field
-//        val person = realm.where<Person>("gogl").findFirst()!!
-
-//        // Update person in a transaction
-//        realm.executeTransaction { _ ->
-//            person.name = "Senior Person"
+//        var list = realm.where(ServerRealm::class.java).findAll()
+//        list.forEach { person ->
+//
+//            println(person)
 //        }
-
-//        val results = realm.where<Person>().equalTo("", "").findAll()
-
-//        var guest: Person = realm.createObject(Person::class.java, UUID.randomUUID().toString())
-
-
-        var list = realm.where(ServerRealm::class.java).findAll()
-        list.forEach { person ->
-
-            println(person)
-        }
-
-        val listStrings = list.map { serverRealm -> serverRealm.name }
+//
+//        val listStrings = list.map { serverRealm -> serverRealm.name }
 
 
     }
 
-    fun getConnections(): List<ConnectionRealm> {
+    fun getServer(id: String, finished: (ServerRealm?) -> Unit) {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        val itemRef = realm.where<ServerRealm>().equalTo("id", id).findFirst()
+
+        finished(itemRef)
+    }
+
+    fun getServers(): List<ServerRealm> {
 
         val context = BaseApplication.INSTANCE.applicationContext
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
 
-        val list = realm.where(ConnectionRealm::class.java).findAll()
-        val listStrings = list.map { conenctionRealm -> conenctionRealm.server }
+        val list = realm.where(ServerRealm::class.java).findAll()
         return list
+
+    }
+
+    fun addServer(server: ServerRealm, finished: () -> Unit) {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        realm.executeTransactionAsync({ realm ->
+            val item = realm.createObject(ServerRealm::class.java, server.id)
+            item.name = server.name
+            item.url = server.url
+            item.user = server.user
+            item.password = server.password
+            item.port = server.port
+            item.sslPort = server.sslPort
+
+        }, {
+            finished()
+            realm.close()
+        },
+            { realm.close() })
+
+    }
+
+    fun updateServer(item: ServerRealm, finished: (String) -> Unit) {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        val itemRef = realm.where<ServerRealm>().equalTo("id", item.id).findFirst()!!
+
+        realm.executeTransaction { _ ->
+            itemRef.name = item.name
+            itemRef.url = item.url
+            itemRef.user = item.user
+            itemRef.password = item.password
+            itemRef.port = item.port
+            itemRef.sslPort = item.sslPort
+
+        }
+
+        finished(itemRef.id ?: "")
+    }
+
+    fun deleteServer(id: String, finished: (String) -> Unit) {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        realm.executeTransaction { realm ->
+
+            val results = realm.where(ServerRealm::class.java).equalTo("id", id).findAll()
+            results.deleteAllFromRealm()
+
+        }
+
+        finished(id)
 
     }
 
@@ -99,6 +141,15 @@ class RealmInteractor {
         realm.executeTransactionAsync({ realm ->
             val item = realm.createObject(TopicRealm::class.java, topic.id)
             item.name = topic.name
+            item.value = topic.value
+            item.serverId = topic.serverId
+            item.type = topic.type
+            item.topic = topic.topic
+            item.time = topic.time
+            item.retain = topic.retain
+            item.itemId = topic.itemId
+            item.qos = topic.qos
+
 
         }, {
             finished()
@@ -108,7 +159,7 @@ class RealmInteractor {
 
     }
 
-    fun deleteTopic(id: String, finished: (String) ->Unit) {
+    fun deleteTopic(id: String, finished: (String) -> Unit) {
 
         val context = BaseApplication.INSTANCE.applicationContext
 
@@ -137,16 +188,33 @@ class RealmInteractor {
 
     }
 
-    fun getTopic(id: String, finished: (String) -> Unit) {
+    fun getTopic(id: String, finished: (TopicRealm?) -> Unit) {
+        val context = BaseApplication.INSTANCE.applicationContext
 
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        val itemRef = realm.where<TopicRealm>().equalTo("id", id).findFirst()
+
+        finished(itemRef)
     }
 
     fun updateTopic(id: String, finished: (String) -> Unit) {}
 
-    fun getItem(id: String, finished: (ItemRealm) -> Unit) {
+    fun getItem(id: String, finished: (ItemRealm?) -> Unit) {
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        val itemRef = realm.where<ItemRealm>().equalTo("id", id).findFirst()
+
+        finished(itemRef)
+
 
     }
-
 
     fun getItems(): List<ItemRealm> {
 
@@ -170,6 +238,7 @@ class RealmInteractor {
 
             val itemRef = realm.createObject(ItemRealm::class.java, item.id)
             itemRef.name = item.name
+            itemRef.imageUrl = item.imageUrl
 
         }, {
             finished(item)
