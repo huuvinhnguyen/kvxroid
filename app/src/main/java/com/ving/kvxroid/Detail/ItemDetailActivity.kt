@@ -54,7 +54,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
         mainStore.subscribe(this){
             it.select { it.topicState }
-                .skipRepeats()
+//                .skipRepeats()
         }
 
 //        connect(this@ItemDetailActivity)
@@ -137,6 +137,8 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
         println("Info Button")
         val intent = Intent(this, TopicDetailActivity::class.java)
+        intent.putExtra("TOPIC_ID", information)
+
         startActivity(intent)
 
     }

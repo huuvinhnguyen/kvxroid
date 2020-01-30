@@ -5,6 +5,6 @@ import org.rekotlin.Store
 val mainStore = Store(
     reducer = ::appReducer,
     state = AppState(),
-    middleware = listOf(connectionMiddleware, topicMiddleware, itemMiddleware, imagesMiddleware, ItemState.middleware(), TopicState.middleware()),
+    middleware = listOf(connectionMiddleware, topicMiddleware, itemMiddleware, imagesMiddleware, ItemState.middleware(), TopicState.middleware(), ServerState.middleware()),
     automaticallySkipRepeats = true
 )

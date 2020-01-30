@@ -3,24 +3,24 @@ package com.ving.kvxroid.Topic
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemTopicViewModel
+import com.ving.kvxroid.Models.Topic
 import com.ving.kvxroid.R
-import com.ving.kvxroid.Redux.*
-import com.ving.kvxroid.Selection.SelectionActivity
-import com.ving.kvxroid.setOnSafeClickListener
-import kotlinx.android.synthetic.main.activity_item_detail.*
-import kotlinx.android.synthetic.main.activity_item_topic.*
+import com.ving.kvxroid.Redux.ItemState
+import com.ving.kvxroid.Redux.TopicState
+import com.ving.kvxroid.Redux.mainStore
 import kotlinx.android.synthetic.main.activity_item_topic.recyclerView
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AddTopicActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ItemTopicViewModel
 
     private var topicViewModel = TopicViewModel()
+    private var topicSwitchViewModel = TopicSwitchViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class AddTopicActivity : AppCompatActivity() {
 //        }
 //
 //        btnSelect.setOnSafeClickListener {
-//            val intent = Intent(this, SelectionActivity::class.java)
+//            val intent = Intent(this, ServerSelectionActivity::class.java)
 //            startActivity(intent)
 //        }
 //
@@ -61,20 +61,21 @@ class AddTopicActivity : AppCompatActivity() {
         val items: ArrayList<AnyObject> = ArrayList()
 
         topicViewModel = TopicViewModel("live", "switch")
+        topicSwitchViewModel = TopicSwitchViewModel("")
 
         items.add(topicViewModel)
-        items.add(TopicSwitchViewModel())
+        items.add(topicSwitchViewModel)
         items.add(TopicQosViewModel())
         items.add(TopicSaveViewModel())
 
-        val itemDetailAdapter = AddTopicAdapter(items as ArrayList<AnyObject>).apply {
+        val adapter = AddTopicAdapter(items as ArrayList<AnyObject>).apply {
             onSaveClick = ::handleSaveClick
             onSelectClick =::handleSelectClick
         }
 
-        recyclerView.adapter = itemDetailAdapter
+        recyclerView.adapter = adapter
 
-        itemDetailAdapter.setItems()
+        adapter.setItems()
 
         recyclerView.layoutManager =  LinearLayoutManager(this@AddTopicActivity)
 
@@ -87,8 +88,11 @@ class AddTopicActivity : AppCompatActivity() {
 
     private fun handleSaveClick(information: String) {
         val model = topicViewModel
-        print(model)
-        print(information)
+        val topic = Topic(UUID.randomUUID().toString(), topicViewModel.name , topicViewModel.topic , "", "", "", topicViewModel.type, "")
+
+        val action = TopicState.AddTopicAction()
+        action.topic = topic
+        mainStore.dispatch(action)
         finish()
 
 

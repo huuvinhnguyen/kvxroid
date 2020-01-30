@@ -47,7 +47,7 @@ class ItemListAdapter(
                     .inflate(R.layout.item_detail_plus_view_holder, parent, false)
                  PlusViewHolder(view)
             }
-            else -> throw IllegalArgumentException("Invalid view kind")
+            else -> throw IllegalArgumentException("Invalid view type")
         }
 
 
@@ -57,7 +57,7 @@ class ItemListAdapter(
         return when (comparable) {
             is Item -> TYPE_ITEM
             is ItemDetailPlusViewModel -> TYPE_PLUS
-            else -> throw IllegalArgumentException("Invalid kind of data " + position)
+            else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
 

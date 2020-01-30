@@ -59,7 +59,7 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
 
             TYPE_SWITCH -> TopicSwitchViewHolder.renderView(parent)
 
-            else -> throw IllegalArgumentException("Invalid view kind")
+            else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
@@ -71,7 +71,7 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
             is TopicSaveViewModel -> TYPE_SAVE
             is TopicSwitchViewModel -> TYPE_SWITCH
 
-            else -> throw IllegalArgumentException("Invalid kind of data " + position)
+            else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
 

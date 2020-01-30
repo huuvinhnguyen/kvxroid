@@ -1,15 +1,13 @@
 package com.ving.kvxroid.Redux
 
-import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Models.Image
-import com.ving.kvxroid.Selection.ItemRealm
-import com.ving.kvxroid.Selection.TopicRealm
+import com.ving.kvxroid.Services.ItemRealm
+import com.ving.kvxroid.Services.TopicRealm
 import com.ving.kvxroid.Services.FirestoreService
 import com.ving.kvxroid.Services.RealmInteractor
 
 import org.rekotlin.Middleware
 import java.util.*
-import kotlin.collections.ArrayList
 
 internal val connectionMiddleware: Middleware<AppState> = { dispatch, getState ->
     { next ->

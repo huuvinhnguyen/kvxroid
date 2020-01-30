@@ -11,7 +11,7 @@ data class AppState(
     override var navigationState: NavigationState = NavigationState(),
     var itemState: ItemState = ItemState(),
     var topicState: TopicState = TopicState(),
-    val counter: Int = 0,
+    var serverState: ServerState = ServerState(),
     val itemList: List<Any> = emptyList(),
     var itemDetailList: List<Any> = emptyList(),
     var connectionList: List<Any> = emptyList(),

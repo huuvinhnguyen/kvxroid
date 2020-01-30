@@ -17,6 +17,7 @@
             android:textSize="18dp"
             android:textStyle="bold" />
         <TextView
+            android:id="@+id/tvTopic"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -40,6 +41,7 @@
 
             />
         <TextView
+            android:id="@+id/tvValue"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -62,6 +64,7 @@
 
             />
         <TextView
+            android:id="@+id/tvTime"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -84,6 +87,7 @@
 
             />
         <TextView
+            android:id="@+id/tvQos"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -106,6 +110,7 @@
 
             />
         <TextView
+            android:id="@+id/tvRetained"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -117,7 +122,7 @@
         android:id="@+id/imageButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_gravity="center"
+        android:layout_gravity="right"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_log_out" />
 </LinearLayout>

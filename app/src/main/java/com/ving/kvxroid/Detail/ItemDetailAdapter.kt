@@ -76,7 +76,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
                 ChartLineViewHolder.renderView(parent)
             }
 
-            else -> throw IllegalArgumentException("Invalid view kind")
+            else -> throw IllegalArgumentException("Invalid view type")
 
         }
     }
@@ -109,7 +109,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             is ItemLineChartViewModel -> TYPE_CHART_LINE
 
 
-            else -> throw IllegalArgumentException("Invalid kind of data " + position)
+            else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
 
@@ -140,12 +140,9 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         init {
 
             itemView.btnInfo.setOnSafeClickListener {
-                onInfoClick?.invoke("Oninfo")
+                onInfoClick?.invoke(viewModel.id)
             }
 
-            itemView.btnTrash.setOnSafeClickListener {
-                onTrashClick?.invoke(viewModel.id)
-            }
         }
 
         override fun bind(viewModel: SwitchViewModel) {
