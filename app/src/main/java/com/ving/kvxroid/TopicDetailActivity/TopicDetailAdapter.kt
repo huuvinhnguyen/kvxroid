@@ -8,10 +8,10 @@ import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
-import kotlinx.android.synthetic.main.topic_detail_footer_view_holder.view.*
 import kotlinx.android.synthetic.main.topic_detail_footer_view_holder.view.imageButton
 import kotlinx.android.synthetic.main.topic_detail_header_view_holder.view.*
 import kotlinx.android.synthetic.main.topic_detail_login_view_holder.view.*
+import kotlinx.android.synthetic.main.topic_detail_server_view_holder.view.*
 import kotlinx.android.synthetic.main.topic_detail_view_holder.view.*
 
 class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<TopicDetailBaseViewHolder<*>>() {
@@ -29,7 +29,8 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
 
     var onItemClick: (() -> Unit)? = null
     var onItemPlusClick: ((String) -> Unit)? = null
-    var onItemLoginClick: ((String) -> Unit)? = null
+    var onLoginClick: ((String) -> Unit)? = null
+    var onLogoutClick: ((String) -> Unit)? = null
     var onTrashClick: ((String) -> Unit)? = null
 
 
@@ -78,8 +79,8 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         when (viewHolder) {
             is TopicDetailHeaderViewHolder -> viewHolder.bind(element as TopicDetailHeaderViewModel)
             is TopicDetailViewHolder -> viewHolder.bind(element as TopicDetailViewModel)
-            is TopicDetailServerViewHolder -> viewHolder.bind(element as TopicDetailServerViewModel)
-            is TopicDetailLoginViewHolder -> viewHolder.bind2(element as TopicDetailLoginViewModel, onItemLoginClick)
+            is TopicDetailServerViewHolder -> viewHolder.bind2(element as TopicDetailServerViewModel, onLogoutClick)
+            is TopicDetailLoginViewHolder -> viewHolder.bind2(element as TopicDetailLoginViewModel, onLoginClick)
             is TopicDetailFooterViewHolder -> viewHolder.bind(element as TopicDetailFooterViewModel)
             else -> throw IllegalArgumentException()
         }
@@ -135,8 +136,22 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         }
 
         override fun bind(item: TopicDetailServerViewModel) {
-//            itemView.textView.text = item.name
+            itemView.tvName.text = item.name
+            itemView.tvServer.text = item.url
+            itemView.tvUser.text = item.username
+            itemView.tvPassword.text = item.password
+            itemView.tvPort.text = item.port
+            itemView.tvSslPort.text = item.sslPort
+        }
 
+        fun bind2(item: TopicDetailServerViewModel, clickListener: ((String) -> Unit)?) = with(itemView)  {
+            itemView.tvName.text = item.name
+            itemView.tvServer.text = item.url
+            itemView.tvUser.text = item.username
+            itemView.tvPassword.text = item.password
+            itemView.tvPort.text = item.port
+            itemView.tvSslPort.text = item.sslPort
+            itemView.btnLogout.setOnClickListener { clickListener?.invoke(item.topicId)  }
         }
     }
 
@@ -194,10 +209,10 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         }
 
         fun bind2(viewModel: TopicDetailLoginViewModel, clickListener: ((String) -> Unit)?) = with(itemView)  {
-            itemView.btnLogin.setOnClickListener { clickListener?.invoke("abc")  }
+            itemView.btnLogin.setOnClickListener { clickListener?.invoke(viewModel.id)  }
         }
     }
 
-    data class TopicDetailLoginViewModel(val name: String = String.empty()) : AnyObject
+    data class TopicDetailLoginViewModel(val id: String = String.empty()) : AnyObject
 
 }

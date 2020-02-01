@@ -30,9 +30,7 @@ class TopicTypeActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_save -> {
 
-
                 finish()
-
                 true
             }
 

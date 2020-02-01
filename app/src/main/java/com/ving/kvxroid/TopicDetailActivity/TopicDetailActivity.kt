@@ -6,22 +6,33 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.R
+import com.ving.kvxroid.Redux.ServerState
 import com.ving.kvxroid.Redux.TopicState
 import com.ving.kvxroid.Redux.mainStore
 import com.ving.kvxroid.Topic.AddServerActivity
+import com.ving.kvxroid.extensions.empty
 import kotlinx.android.synthetic.main.activity_topic_detail.*
 import org.rekotlin.StoreSubscriber
 
 
-class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
+class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<Pair<TopicState, ServerState>> {
 
-    override fun newState(state: TopicState) {
-        val topic = state.topic
+    override fun newState(state: Pair<TopicState, ServerState>) {
+        val topic = state.first.topic
+        val server = state.second.server
+
         var items: ArrayList<AnyObject> = arrayListOf()
         items.add(TopicDetailAdapter.TopicDetailHeaderViewModel(topic?.name ?: ""))
         items.add(TopicDetailViewModel(topic?.id ?: "", topic?.topic?:"", topic?.value ?: "", topic?.time?: "", topic?.qos ?: "", ""))
-        items.add(TopicDetailServerViewModel("Server 1 1"))
-        items.add(TopicDetailAdapter.TopicDetailLoginViewModel(""))
+
+        if (topic?.serverId == String.empty()) {
+
+            items.add(TopicDetailAdapter.TopicDetailLoginViewModel(topic?.id ?: ""))
+        } else {
+
+            items.add(TopicDetailServerViewModel(topic?.id ?: "",server?.name ?: "", server?.url ?:"",server?.user ?: "", server?.password ?: "", server?.port ?: "", server?.sslPort ?: ""))
+        }
+
         items.add(TopicDetailAdapter.TopicDetailFooterViewModel(topic?.id ?: ""))
         adapter.setItems(items)
 
@@ -35,8 +46,7 @@ class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         initView()
 
         mainStore.subscribe(this) {
-            it.select { it.topicState }
-//                .skipRepeats()
+            it.select { Pair(it.topicState, it.serverState) }
         }
 
         intent?.getStringExtra("TOPIC_ID")?.also {
@@ -52,7 +62,8 @@ class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
 
         adapter = TopicDetailAdapter(ArrayList()).apply {
-            onItemLoginClick = ::handleLoginClick
+            onLoginClick = ::handleLoginClick
+            onLogoutClick = :: handleLogoutClick
             onTrashClick = ::handleTrashClick
 
 
@@ -65,7 +76,22 @@ class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
     private fun handleLoginClick(information: String) {
 
         val intent = Intent(this, AddServerActivity::class.java)
+        intent.putExtra("TOPIC_ID", information)
+
         startActivity(intent)
+    }
+
+    private fun handleLogoutClick(information: String) {
+
+        intent?.getStringExtra("TOPIC_ID")?.also { id ->
+            var topic = mainStore.state.topicState.topics.filter { it.id == id}.first()
+            topic.serverId = ""
+
+            val action = TopicState.UpdateTopicAction()
+            action.topic = topic
+            mainStore.dispatch(action)
+        }
+
     }
 
     private fun handleTrashClick(id: String) {

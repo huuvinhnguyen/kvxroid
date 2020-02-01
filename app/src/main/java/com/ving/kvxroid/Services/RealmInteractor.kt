@@ -200,7 +200,32 @@ class RealmInteractor {
         finished(itemRef)
     }
 
-    fun updateTopic(id: String, finished: (String) -> Unit) {}
+    fun updateTopic(item: TopicRealm, finished: (String) -> Unit) {
+
+        val context = BaseApplication.INSTANCE.applicationContext
+
+        Realm.init(context)
+
+        val realm = Realm.getDefaultInstance()
+
+        val itemRef = realm.where<TopicRealm>().equalTo("id", item.id).findFirst()!!
+
+        realm.executeTransaction { _ ->
+            itemRef.name = item.name
+            itemRef.value = item.value
+            itemRef.serverId = item.serverId
+            itemRef.type = item.type
+            itemRef.topic = item.topic
+            itemRef.time = item.time
+            itemRef.retain = item.retain
+            itemRef.itemId = item.itemId
+            itemRef.qos = item.qos
+
+        }
+
+        finished(itemRef.id ?: "")
+
+    }
 
     fun getItem(id: String, finished: (ItemRealm?) -> Unit) {
         val context = BaseApplication.INSTANCE.applicationContext

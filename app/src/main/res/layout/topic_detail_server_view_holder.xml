@@ -5,19 +5,39 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp">
     >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Header abc"
+            android:textSize="32dp"
+            android:textFontWeight="800"
+            android:textColor="#0A1034"/>
+
+    </LinearLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/texView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Server"
             android:textSize="18dp"
             android:textStyle="bold" />
         <TextView
+            android:id="@+id/tvServer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -35,12 +55,13 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Value"
+            android:text="User"
             android:textSize="18dp"
             android:textStyle="bold"
 
             />
         <TextView
+            android:id="@+id/tvUser"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -57,12 +78,13 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time"
+            android:text="Password"
             android:textSize="18dp"
             android:textStyle="bold"
 
             />
         <TextView
+            android:id="@+id/tvPassword"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -79,16 +101,17 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="QoS"
+            android:text="Port"
             android:textSize="18dp"
             android:textStyle="bold"
 
             />
         <TextView
+            android:id="@+id/tvPort"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:text="Topic type"
+            android:text="Port"
             android:textSize="18dp"
             />
     </LinearLayout>
@@ -101,12 +124,13 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retained"
+            android:text="ssl port"
             android:textSize="18dp"
             android:textStyle="bold"
 
             />
         <TextView
+            android:id="@+id/tvSslPort"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -114,4 +138,11 @@
             android:textSize="18dp"
             />
     </LinearLayout>
+    <ImageButton
+        android:id="@+id/btnLogout"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="right"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_log_out" />
 </LinearLayout>
