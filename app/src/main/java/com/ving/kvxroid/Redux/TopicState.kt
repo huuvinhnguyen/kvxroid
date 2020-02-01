@@ -19,7 +19,9 @@ data class TopicState(
     companion object {}
 
     data class TopicActionConnect(val unit: Unit = Unit): Action
-    data class TopicActionUpdate(val unit: Unit = Unit): Action
+    data class UpdateTopicAction(val unit: Unit = Unit): Action{
+        var topic: Topic? = null
+    }
     data class LoadTopicsAction(val unit: Unit = Unit): Action
     data class AddTopicAction(val unit: Unit = Unit): Action {
         var topic: Topic? = null
@@ -72,6 +74,30 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                 dispatch(action)
             }
 
+            (action as? TopicState.UpdateTopicAction)?.let {
+                val interactor = RealmInteractor()
+                var itemRef = TopicRealm()
+                action.topic?.let {
+                    itemRef.id = it.id
+                    itemRef.name = it.name
+                    itemRef.value = it.value
+                    itemRef.serverId = it.serverId
+                    itemRef.type = it.type
+                    itemRef.topic = it.topic
+                    itemRef.time = it.time
+                    itemRef.retain = ""
+                    itemRef.itemId = ""
+                    itemRef.qos = it.qos
+
+                }
+                interactor.updateTopic(itemRef) {
+
+                    val loadTopicAction = TopicState.LoadTopicAction()
+                    loadTopicAction.id = action.topic?.id ?: ""
+                    dispatch(loadTopicAction)
+                }
+            }
+
             (action as? TopicState.RemoveTopicAction)?.let {
                 val interactor = RealmInteractor()
                 interactor.deleteTopic(action.id) {
@@ -93,6 +119,9 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                             it.type ?: "",
                             "")
                         dispatch(action)
+                        val action2 = ServerState.LoadServerAction()
+                        action2.id = it.serverId ?: ""
+                        dispatch(action2)
                     }
                 }
             }
@@ -103,8 +132,14 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                 action.topic?.let {
                     itemRef.id = it.id
                     itemRef.name = it.name
-                    itemRef.topic = it.topic
+                    itemRef.value = it.value
+                    itemRef.serverId = it.serverId
                     itemRef.type = it.type
+                    itemRef.topic = it.topic
+                    itemRef.time = it.time
+                    itemRef.retain = ""
+                    itemRef.itemId = ""
+                    itemRef.qos = it.qos
                 }
 
                 val realmInteractor = RealmInteractor()
@@ -121,7 +156,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
 
                 val task = appState?.tasks?.get("abc")
                 task?.listener = {
-                    dispatch(TopicState.TopicActionUpdate())
+                    dispatch(TopicState.UpdateTopicAction())
                 }
             }
                 ?: next(action)

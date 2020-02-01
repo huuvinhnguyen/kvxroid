@@ -54,10 +54,10 @@ fun ServerState.Companion.reducer(action: Action, state: ServerState?): ServerSt
                     val server = Server(it.id ?: "",
                         it.name ?: "",
                         it.url ?: "",
+                        it.user ?: "",
                         it.password ?: "",
-                        it.id ?: "",
-                        it.id ?: "",
-                        it.id ?: "")
+                        it.port ?: "",
+                        it.sslPort ?: "")
                     state = state.copy(server = server)
                 }
             }

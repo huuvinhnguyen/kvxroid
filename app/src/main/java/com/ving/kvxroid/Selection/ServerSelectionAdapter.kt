@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.selection_server_view_holder.view.*
 import kotlinx.android.synthetic.main.selection_server_view_holder.view.checkBox
 
 
-class ServerSelectionAdapter(private val items: ArrayList<AnyObject>) :
+class ServerSelectionAdapter(val items: ArrayList<AnyObject>) :
     RecyclerView.Adapter<ServerSelectionBaseViewHolder<*>>() {
 
     companion object {
@@ -19,12 +19,7 @@ class ServerSelectionAdapter(private val items: ArrayList<AnyObject>) :
         private const val TYPE_SERVER = 1
     }
 
-    private var data: List<Any> = emptyList()
-
-
-    //    private var listOfMovies = listOf<MovieModel>()
     var onItemClick: ((ServerSelectionViewModel) -> Unit)? = null
-    var onItemPlusClick: ((String) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServerSelectionBaseViewHolder<*> {
@@ -65,11 +60,9 @@ class ServerSelectionAdapter(private val items: ArrayList<AnyObject>) :
         }
     }
 
-    fun setItems() {
-
-//        items.add(ServerSelectionViewModel("abc"))
-//        items.add(ServerSelectionViewModel("eeee"))
-
+    fun setItems(list: ArrayList<AnyObject>) {
+        items.clear()
+        items.addAll(list)
         notifyDataSetChanged()
     }
 
@@ -106,7 +99,7 @@ class ServerSelectionAdapter(private val items: ArrayList<AnyObject>) :
 
         override fun bind(item: ServerSelectionViewModel) {
             this.viewModel = item
-//            itemView.checkBox.isChecked = viewModel.isSelected
+            itemView.checkBox.isChecked = viewModel.isSelected
             itemView.tvServer.text = item.title
 
         }

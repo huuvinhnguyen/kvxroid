@@ -71,8 +71,11 @@ class AddServerAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ad
         }
     }
 
-    fun setItems() {
+    fun setItems(list: ArrayList<AnyObject>) {
 
+        items.clear()
+        items.addAll(list)
+        items.add(ServerFooterViewModel(""))
         notifyDataSetChanged()
     }
 
@@ -126,6 +129,7 @@ class AddServerAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ad
 
 
     data class ServerViewModel(
+        var id: String = String.empty(),
         var name: String = String.empty(),
         var user: String = String.empty(),
         var password: String = String.empty(),
