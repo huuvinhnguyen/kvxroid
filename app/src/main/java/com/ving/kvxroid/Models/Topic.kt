@@ -4,7 +4,7 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
 
 data class Topic(
-    var id: String,
+    var id: String = String.empty(),
     var name: String = String.empty(),
     var topic: String = String.empty(),
     var value: String = String.empty(),

@@ -77,7 +77,7 @@ fun appReducer(action: Action, state: AppState?): AppState {
             state.tasks.put("abc", connector)
 
             connector.connect()
-            connector.receiveMessages()
+//            connector.receiveMessages()
         }
 
         is ItemLoadAction -> {

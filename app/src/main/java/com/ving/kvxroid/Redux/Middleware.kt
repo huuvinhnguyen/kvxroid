@@ -56,7 +56,7 @@ internal val topicMiddleware: Middleware<AppState> = { dispatch, getState ->
 
 
                 val task = appState?.tasks?.get("abc")
-                task?.listener = {
+                task?.didReceiveMessage = {
                     dispatch(TopicListUpdateAction())
 
                 }

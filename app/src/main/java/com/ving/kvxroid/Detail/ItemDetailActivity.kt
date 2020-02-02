@@ -131,8 +131,6 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
     }
 
-
-
     private fun handleInfoClick(information: String) {
 
         println("Info Button")

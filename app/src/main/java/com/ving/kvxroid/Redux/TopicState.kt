@@ -1,5 +1,6 @@
 package com.ving.kvxroid.Redux
 
+import com.ving.kvxroid.Models.Server
 import com.ving.kvxroid.Models.Topic
 import com.ving.kvxroid.Services.TopicRealm
 import com.ving.kvxroid.Services.RealmInteractor
@@ -33,6 +34,15 @@ data class TopicState(
     data class FetchTopicAction(val unit: Unit = Unit): Action {
         var topic: Topic? = null
     }
+
+    data class UpdateTaskAction(val unit: Unit = Unit): Action {
+        var topic: Topic? = null
+    }
+
+    data class FetchTaskAction(val unit: Unit = Unit): Action {
+
+    }
+
     data class RemoveTopicAction(val unit: Unit = Unit): Action {
         var id: String = ""
     }
@@ -69,9 +79,9 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     Topic(it.id ?: "", it.name ?: "", it.topic ?: "", it.value ?: "", it.time ?: "", it.serverId ?: "", it.type ?: "")
                 }
 
-                val action = TopicState.FetchTopicsAction()
-                action.topics = topics
-                dispatch(action)
+                val fetchTopicsAction = TopicState.FetchTopicsAction()
+                fetchTopicsAction.topics = topics
+                dispatch(fetchTopicsAction)
             }
 
             (action as? TopicState.UpdateTopicAction)?.let {
@@ -109,8 +119,8 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                 val interactor = RealmInteractor()
                 interactor.getTopic(it.id) {
                     it?.let {
-                        val action = TopicState.FetchTopicAction()
-                        action.topic = Topic(it.id ?: "",
+                        val fetchTopicAction = TopicState.FetchTopicAction()
+                        fetchTopicAction.topic = Topic(it.id ?: "",
                             it.name ?: "",
                             it.topic?: "",
                             it.value ?: "",
@@ -118,11 +128,44 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                             it.serverId ?: "",
                             it.type ?: "",
                             "")
-                        dispatch(action)
+                        dispatch(fetchTopicAction)
                         val action2 = ServerState.LoadServerAction()
                         action2.id = it.serverId ?: ""
                         dispatch(action2)
                     }
+                }
+            }
+
+            (action as? TopicState.UpdateTaskAction)?.let {
+                val topic = action.topic ?: Topic()
+                val interactor = RealmInteractor()
+                interactor.getServer(topic.serverId) {
+                    val server = Server()
+                    server.id = it?.id ?: ""
+                    server.name = it?.name ?: ""
+                    server.url = it?.url ?: ""
+                    server.user = it?.user ?: ""
+                    server.password = it?.password ?: ""
+                    server.port = it?.port ?: ""
+                    server.sslPort = it?.sslPort ?: ""
+
+                    val state = getState()?.topicState
+
+
+                    if (state?.tasks?.get(action.topic?.id) != null) {
+
+                    } else {
+                        val connector = TopicConnector()
+                        connector.configure(topic, server)
+                        connector.didReceiveMessage  = {
+                            if (connector.topic.value != it) {
+                                val updateTopicAction = TopicState.UpdateTopicAction()
+                                updateTopicAction.topic = connector.topic
+                                dispatch(updateTopicAction)
+                            }
+                        }
+                    }
+
                 }
             }
 
@@ -155,7 +198,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                 val appState = getState()
 
                 val task = appState?.tasks?.get("abc")
-                task?.listener = {
+                task?.didReceiveMessage = {
                     dispatch(TopicState.UpdateTopicAction())
                 }
             }
