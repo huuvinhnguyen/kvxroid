@@ -72,13 +72,13 @@ fun appReducer(action: Action, state: AppState?): AppState {
         }
 
 
-        is TopicListConnectAction -> {
-            val connector = TopicConnector()
-            state.tasks.put("abc", connector)
-
-            connector.connect()
-//            connector.receiveMessages()
-        }
+//        is TopicListConnectAction -> {
+//            val connector = TopicConnector()
+//            state.tasks.put("abc", connector)
+//
+//            connector.connect()
+////            connector.receiveMessages()
+//        }
 
         is ItemLoadAction -> {
             state = state.copy(itemViewModel = action.itemViewModel)

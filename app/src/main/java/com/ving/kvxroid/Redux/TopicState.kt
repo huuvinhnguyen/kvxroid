@@ -10,7 +10,6 @@ import org.rekotlin.Middleware
 import org.rekotlin.StateType
 
 data class TopicState(
-    val counter: Int = 0,
     var topic: Topic? = null,
     var topics: List<Topic> = emptyList(),
     val tasks: MutableMap<String, TopicConnector> = mutableMapOf<String, TopicConnector>()
@@ -40,12 +39,21 @@ data class TopicState(
     }
 
     data class FetchTaskAction(val unit: Unit = Unit): Action {
-
+        var topicId: String = ""
+        var task: TopicConnector? = null
     }
+
+    data class PublishAction(val unit: Unit = Unit): Action {
+        var topicId: String = ""
+        var message: String = ""
+    }
+
+    data class StopAllTasksAction(val unit: Unit = Unit): Action
 
     data class RemoveTopicAction(val unit: Unit = Unit): Action {
         var id: String = ""
     }
+
     data class FetchTopicsAction(val unit: Unit = Unit): Action {
         var topics: List<Topic> = emptyList()
     }
@@ -65,6 +73,29 @@ fun TopicState.Companion.reducer(action: Action, state: TopicState?): TopicState
             state = state.copy(topic = action.topic)
         }
 
+        is TopicState.FetchTaskAction -> {
+            val topicId = action?.topicId ?: ""
+            if (state.tasks.get(topicId) == null) {
+//                action.task?.connect()
+                action.task?.let {
+                    state.tasks.put(topicId, it)
+                }
+            }
+        }
+
+        is TopicState.PublishAction -> {
+            val task = state.tasks.get(action.topicId)
+            task?.publish(action.message)
+        }
+
+        is TopicState.StopAllTasksAction -> {
+            state.tasks.forEach {
+                it.value.disconnect()
+            }
+            state.tasks.clear()
+
+        }
+
     }
     return state
 }
@@ -76,7 +107,22 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
             (action as? TopicState.LoadTopicsAction)?.let {
                 val topicList = RealmInteractor().getTopics()
                 val topics = topicList.map {
-                    Topic(it.id ?: "", it.name ?: "", it.topic ?: "", it.value ?: "", it.time ?: "", it.serverId ?: "", it.type ?: "")
+                    Topic(it.id ?: "",
+                        it.name ?: "",
+                        it.topic ?: "",
+                        it.value ?: "",
+                        it.time ?: "",
+                        it.serverId ?: "",
+                        it.type ?: "")
+                }
+
+                val stopAllTasksAction = TopicState.StopAllTasksAction()
+                dispatch(stopAllTasksAction)
+
+                topics.forEach {
+                    val updateTaskAction = TopicState.UpdateTaskAction()
+                    updateTaskAction.topic = it
+                    dispatch(updateTaskAction)
                 }
 
                 val fetchTopicsAction = TopicState.FetchTopicsAction()
@@ -105,6 +151,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     val loadTopicAction = TopicState.LoadTopicAction()
                     loadTopicAction.id = action.topic?.id ?: ""
                     dispatch(loadTopicAction)
+
                 }
             }
 
@@ -132,6 +179,9 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                         val action2 = ServerState.LoadServerAction()
                         action2.id = it.serverId ?: ""
                         dispatch(action2)
+
+                        val loadTopicsAction = TopicState.LoadTopicsAction()
+//                        dispatch(loadTopicsAction)
                     }
                 }
             }
@@ -151,17 +201,20 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
 
                     val state = getState()?.topicState
 
+                    val task = state?.tasks?.get(action.topic?.id)
 
-                    if (state?.tasks?.get(action.topic?.id) != null) {
+
+                    if (task != null) {
 
                     } else {
                         val connector = TopicConnector()
                         connector.configure(topic, server)
                         connector.didReceiveMessage  = {
                             if (connector.topic.value != it) {
-                                val updateTopicAction = TopicState.UpdateTopicAction()
-                                updateTopicAction.topic = connector.topic
-                                dispatch(updateTopicAction)
+                                connector.topic.value = it
+                                    val updateTopicAction = TopicState.UpdateTopicAction()
+                                    updateTopicAction.topic = connector.topic
+                                    dispatch(updateTopicAction)
                             }
                         }
                     }

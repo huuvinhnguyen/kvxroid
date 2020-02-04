@@ -42,6 +42,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
     var onTrashClick: ((String) -> Unit)? = null
     var onItemTrashClick: ((String) -> Unit)? = null
     var onItemEditClick: ((String) -> Unit)? = null
+    var onSwitchClick: ((String) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemDetailBaseViewHolder<*> {
@@ -113,7 +114,9 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         }
     }
 
-    fun setItems() {
+    fun setItems(list: ArrayList<AnyObject>) {
+        items.clear()
+        items.addAll(list)
         items.add(ItemDetailPlusViewModel())
         items.add(ItemDetailTrashViewModel())
         notifyDataSetChanged()
@@ -143,11 +146,16 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
                 onInfoClick?.invoke(viewModel.id)
             }
 
+            itemView.btnSwitch.setOnSafeClickListener {
+                onSwitchClick?.invoke(viewModel.id)
+            }
+
         }
 
         override fun bind(viewModel: SwitchViewModel) {
             this.viewModel = viewModel
             itemView.textView.text = viewModel.name
+            itemView.tvValue.text = viewModel.value
         }
     }
 

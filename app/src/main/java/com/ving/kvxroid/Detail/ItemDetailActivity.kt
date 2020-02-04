@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import android.content.Intent
+import android.util.Log
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Redux.*
 import com.ving.kvxroid.Topic.AddTopicActivity
@@ -26,24 +27,17 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
             ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
         }
 
+        Log.i("#new State", items.size.toString())
+
+
         items.addAll(list)
 
-        val itemDetailAdapter = ItemDetailAdapter(items as ArrayList<AnyObject>).apply {
-            onItemClick = ::handleItemClick
-            onItemEditClick = ::handleEditClick
-            onItemPlusClick = ::handlePlusClick
-            onItemTrashClick = ::handleTrashClick
-            onInfoClick = ::handleInfoClick
-            onTrashClick = ::handleTopicRemoveClick
-        }
-
-        recyclerView.adapter = itemDetailAdapter
-
-        itemDetailAdapter.setItems()
+        adapter.setItems(items)
 
     }
 
-//    private lateinit var mqttAndroidClient: MqttAndroidClient
+//    private lateinit var mqttAndroidClient:
+    private lateinit var adapter: ItemDetailAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +66,18 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
     private fun initView() {
         recyclerView.layoutManager =  LinearLayoutManager(this@ItemDetailActivity)
+
+        adapter = ItemDetailAdapter(ArrayList()).apply {
+            onItemClick = ::handleItemClick
+            onItemEditClick = ::handleEditClick
+            onItemPlusClick = ::handlePlusClick
+            onItemTrashClick = ::handleTrashClick
+            onInfoClick = ::handleInfoClick
+            onTrashClick = ::handleTopicRemoveClick
+            onSwitchClick = ::handleSwitchClick
+        }
+
+        recyclerView.adapter = adapter
     }
 
     private fun handleItemClick() {
@@ -102,7 +108,6 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         val intent = Intent(this, AddTopicActivity::class.java)
         startActivity(intent)
 
-        mainStore.dispatch(TopicListConnectAction())
     }
 
     private fun handleTrashClick(information: String) {
@@ -138,6 +143,10 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         intent.putExtra("TOPIC_ID", information)
 
         startActivity(intent)
+
+    }
+
+    private fun handleSwitchClick(information: String) {
 
     }
 
