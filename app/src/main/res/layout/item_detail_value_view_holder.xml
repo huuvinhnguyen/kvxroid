@@ -16,20 +16,34 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="textEmailAddress"
-        android:text="Header "
-        android:textFontWeight="800"
-        android:textColor="#0A1034"/>
+        android:text="Header " />
 
-    <ImageButton
-        android:id="@+id/btnSwitch"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_lock_power_off" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etUser"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Message" />
+        <ImageButton
+            android:id="@+id/btnPublish"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_send" />
+
+    </LinearLayout>
+
+
     <TextView
         android:id="@+id/tvValue"
         android:layout_width="wrap_content"
@@ -50,5 +64,3 @@
 
 
 </LinearLayout>
-
-

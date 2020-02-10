@@ -75,7 +75,6 @@ class AddServerAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ad
 
         items.clear()
         items.addAll(list)
-        items.add(ServerFooterViewModel(""))
         notifyDataSetChanged()
     }
 
@@ -147,7 +146,7 @@ class AddServerAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ad
         private lateinit var viewModel: ServerFooterViewModel
 
         init {
-            itemView.ibTrash.setOnSafeClickListener { onTrashClick?.invoke(viewModel.id) }
+            itemView.ibTrash.setOnSafeClickListener { onTrashClick?.invoke(viewModel.topicId) }
         }
 
         override fun bind(item: ServerFooterViewModel) {
@@ -156,7 +155,8 @@ class AddServerAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ad
     }
 
     data class ServerFooterViewModel(
-        var id: String = String.empty()
+        var topicId: String = String.empty(),
+        var serverId: String = String.empty()
     ) : AnyObject
 
 }

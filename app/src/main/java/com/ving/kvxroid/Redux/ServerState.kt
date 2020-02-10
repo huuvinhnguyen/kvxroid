@@ -19,8 +19,12 @@ data class ServerState(
     data class AddServerAction(val unit: Unit = Unit): Action {
         var server: Server? = null
     }
-    data class UpdateServerAction(val unit: Unit = Unit): Action
-    data class RemoveServerAction(val unit: Unit = Unit): Action
+    data class UpdateServerAction(val unit: Unit = Unit): Action {
+        var server: Server? = null
+    }
+    data class RemoveServerAction(val unit: Unit = Unit): Action {
+        var id: String = ""
+    }
     data class LoadServerAction(val unit: Unit = Unit): Action {
         var id: String = ""
     }
@@ -88,6 +92,35 @@ fun ServerState.Companion.middleware(): Middleware<AppState> = { dispatch, getSt
                 }
             }
 
+            (action as? ServerState.UpdateServerAction)?.let {
+
+                val interactor = RealmInteractor()
+                var item = ServerRealm()
+                action.server?.let {
+                    item.id = it.id
+                    item.name = it.name
+                    item.url = it.url
+                    item.user = it.user
+                    item.password = it.password
+                    item.port = it.port
+                    item.sslPort = it.sslPort
+                    interactor.updateServer(item) {
+                        val loadServerAction = ServerState.LoadServerAction()
+                        loadServerAction.id = it
+                        dispatch(loadServerAction)
+                    }
+                }
+            }
+
+            (action as? ServerState.RemoveServerAction)?.let {
+                val interactor = RealmInteractor()
+                action.id?.let {
+                    interactor.deleteServer(it) {
+                        val loadServersAction = ServerState.LoadServersAction()
+                        dispatch(loadServersAction)
+                    }
+                }
+            }
                 ?: next(action)
         }
     }

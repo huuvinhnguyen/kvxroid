@@ -4,6 +4,7 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
 
 data class TopicDetailServerViewModel(
+    val serverId: String = String.empty(),
     val topicId: String = String.empty(),
     val name: String = String.empty(),
     val url: String = String.empty(),

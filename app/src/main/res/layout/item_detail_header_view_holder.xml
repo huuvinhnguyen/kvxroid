@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:text="Header 1 "
-        android:gravity="center"
-        />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="left"
+        android:text="Header abc"
+        android:textColor="#0A1034"
+        android:textFontWeight="800"
+        android:textSize="32dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:src="@android:drawable/ic_menu_edit"
+           />
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

@@ -51,6 +51,7 @@ class TopicViewHolder(
 }
 
 data class TopicViewModel(
+    var id: String = String.empty(),
     var name: String = String.empty(),
     var topic: String = String.empty(),
     var type: String = String.empty()
