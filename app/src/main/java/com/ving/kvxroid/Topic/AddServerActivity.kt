@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Models.Server
+import com.ving.kvxroid.Models.Topic
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.ServerState
 import com.ving.kvxroid.Redux.TopicState
@@ -32,10 +33,15 @@ class AddServerActivity : AppCompatActivity(), StoreSubscriber<ServerState> {
 
         val items: ArrayList<AnyObject> = ArrayList()
         items.add(serverViewModel)
+        if (mode == Mode.Edit) {
+            items.add(AddServerAdapter.ServerFooterViewModel())
+
+        }
 
         val adapter = AddServerAdapter(ArrayList()).apply {
             onSaveClick = ::handleSaveServer
             onSelectClick = ::handleSelectServer
+            onTrashClick = ::handleDeleteServer
 
         }
 
@@ -45,11 +51,32 @@ class AddServerActivity : AppCompatActivity(), StoreSubscriber<ServerState> {
 
     }
 
+    enum class Mode(var topicId: String, var serverId: String) {
+        Add(topicId = "", serverId = ""),
+        Edit("", "")
+    }
+
+    var mode = Mode.Add
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_server)
         initView()
+
+        intent?.getStringExtra("TOPIC_ID")?.also { id ->
+            var topic = mainStore.state.topicState.topics?.filter { it.id == id }?.first() ?: Topic()
+            if (topic.serverId == "") {
+                mode = Mode.Add
+                mode.topicId = id
+                mode.serverId = UUID.randomUUID().toString()
+            } else {
+                mode = Mode.Edit
+                mode.topicId = id
+                mode.serverId = topic.serverId
+            }
+        }
+
 
         val action = ServerState.LoadServerAction()
         action.id = ""
@@ -58,8 +85,6 @@ class AddServerActivity : AppCompatActivity(), StoreSubscriber<ServerState> {
         mainStore.subscribe(this){
             it.select { it.serverState }
         }
-
-
     }
 
     private var serverViewModel = AddServerAdapter.ServerViewModel()
@@ -79,11 +104,8 @@ class AddServerActivity : AppCompatActivity(), StoreSubscriber<ServerState> {
 
     private fun handleSaveServer() {
 
-
-
-
         val server = Server(
-            UUID.randomUUID().toString(),
+            mode.serverId,
             serverViewModel.name,
             serverViewModel.server,
             serverViewModel.user,
@@ -92,21 +114,44 @@ class AddServerActivity : AppCompatActivity(), StoreSubscriber<ServerState> {
             serverViewModel.sslPort
         )
 
-        intent?.getStringExtra("TOPIC_ID")?.also { id ->
 
-            var topic = mainStore.state.topicState.topics.filter { it.id == id}.first()
+        when (mode) {
 
-            val action1 = TopicState.UpdateTopicAction()
-            topic.serverId = server?.id
-            action1.topic = topic
-            mainStore.dispatch(action1)
+            Mode.Add -> {
 
+                val addServerAction = ServerState.AddServerAction()
+                addServerAction.server = server
+                mainStore.dispatch(addServerAction)
+
+                val updateTopicAction = TopicState.UpdateTopicAction()
+                var topic = mainStore.state.topicState.topics?.filter { it.id == mode.topicId }?.first()
+
+                topic?.serverId = server.id
+                updateTopicAction.topic = topic
+                mainStore.dispatch(updateTopicAction)
+            }
+
+            Mode.Edit -> {
+
+                val updateServerAction = ServerState.UpdateServerAction()
+                updateServerAction.server = server
+                mainStore.dispatch(updateServerAction)
+            }
         }
 
+        finish()
+    }
 
-        val action2 = ServerState.AddServerAction()
-        action2.server = server
-        mainStore.dispatch(action2)
+    private fun handleDeleteServer(information: String) {
+        val deleteServerAction = ServerState.RemoveServerAction()
+        deleteServerAction.id = mode.serverId
+        mainStore.dispatch(deleteServerAction)
+
+        val updateTopicAction = TopicState.UpdateTopicAction()
+        var topic = mainStore.state.topicState.topics?.filter { it.id == mode.topicId }?.first()
+        topic?.serverId = ""
+        updateTopicAction.topic = topic
+        mainStore.dispatch(updateTopicAction)
 
         finish()
     }

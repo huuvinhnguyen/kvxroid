@@ -32,6 +32,8 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
     var onLoginClick: ((String) -> Unit)? = null
     var onLogoutClick: ((String) -> Unit)? = null
     var onTrashClick: ((String) -> Unit)? = null
+    var onEditTopicClick: ((String) -> Unit)? = null
+    var onEditServerClick: ((String) -> Unit)? = null
 
 
 
@@ -129,13 +131,17 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
     inner class TopicDetailServerViewHolder(itemView: View) :
         TopicDetailBaseViewHolder<TopicDetailServerViewModel>(itemView) {
 
+        lateinit var viewModel1: TopicDetailServerViewModel
+
         init {
             itemView.setOnSafeClickListener {
                 onItemClick?.invoke()
             }
+
         }
 
         override fun bind(item: TopicDetailServerViewModel) {
+//            this.viewModel = item
             itemView.tvName.text = item.name
             itemView.tvServer.text = item.url
             itemView.tvUser.text = item.username
@@ -152,19 +158,30 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             itemView.tvPort.text = item.port
             itemView.tvSslPort.text = item.sslPort
             itemView.btnLogout.setOnClickListener { clickListener?.invoke(item.topicId)  }
+
+            itemView.btnEditServer.setOnSafeClickListener {
+                onEditServerClick?.invoke(item.topicId)
+            }
         }
     }
 
     inner class TopicDetailHeaderViewHolder(itemView: View) :
         TopicDetailBaseViewHolder<TopicDetailHeaderViewModel>(itemView) {
 
+        private lateinit var viewModel: TopicDetailHeaderViewModel
+
         init {
             itemView.setOnSafeClickListener {
                 onItemClick?.invoke()
             }
+
+            itemView.btnEditTopic.setOnSafeClickListener {
+                onEditTopicClick?.invoke(viewModel.id)
+            }
         }
 
         override fun bind(item: TopicDetailHeaderViewModel) {
+            this.viewModel = item
             itemView.tvHeader.text = item.name
 
         }
@@ -172,6 +189,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
 
 
     data class TopicDetailHeaderViewModel(
+        val id: String = String.empty(),
         val name: String = String.empty()
     ) : AnyObject
 
@@ -182,6 +200,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             itemView.imageButton.setOnSafeClickListener {
                 onTrashClick?.invoke(viewModel.id)
             }
+
         }
 
         override  fun bind(item: TopicDetailFooterViewModel) {

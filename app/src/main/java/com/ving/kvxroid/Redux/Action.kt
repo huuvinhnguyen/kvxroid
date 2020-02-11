@@ -16,7 +16,6 @@ data class TopicActionRemove(val unit: Unit = Unit): Action {
     var id: String = ""
 }
 data class TopicListLoadAction(val unit: Unit = Unit): Action
-data class TopicListConnectAction(val unit: Unit = Unit): Action
 data class TopicListUpdateAction(val unit: Unit = Unit): Action
 data class TopicListAddAction(val unit: Unit = Unit): Action
 data class TopicListGetItemAction(val unit: Unit = Unit): Action

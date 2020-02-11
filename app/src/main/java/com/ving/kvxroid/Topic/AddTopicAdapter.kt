@@ -75,8 +75,10 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
         }
     }
 
-    fun setItems() {
+    fun setItems(list: ArrayList<AnyObject>) {
 
+        items.clear()
+        items.addAll(list)
         notifyDataSetChanged()
     }
 

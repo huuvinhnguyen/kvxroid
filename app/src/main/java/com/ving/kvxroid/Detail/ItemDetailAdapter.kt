@@ -32,6 +32,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         private const val TYPE_CHART  = 4
         private const val TYPE_CHART_LINE = 5
         private const val TYPE_FOOTER = 6
+        private const val TYPE_VALUE = 7
 
     }
 
@@ -42,6 +43,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
     var onTrashClick: ((String) -> Unit)? = null
     var onItemTrashClick: ((String) -> Unit)? = null
     var onItemEditClick: ((String) -> Unit)? = null
+    var onSwitchClick: ((String, String) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemDetailBaseViewHolder<*> {
@@ -51,11 +53,19 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
                     .inflate(R.layout.item_detail_header_view_holder, parent, false)
                 return HeaderViewHolder(view)
             }
+
             TYPE_SWITCH -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_detail_switch_view_holder, parent, false)
                 return SwitchViewHolder(view)
             }
+
+            TYPE_VALUE -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_detail_value_view_holder, parent, false)
+                return ValueViewHolder(view)
+            }
+
             TYPE_PLUS -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_detail_plus_view_holder, parent, false)
@@ -89,6 +99,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         when (viewHolder) {
             is HeaderViewHolder -> viewHolder.bind(element as ItemDetailHeaderViewModel)
             is SwitchViewHolder -> viewHolder.bind(element as SwitchViewModel)
+            is ValueViewHolder -> viewHolder.bind(element as ValueViewModel)
             is PlusViewHolder ->   viewHolder.bind(element as ItemDetailPlusViewModel)
             is TrashViewHolder ->   viewHolder.bind(element as ItemDetailTrashViewModel)
             is ChartViewHolder ->   viewHolder.bind(element as ItemDetailChartViewModel)
@@ -103,6 +114,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         return when (comparable) {
             is ItemDetailHeaderViewModel -> TYPE_HEADER
             is SwitchViewModel -> TYPE_SWITCH
+            is ValueViewModel -> TYPE_VALUE
             is ItemDetailPlusViewModel -> TYPE_PLUS
             is ItemDetailTrashViewModel -> TYPE_TRASH
             is ItemDetailChartViewModel -> TYPE_CHART
@@ -113,9 +125,12 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         }
     }
 
-    fun setItems() {
+    fun setItems(list: ArrayList<AnyObject>) {
+        items.clear()
+        items.addAll(list)
         items.add(ItemDetailPlusViewModel())
         items.add(ItemDetailTrashViewModel())
+        items.add(ValueViewModel())
         notifyDataSetChanged()
     }
 
@@ -143,15 +158,38 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
                 onInfoClick?.invoke(viewModel.id)
             }
 
+            itemView.btnSwitch.setOnSafeClickListener {
+                val message = if (viewModel.value == "1") "0" else "1"
+                val topicId = viewModel.id
+                onSwitchClick?.invoke(topicId, message)
+            }
+
         }
 
         override fun bind(viewModel: SwitchViewModel) {
             this.viewModel = viewModel
             itemView.textView.text = viewModel.name
+            itemView.tvValue.text = viewModel.value
         }
     }
 
     data class SwitchViewModel(
+        val id: String = String.empty(),
+        val name: String = String.empty(),
+        val value: String = String.empty()
+    ) : AnyObject
+
+
+    inner class ValueViewHolder(itemView: View) : ItemDetailBaseViewHolder<ValueViewModel>(itemView) {
+
+        private lateinit var viewModel: ValueViewModel
+
+        override fun bind(viewModel: ValueViewModel) {
+
+        }
+    }
+
+    data class ValueViewModel(
         val id: String = String.empty(),
         val name: String = String.empty(),
         val value: String = String.empty()

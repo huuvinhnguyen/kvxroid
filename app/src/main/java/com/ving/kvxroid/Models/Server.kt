@@ -4,7 +4,7 @@ import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
 
 data class Server(
-    var id: String,
+    var id: String = String.empty(),
     var name: String = String.empty(),
     var url: String = String.empty(),
     var user: String = String.empty(),
