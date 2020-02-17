@@ -11,7 +11,7 @@ import org.rekotlin.StateType
 
 data class TopicState(
     var topic: Topic? = null,
-    var topics: List<Topic>? = emptyList(),
+    var topics: MutableList<Topic>? = arrayListOf(),
     var editableTopic: Topic? = null,
     val tasks: MutableMap<String, TopicConnector> = mutableMapOf<String, TopicConnector>()
 
@@ -58,7 +58,7 @@ data class TopicState(
     }
 
     data class FetchTopicsAction(val unit: Unit = Unit): Action {
-        var topics: List<Topic> = emptyList()
+        var topics: MutableList<Topic> = arrayListOf()
     }
 
 
@@ -121,7 +121,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                         it.time ?: "",
                         it.serverId ?: "",
                         it.type ?: "")
-                }
+                }.toMutableList()
 
                 val stopAllTasksAction = TopicState.StopAllTasksAction()
                 dispatch(stopAllTasksAction)
@@ -153,6 +153,21 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     itemRef.qos = it.qos
 
                 }
+
+                val topics = getState()?.topicState?.topics ?: arrayListOf()
+
+                action.topic?.let {
+                    topics.forEachIndexed { index, topic ->
+                        if(topic.id == action.topic?.id) {
+                            topics[index] = it
+                        }
+                    }
+                }
+
+                val fetchTopicsAction = TopicState.FetchTopicsAction()
+                fetchTopicsAction.topics = topics
+                dispatch(fetchTopicsAction)
+
                 interactor.updateTopic(itemRef) {
 
                     val loadTopicAction = TopicState.LoadTopicAction()
@@ -206,7 +221,14 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     action2.id = it.serverId ?: ""
                     dispatch(action2)
 
+                    val updateTaskAction = TopicState.UpdateTaskAction()
+                    updateTaskAction.topic = it
+                    dispatch(updateTaskAction)
+
+
                 }
+
+
 
             }
 
