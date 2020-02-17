@@ -155,7 +155,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         super.onDestroy()
         mainStore.unsubscribe(this)
         mainStore.state.topicState.tasks?.clear()
-        mainStore.state.topicState.topics =  emptyList()
+        mainStore.state.topicState.topics =  arrayListOf()
     }
 
     override fun onBackPressed() {
