@@ -7,7 +7,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Models.Topic
 import com.ving.kvxroid.R
+import com.ving.kvxroid.Redux.TopicState
+import com.ving.kvxroid.Redux.mainStore
 import kotlinx.android.synthetic.main.activity_topic_type.*
 
 class TopicTypeActivity : AppCompatActivity() {
@@ -19,6 +22,9 @@ class TopicTypeActivity : AppCompatActivity() {
         TopicTypeAdapter.ItemViewModel("humidity",false)
     ) as ArrayList<AnyObject>
 
+    private var topic = Topic()
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
@@ -29,6 +35,19 @@ class TopicTypeActivity : AppCompatActivity() {
         // Handle item selection
         return when (item.itemId) {
             R.id.action_save -> {
+
+                var topic = mainStore.state.topicState.editableTopic
+
+                val viewModel = items.filter { it as TopicTypeAdapter.ItemViewModel
+                    it.isSelected == true
+                }.first() as TopicTypeAdapter.ItemViewModel
+
+                topic?.type = viewModel.title
+
+                val action = TopicState.FetchEditableTopicAction()
+                action.topic = topic
+                mainStore.dispatch(action)
+
 
                 finish()
                 true

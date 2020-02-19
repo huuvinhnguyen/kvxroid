@@ -17,7 +17,8 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
         private const val TYPE_TOPIC = 0
         private const val TYPE_QOS = 2
         private const val TYPE_SAVE = 1
-        private const val TYPE_SWITCH =3
+        private const val TYPE_SWITCH = 3
+        private const val TYPE_RETAIN = 4
 
 
     }
@@ -30,6 +31,7 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
         when (holder) {
             is TopicViewHolder -> holder.bind(element as TopicViewModel, onSelectClick)
             is TopicQosViewHolder -> holder.bind(element as TopicQosViewModel)
+            is TopicRetainViewHolder -> holder.bind(element as TopicRetainViewModel)
             is TopicSaveViewHolder -> {
                 holder.bind(element as TopicSaveViewModel, onSaveClick)
 
@@ -53,6 +55,10 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
             TYPE_QOS -> {
                 return TopicQosViewHolder.renderView(parent)
             }
+
+            TYPE_RETAIN -> {
+                return TopicRetainViewHolder.renderView(parent)
+            }
             TYPE_SAVE -> {
                 return TopicSaveViewHolder.renderView(parent)
             }
@@ -68,6 +74,7 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
         return when (comparable) {
             is TopicViewModel -> TYPE_TOPIC
             is TopicQosViewModel -> TYPE_QOS
+            is TopicRetainViewModel -> TYPE_RETAIN
             is TopicSaveViewModel -> TYPE_SAVE
             is TopicSwitchViewModel -> TYPE_SWITCH
 

@@ -17,10 +17,14 @@ import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
+import com.ving.kvxroid.extensions.onChange
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
 import kotlinx.android.synthetic.main.item_detail_chart_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.*
+import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.btnInfo
+import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvValue
+import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.*
 
 class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<ItemDetailBaseViewHolder<*>>() {
 
@@ -44,6 +48,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
     var onItemTrashClick: ((String) -> Unit)? = null
     var onItemEditClick: ((String) -> Unit)? = null
     var onSwitchClick: ((String, String) -> Unit)? = null
+    var onSendClick: ((String, String) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemDetailBaseViewHolder<*> {
@@ -130,7 +135,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         items.addAll(list)
         items.add(ItemDetailPlusViewModel())
         items.add(ItemDetailTrashViewModel())
-        items.add(ValueViewModel())
+//        items.add(ValueViewModel())
         notifyDataSetChanged()
     }
 
@@ -182,17 +187,35 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
 
     inner class ValueViewHolder(itemView: View) : ItemDetailBaseViewHolder<ValueViewModel>(itemView) {
 
+        init {
+
+            itemView.btnInfo.setOnSafeClickListener {
+                onInfoClick?.invoke(viewModel.id)
+            }
+
+            itemView.btnSend.setOnSafeClickListener {
+                val topicId = viewModel.id
+                onSendClick?.invoke(topicId, viewModel.message)
+            }
+
+        }
+
         private lateinit var viewModel: ValueViewModel
 
         override fun bind(viewModel: ValueViewModel) {
-
+            this.viewModel = viewModel
+            itemView.etMessage.onChange {
+                viewModel.message = it
+            }
+            itemView.tvName.text = viewModel.name
         }
     }
 
     data class ValueViewModel(
         val id: String = String.empty(),
         val name: String = String.empty(),
-        val value: String = String.empty()
+        var value: String = String.empty(),
+        var message: String = String.empty()
     ) : AnyObject
 
     inner class PlusViewHolder(

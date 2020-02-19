@@ -108,6 +108,25 @@ class TopicQosViewHolder(
 
 data class TopicQosViewModel(val value: String = String.empty()) : AnyObject
 
+class TopicRetainViewHolder(
+    override val containerView: View
+) : AddTopicBaseViewHolder<TopicRetainViewModel>(containerView), LayoutContainer {
+    companion object {
+        fun renderView(parent: ViewGroup): TopicRetainViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.add_topic_retain_view_holder, parent, false)
+            return TopicRetainViewHolder(view)
+        }
+    }
+
+    fun bind(viewModel: TopicRetainViewModel) {
+
+    }
+
+}
+
+data class TopicRetainViewModel(val value: String = String.empty()): AnyObject
+
 
 class TopicSwitchViewHolder(
     override val containerView: View

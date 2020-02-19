@@ -24,11 +24,12 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         items.add(ItemDetailHeaderViewModel("header 13"))
 
         val list = state.topics?.map {
-//            when(it.type) {
-//                "switch" -> ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
-//                else -> ItemDetailAdapter.ValueViewModel()
-//            }
-            ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
+            when(it.type) {
+                "switch" -> ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
+                "value" -> ItemDetailAdapter.ValueViewModel(it.id, it.name, it.value)
+                else -> throw IllegalArgumentException("Invalid type")
+            }
+//            ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
         } ?: emptyList()
 
         Log.i("#new State", items.size.toString())
@@ -72,7 +73,8 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
             onItemTrashClick = ::handleTrashClick
             onInfoClick = ::handleInfoClick
             onTrashClick = ::handleTopicRemoveClick
-            onSwitchClick = ::handleSwitchClick
+            onSwitchClick = ::handlePublishClick
+            onSendClick = ::handlePublishClick
         }
 
         recyclerView.adapter = adapter
@@ -144,7 +146,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
     }
 
-    private fun handleSwitchClick(topicId: String, message: String) {
+    private fun handlePublishClick(topicId: String, message: String) {
         val action = TopicState.PublishAction()
         action.topicId = topicId
         action.message = message

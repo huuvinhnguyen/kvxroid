@@ -32,6 +32,7 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
             items.add(topicViewModel)
             items.add(topicSwitchViewModel)
             items.add(TopicQosViewModel())
+            items.add(TopicRetainViewModel())
             items.add(TopicSaveViewModel())
 
             adapter.setItems(items)
@@ -75,7 +76,7 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
             Mode.Edit -> {
 //                val topic = mainStore.state.topicState.topic
                 val action = TopicState.FetchEditableTopicAction()
-                action.topic = mainStore.state.topicState.topic
+                action.topic = mainStore.state.topicState.topic?.copy()
                 mainStore.dispatch(action)
 
             }
@@ -84,6 +85,19 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         mainStore.subscribe(this){
             it.select { it.topicState }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainStore.unsubscribe(this)
+        mainStore.state.topicState.editableTopic = null
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        mainStore.unsubscribe(this)
+        mainStore.state.topicState.editableTopic = null
+
     }
 
     private fun initView() {
@@ -100,6 +114,7 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
     private fun handleSelectClick(information: String) {
         val intent = Intent(this, TopicTypeActivity::class.java)
+
         startActivity(intent)
     }
 

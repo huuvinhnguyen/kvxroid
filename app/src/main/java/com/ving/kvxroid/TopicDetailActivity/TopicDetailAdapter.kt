@@ -123,6 +123,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             itemView.tvValue.text = item.value
             itemView.tvTime.text = item.time
             itemView.tvQos.text = item.qos
+            itemView.tvType.text = item.type
             itemView.tvRetained.text = item.retained
         }
 
