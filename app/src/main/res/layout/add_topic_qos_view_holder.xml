@@ -13,21 +13,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center">
-        <RadioButton android:id="@+id/radio_pirates"
+        <RadioButton android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  0  " />
+        <!--            android:onClick="onRadioButtonClicked"/>-->
+        <RadioButton android:id="@+id/radio1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="  1  " />
         <!--            android:onClick="onRadioButtonClicked"/>-->
-        <RadioButton android:id="@+id/radio_ninjas"
+
+        <RadioButton android:id="@+id/radio2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="  2  " />
-        <!--            android:onClick="onRadioButtonClicked"/>-->
-
-        <RadioButton android:id="@+id/radio_ninjas2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  3  " />
     </RadioGroup>
 
 </LinearLayout>

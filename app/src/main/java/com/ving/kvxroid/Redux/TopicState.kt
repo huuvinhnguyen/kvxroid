@@ -120,7 +120,9 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                         it.value ?: "",
                         it.time ?: "",
                         it.serverId ?: "",
-                        it.type ?: "")
+                        it.type ?: "",
+                        it.qos ?: "",
+                        it.retain ?: "")
                 }.toMutableList()
 
                 val stopAllTasksAction = TopicState.StopAllTasksAction()
@@ -148,7 +150,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     itemRef.type = it.type
                     itemRef.topic = it.topic
                     itemRef.time = it.time
-                    itemRef.retain = ""
+                    itemRef.retain = it.retain
                     itemRef.itemId = ""
                     itemRef.qos = it.qos
 
@@ -284,7 +286,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     itemRef.type = it.type
                     itemRef.topic = it.topic
                     itemRef.time = it.time
-                    itemRef.retain = ""
+                    itemRef.retain = it.retain
                     itemRef.itemId = ""
                     itemRef.qos = it.qos
                 }

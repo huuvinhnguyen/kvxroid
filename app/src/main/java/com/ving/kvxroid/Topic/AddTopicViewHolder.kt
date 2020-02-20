@@ -10,6 +10,8 @@ import com.ving.kvxroid.extensions.empty
 import com.ving.kvxroid.extensions.onChange
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_item_name.view.etName
+import kotlinx.android.synthetic.main.add_topic_qos_view_holder.view.*
+import kotlinx.android.synthetic.main.add_topic_retain_view_holder.view.*
 import kotlinx.android.synthetic.main.add_topic_save_view_holder.view.*
 import kotlinx.android.synthetic.main.add_topic_view_holder.view.*
 import kotlinx.android.synthetic.main.add_topic_switch_view_holder.*
@@ -91,6 +93,11 @@ class TopicQosViewHolder(
 ) : AddTopicBaseViewHolder<TopicQosViewModel>(containerView),
     LayoutContainer {
 
+    private lateinit var viewModel: TopicQosViewModel
+
+    init {
+    }
+
     companion object {
         fun renderView(parent: ViewGroup): TopicQosViewHolder {
 
@@ -102,15 +109,40 @@ class TopicQosViewHolder(
 
     fun bind(viewModel: TopicQosViewModel) {
 
+        this.viewModel = viewModel
+
+        if (viewModel.value == "0") {
+            itemView.radio0.isChecked = true
+        } else if (viewModel.value == "1") {
+            itemView.radio1.isChecked = true
+
+        } else if (viewModel.value == "2") {
+            itemView.radio2.isChecked = true
+        }
+
+        itemView.radio0.setOnClickListener {
+            viewModel.value = "0"
+
+        }
+        itemView.radio1.setOnClickListener {
+            viewModel.value = "1"
+
+        }
+
+        itemView.radio2.setOnClickListener {
+            viewModel.value = "2"
+        }
+
     }
 
 }
 
-data class TopicQosViewModel(val value: String = String.empty()) : AnyObject
+data class TopicQosViewModel(var value: String = String.empty()) : AnyObject
 
 class TopicRetainViewHolder(
     override val containerView: View
 ) : AddTopicBaseViewHolder<TopicRetainViewModel>(containerView), LayoutContainer {
+    private lateinit var viewModel: TopicRetainViewModel
     companion object {
         fun renderView(parent: ViewGroup): TopicRetainViewHolder {
             val view = LayoutInflater.from(parent.context)
@@ -121,11 +153,27 @@ class TopicRetainViewHolder(
 
     fun bind(viewModel: TopicRetainViewModel) {
 
+        this.viewModel = viewModel
+
+        if (viewModel.value == "0") {
+            itemView.radioNo.isChecked = true
+        } else if (viewModel.value == "1") {
+            itemView.radioYes.isChecked = true
+        }
+
+        itemView.radioYes.setOnClickListener {
+            viewModel.value = "1"
+        }
+
+        itemView.radioNo.setOnClickListener {
+            viewModel.value = "0"
+        }
+
     }
 
 }
 
-data class TopicRetainViewModel(val value: String = String.empty()): AnyObject
+data class TopicRetainViewModel(var value: String = String.empty()): AnyObject
 
 
 class TopicSwitchViewHolder(
