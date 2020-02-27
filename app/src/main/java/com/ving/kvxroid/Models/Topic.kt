@@ -14,6 +14,5 @@ data class Topic(
     var qos: String = String.empty(),
     var retain: String = String.empty(),
     var itemId: String = String.empty()
-
     ): AnyObject
 

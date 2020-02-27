@@ -151,6 +151,7 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
                     topicQosViewModel.value,
                     topicRetainViewModel.value,
                     itemId)
+
                 val action = TopicState.AddTopicAction()
                 action.topic = topic
                 mainStore.dispatch(action)

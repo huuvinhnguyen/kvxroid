@@ -294,6 +294,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     itemRef.qos = it.qos
                 }
 
+
                 val realmInteractor = RealmInteractor()
                 realmInteractor.addTopic(itemRef) {
                     val itemId = action.topic?.itemId ?: ""
