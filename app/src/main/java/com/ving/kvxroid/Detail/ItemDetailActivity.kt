@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.activity_item_detail.*
 import android.content.Intent
 import android.util.Log
 import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Models.Item
 import com.ving.kvxroid.Redux.*
 import com.ving.kvxroid.Topic.AddTopicActivity
 import com.ving.kvxroid.TopicDetailActivity.TopicDetailActivity
@@ -21,7 +22,14 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
     override fun newState(state: TopicState) {
 
         val items: ArrayList<AnyObject> = ArrayList()
-        items.add(ItemDetailHeaderViewModel("header 13"))
+
+        val id = intent?.getStringExtra("ITEM_ID") ?: ""
+
+        val itemName = mainStore.state.itemState.items.find { it.id == id }?.name ?: ""
+
+        items.add(ItemDetailHeaderViewModel(itemName))
+
+
 
         val list = state.topics?.map {
             when(it.type) {
@@ -29,7 +37,6 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
                 "value" -> ItemDetailAdapter.ValueViewModel(it.id, it.name, it.value)
                 else -> throw IllegalArgumentException("Invalid type")
             }
-//            ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
         } ?: emptyList()
 
         Log.i("#new State", items.size.toString())
@@ -49,19 +56,17 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         setContentView(com.ving.kvxroid.R.layout.activity_item_detail)
         initView()
 
-        mainStore.dispatch(TopicState.LoadTopicsAction())
+        val id = intent?.getStringExtra("ITEM_ID") ?: ""
+        val action = TopicState.LoadTopicsAction()
+        action.itemId = id
 
+        mainStore.dispatch(action)
         mainStore.subscribe(this){
             it.select { it.topicState }
 //                .skipRepeats()
         }
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        mqttAndroidClient.unregisterResources()
-//        mqttAndroidClient.close()
-//    }
 
     private fun initView() {
         recyclerView.layoutManager =  LinearLayoutManager(this@ItemDetailActivity)
@@ -94,18 +99,20 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         intent?.getStringExtra("ITEM_ID")?.also {
             val actionData =  SetRouteSpecificData(route = routes as Route, data = it)
             mainStore.dispatch(actionData)
+
+
+            val action = SetRouteAction(route = routes)
+            mainStore.dispatch(action)
+
         }
-
-
-        val action = SetRouteAction(route = routes)
-        mainStore.dispatch(action)
-
     }
 
     private fun handlePlusClick(information: String) {
 
         println("Plus Button")
+        val itemId = intent?.getStringExtra("ITEM_ID") ?: ""
         val intent = Intent(this, AddTopicActivity::class.java)
+        intent.putExtra("ITEM_ID", itemId)
         startActivity(intent)
 
     }
@@ -158,6 +165,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         mainStore.unsubscribe(this)
         mainStore.state.topicState.tasks?.clear()
         mainStore.state.topicState.topics =  arrayListOf()
+
     }
 
     override fun onBackPressed() {

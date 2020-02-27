@@ -239,8 +239,8 @@ class TopicConnector {
         try {
             encodedPayload = data.toByteArray(charset("UTF-8"))
             val message = MqttMessage(encodedPayload)
-            message.qos = 2
-            message.isRetained = false
+            message.qos = this.topic?.qos?.toInt() ?: 0
+            message.isRetained = this.topic?.retain == "1"
             mqttAndroidClient?.publish(topic, message)
         } catch (e: Exception) {
             // Give Callback on error here

@@ -40,9 +40,9 @@ object RoutableHelper {
     fun createItemNameActivity(context: Context): ItemNameActivityRoutable {
         val intent = Intent(context, ItemNameActivity::class.java)
 
-//        val route = mainStore.state.navigationState.route
-//        val id = mainStore.state.navigationState.getRouteSpecificState<String>(route) ?: ""
-//        intent.putExtra("ITEM_ID", id)
+        val route = mainStore.state.navigationState.route
+        val id = mainStore.state.navigationState.getRouteSpecificState<String>(route) ?: ""
+        intent.putExtra("ITEM_ID", id)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
         return ItemNameActivityRoutable(context)

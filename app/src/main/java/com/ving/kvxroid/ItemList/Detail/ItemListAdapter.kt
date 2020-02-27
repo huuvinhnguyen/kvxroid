@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
-import com.ving.kvxroid.Models.Item
 import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
@@ -55,7 +54,7 @@ class ItemListAdapter(
     override fun getItemViewType(position: Int): Int {
         val comparable = items[position]
         return when (comparable) {
-            is Item -> TYPE_ITEM
+            is ItemViewModel -> TYPE_ITEM
             is ItemDetailPlusViewModel -> TYPE_PLUS
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
@@ -67,7 +66,7 @@ class ItemListAdapter(
 
          when (viewHolder) {
             is ItemViewHolder -> {
-                val viewModel = items[position] as Item
+                val viewModel = items[position] as ItemViewModel
                 viewHolder.bindView(viewModel)
             }
         }
@@ -82,9 +81,9 @@ class ItemListAdapter(
         override val containerView: View
     ):  RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
-        private lateinit var viewModel: Item
+        private lateinit var viewModel: ItemViewModel
 
-        fun bindView(viewModel: Item) {
+        fun bindView(viewModel: ItemViewModel) {
             this.viewModel = viewModel
             itemView.textTitle.text = viewModel.name
 
@@ -118,11 +117,10 @@ class ItemListAdapter(
         }
     }
 
-    data class ViewModel (
+    data class ItemViewModel (
         val id: String,
         val name: String,
-        val imageUrl: String,
-        var isSelected: Boolean
+        val imageUrl: String
     ) : AnyObject
 
     abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {

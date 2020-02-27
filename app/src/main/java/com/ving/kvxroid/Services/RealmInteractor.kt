@@ -177,13 +177,13 @@ class RealmInteractor {
         finished(id)
     }
 
-    fun getTopics(): List<TopicRealm> {
+    fun getTopics(itemId: String): List<TopicRealm> {
 
         val context = BaseApplication.INSTANCE.applicationContext
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
 
-        val list = realm.where(TopicRealm::class.java).findAll()
+        val list = realm.where(TopicRealm::class.java).equalTo("itemId", itemId).findAll()
         return list
 
     }
@@ -228,6 +228,7 @@ class RealmInteractor {
     }
 
     fun getItem(id: String, finished: (ItemRealm?) -> Unit) {
+
         val context = BaseApplication.INSTANCE.applicationContext
 
         Realm.init(context)

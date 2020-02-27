@@ -32,7 +32,7 @@ fun appReducer(action: Action, state: AppState?): AppState {
 
 
 
-            val topicList = RealmInteractor().getTopics()
+            val topicList = RealmInteractor().getTopics("")
             val list = topicList.forEach {
                 val viewModel = ItemDetailSwitchViewModel(it.id ?:"", it.name ?:"")
                 items.add(viewModel)

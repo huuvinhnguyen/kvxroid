@@ -5,11 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ving.kvxroid.AnyObject
-import com.ving.kvxroid.Detail.ItemTopicViewModel
 import com.ving.kvxroid.Models.Topic
 import com.ving.kvxroid.R
-import com.ving.kvxroid.Redux.ItemState
-import com.ving.kvxroid.Redux.ServerState
 import com.ving.kvxroid.Redux.TopicState
 import com.ving.kvxroid.Redux.mainStore
 import kotlinx.android.synthetic.main.activity_item_topic.recyclerView
@@ -28,11 +25,15 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
             topicViewModel = TopicViewModel(it.id, it.name, it.topic, it.type)
             topicSwitchViewModel = TopicSwitchViewModel("")
+            topicQosViewModel = TopicQosViewModel(it.qos)
+            topicRetainViewModel = TopicRetainViewModel(it.retain)
 
             items.add(topicViewModel)
-            items.add(topicSwitchViewModel)
-            items.add(TopicQosViewModel())
-            items.add(TopicRetainViewModel())
+            if (it.type == "switch") {
+                items.add(topicSwitchViewModel)
+            }
+            items.add(topicQosViewModel)
+            items.add(topicRetainViewModel)
             items.add(TopicSaveViewModel())
 
             adapter.setItems(items)
@@ -49,6 +50,8 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
     private var topicViewModel = TopicViewModel()
     private var topicSwitchViewModel = TopicSwitchViewModel()
+    private var topicQosViewModel = TopicQosViewModel()
+    private var topicRetainViewModel = TopicRetainViewModel()
     lateinit var adapter: AddTopicAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,8 +116,14 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
     }
 
     private fun handleSelectClick(information: String) {
-        val intent = Intent(this, TopicTypeActivity::class.java)
+        topic.name = topicViewModel.name
+        topic.topic = topicViewModel.topic
+        topic.type = topicViewModel.type
+        topic.qos = topicQosViewModel.value
+        topic.retain = topicRetainViewModel.value
 
+        val intent = Intent(this, TopicTypeActivity::class.java)
+        intent.putExtra("TYPE_ID", information)
         startActivity(intent)
     }
 
@@ -123,12 +132,25 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         topic.name = topicViewModel.name
         topic.topic = topicViewModel.topic
         topic.type = topicViewModel.type
+        topic.qos = topicQosViewModel.value
+        topic.retain = topicRetainViewModel.value
 
         when(mode) {
 
             Mode.Add -> {
 
-                val topic = Topic(UUID.randomUUID().toString(), topic.name , topic.topic , "", "", topic.serverId, topic.type, "")
+                val itemId = intent.getStringExtra("ITEM_ID") ?: ""
+
+                val topic = Topic(
+                    UUID.randomUUID().toString(),
+                    topic.name ,
+                    topic.topic ,
+                    topic.value, "",
+                    topic.serverId,
+                    topic.type,
+                    topicQosViewModel.value,
+                    topicRetainViewModel.value,
+                    itemId)
                 val action = TopicState.AddTopicAction()
                 action.topic = topic
                 mainStore.dispatch(action)
@@ -136,7 +158,7 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
             Mode.Edit -> {
 
-                val topic = Topic( mode.topicId, topic.name , topic.topic , topic.value, "", topic.serverId, topic.type, "")
+                val topic = Topic( mode.topicId, topic.name , topic.topic , topic.value, "", topic.serverId, topic.type, topicQosViewModel.value, topicRetainViewModel.value)
                 val action = TopicState.UpdateTopicAction()
                 action.topic = topic
                 mainStore.dispatch(action)

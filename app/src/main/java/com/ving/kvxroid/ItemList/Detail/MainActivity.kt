@@ -3,12 +3,11 @@ package com.ving.kvxroid.ItemList.Detail
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.Detail.ItemDetailActivity
+import com.ving.kvxroid.Detail.ItemDetailPlusViewModel
+import com.ving.kvxroid.Models.Item
 import kotlinx.android.synthetic.main.activity_main.*
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.*
@@ -22,7 +21,15 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
     override fun newState(state: ItemState) {
 
-        val itemListAdapter = ItemListAdapter(state.items as ArrayList<AnyObject>).apply {
+        var items: ArrayList<AnyObject> = arrayListOf()
+
+        val list = state.items.map { it as Item
+            ItemListAdapter.ItemViewModel(it.id, it.name, it.imageUrl) }
+        items.add(ItemDetailPlusViewModel())
+
+        items.addAll(list)
+
+        val itemListAdapter = ItemListAdapter(items as ArrayList<AnyObject>).apply {
             onItemClick = ::handleItemClick
             onItemPlusClick = ::handlePlusClick
 
@@ -69,9 +76,6 @@ class MainActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
     private fun handleItemClick(id: String) {
 
-        val intent = Intent(this, ItemDetailActivity::class.java)
-//        intent.putExtra("ITEM_ID", id)
-//        startActivity(intent)
 
         val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute)
         val actionData =  SetRouteSpecificData(route = routes as Route, data = id)

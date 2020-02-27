@@ -17,7 +17,7 @@ class TopicTypeActivity : AppCompatActivity() {
 
     private lateinit var adapter: TopicTypeAdapter
     private val items = arrayListOf(
-        TopicTypeAdapter.ItemViewModel("switch",false),
+        TopicTypeAdapter.ItemViewModel("switch",true),
         TopicTypeAdapter.ItemViewModel("value",false),
         TopicTypeAdapter.ItemViewModel("humidity",false)
     ) as ArrayList<AnyObject>
@@ -76,6 +76,15 @@ class TopicTypeActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         adapter.setItems(items)
+
+
+        intent?.getStringExtra("TYPE_ID")?.also { id ->
+            items.forEach { it as  TopicTypeAdapter.ItemViewModel
+                it.isSelected = it.title == id
+
+            }
+        }
+
 
     }
 

@@ -11,7 +11,9 @@ data class Topic(
     var time: String = String.empty(),
     var serverId: String = String.empty(),
     var type: String = String.empty(),
-    var qos: String = String.empty()
+    var qos: String = String.empty(),
+    var retain: String = String.empty(),
+    var itemId: String = String.empty()
 
     ): AnyObject
 
