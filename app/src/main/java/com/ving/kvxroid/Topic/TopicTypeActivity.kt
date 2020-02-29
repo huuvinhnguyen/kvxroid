@@ -19,7 +19,9 @@ class TopicTypeActivity : AppCompatActivity() {
     private val items = arrayListOf(
         TopicTypeAdapter.ItemViewModel("switch",true),
         TopicTypeAdapter.ItemViewModel("value",false),
-        TopicTypeAdapter.ItemViewModel("humidity",false)
+        TopicTypeAdapter.ItemViewModel("humidity",false),
+        TopicTypeAdapter.ItemViewModel("number",false)
+
     ) as ArrayList<AnyObject>
 
     private var topic = Topic()

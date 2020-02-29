@@ -70,6 +70,8 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
                 var topic = Topic()
 
                 topic.type = "switch"
+                topic.qos = "2"
+                topic.retain = "1"
                 val action = TopicState.FetchEditableTopicAction()
                 action.topic = topic
                 mainStore.dispatch(action)

@@ -35,6 +35,7 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
             when(it.type) {
                 "switch" -> ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
                 "value" -> ItemDetailAdapter.ValueViewModel(it.id, it.name, it.value)
+                "number" -> ItemDetailAdapter.NumberViewModel(it.id, it.name, it.value)
                 else -> throw IllegalArgumentException("Invalid type")
             }
         } ?: emptyList()
