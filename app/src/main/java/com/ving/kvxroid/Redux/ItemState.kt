@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 data class ItemState(
     var item: Item? = null,
-    val items: List<Any> = emptyList(),
+    val items: List<Item> = emptyList(),
     var itemDetailList: List<Any> = emptyList(),
     var images: List<Any> = emptyList()
 
@@ -33,13 +33,17 @@ data class ItemState(
 
     }
     data class ItemListAction(val unit: Unit = Unit) : Action
-    data class ItemListStateLoad(val unit: Unit = Unit) : Action
+
     data class ItemAddAction(val unit: Unit = Unit) : Action {
         var item: Item? = null
     }
 
     data class ItemRemoveAction(val unit: Unit = Unit): Action {
         var id: String = ""
+    }
+
+    data class ItemUpdateAction(val unit: Unit = Unit): Action {
+        var item: Item? = null
     }
 
     data class SelectImageAction(val unit: Unit = Unit) : Action {
@@ -65,23 +69,23 @@ fun ItemState.Companion.reducer(action: Action, state: ItemState?): ItemState {
             state = state.copy(images = action.list)
         }
 
-        is ItemState.ItemListStateLoad -> {
+//        is ItemState.ItemListStateLoad -> {
 
-            val items: ArrayList<AnyObject> = ArrayList()
-            items.add(ItemDetailHeaderViewModel("Header abc"))
-            items.add(ItemDetailSwitchViewModel("switch 1"))
-            items.add(ItemDetailSwitchViewModel("switch 2"))
-            items.add(ItemDetailPlusViewModel())
+//            val items: ArrayList<AnyObject> = ArrayList()
+//            items.add(ItemDetailHeaderViewModel("Header abc"))
+//            items.add(ItemDetailSwitchViewModel("switch 1"))
+//            items.add(ItemDetailSwitchViewModel("switch 2"))
+//            items.add(ItemDetailPlusViewModel())
 
-            val topicList = RealmInteractor().getTopics()
-            val list = topicList.forEach { topicRealm ->
-                val viewModel = ItemDetailSwitchViewModel("sffffff")
-                items.add(viewModel)
-            }
-
-            state = state.copy(itemDetailList = items)
-
-        }
+//            val topicList = RealmInteractor().getTopics()
+//            val list = topicList.forEach { topicRealm ->
+//                val viewModel = ItemDetailSwitchViewModel("sffffff")
+//                items.add(viewModel)
+//            }
+//
+//            state = state.copy(itemDetailList = items)
+//
+//        }
 
 
         is ItemState.ItemLoadAction -> {
@@ -96,7 +100,7 @@ fun ItemState.Companion.reducer(action: Action, state: ItemState?): ItemState {
         }
 
         is ItemState.ItemListAction -> {
-            val items: ArrayList<AnyObject> = ArrayList()
+            val items: ArrayList<Item> = ArrayList()
 
             val interactor = RealmInteractor()
 
@@ -105,9 +109,8 @@ fun ItemState.Companion.reducer(action: Action, state: ItemState?): ItemState {
             }
 
             items.addAll(list)
-            items.add(ItemDetailPlusViewModel())
 
-            state = state.copy(items = items)
+            state = state.copy(items = list)
 
         }
 
@@ -150,28 +153,33 @@ fun ItemState.Companion.middleware(): Middleware<AppState> = { dispatch, getStat
                 next(action)
                 val realmInteractor = RealmInteractor()
                 var item = ItemRealm()
-                item.id = UUID.randomUUID().toString()
+
 
                 action.item?.let {
+                    item.id = it.id
                     item.name = it.name
                     item.imageUrl = it.imageUrl
                     realmInteractor.addItem(item) {
                         dispatch(ItemState.ItemListAction())
 
                     }
-
                 }
 
 
             }
 
-            (action as? ItemUpdateAction)?.let {
+            (action as? ItemState.ItemUpdateAction)?.let {
 
                 val realmInteractor = RealmInteractor()
+                var item = ItemRealm()
+                action.item?.let {
+                    item.id = it.id
+                    item.name = it.name
+                    item.imageUrl = it.imageUrl
+                }
 
-                realmInteractor.updateItem(ItemRealm()) {
+                realmInteractor.updateItem(item) {
                     dispatch(ItemState.ItemListAction())
-
                 }
 
             }

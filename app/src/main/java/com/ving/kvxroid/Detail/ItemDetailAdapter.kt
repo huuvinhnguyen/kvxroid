@@ -17,10 +17,16 @@ import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
+import com.ving.kvxroid.extensions.onChange
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
 import kotlinx.android.synthetic.main.item_detail_chart_view_holder.view.*
+import kotlinx.android.synthetic.main.item_detail_number_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.*
+import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.btnInfo
+import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvValue
+import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.*
+import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.tvName as tvName1
 
 class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<ItemDetailBaseViewHolder<*>>() {
 
@@ -33,6 +39,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         private const val TYPE_CHART_LINE = 5
         private const val TYPE_FOOTER = 6
         private const val TYPE_VALUE = 7
+        private const val TYPE_NUMBER = 8
 
     }
 
@@ -44,6 +51,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
     var onItemTrashClick: ((String) -> Unit)? = null
     var onItemEditClick: ((String) -> Unit)? = null
     var onSwitchClick: ((String, String) -> Unit)? = null
+    var onSendClick: ((String, String) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemDetailBaseViewHolder<*> {
@@ -86,6 +94,14 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
                 ChartLineViewHolder.renderView(parent)
             }
 
+            TYPE_NUMBER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_detail_number_view_holder, parent, false)
+                return NumberViewHolder(view)
+
+            }
+
+
             else -> throw IllegalArgumentException("Invalid view type")
 
         }
@@ -104,6 +120,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             is TrashViewHolder ->   viewHolder.bind(element as ItemDetailTrashViewModel)
             is ChartViewHolder ->   viewHolder.bind(element as ItemDetailChartViewModel)
             is ChartLineViewHolder -> viewHolder.bind(element as ItemLineChartViewModel)
+            is NumberViewHolder -> viewHolder.bind(element as NumberViewModel)
 
             else -> throw IllegalArgumentException()
         }
@@ -119,7 +136,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             is ItemDetailTrashViewModel -> TYPE_TRASH
             is ItemDetailChartViewModel -> TYPE_CHART
             is ItemLineChartViewModel -> TYPE_CHART_LINE
-
+            is NumberViewModel -> TYPE_NUMBER
 
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
@@ -130,7 +147,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         items.addAll(list)
         items.add(ItemDetailPlusViewModel())
         items.add(ItemDetailTrashViewModel())
-        items.add(ValueViewModel())
+//        items.add(ValueViewModel())
         notifyDataSetChanged()
     }
 
@@ -180,19 +197,62 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
     ) : AnyObject
 
 
+    inner class NumberViewHolder(itemView: View) : ItemDetailBaseViewHolder<NumberViewModel>(itemView) {
+
+        private lateinit var viewModel: NumberViewModel
+
+        init {
+
+            itemView.btnInfo.setOnSafeClickListener {
+                onInfoClick?.invoke(viewModel.id)
+            }
+        }
+
+        override fun bind(viewModel: NumberViewModel) {
+            this.viewModel = viewModel
+            itemView.tvName.text = viewModel.name
+            itemView.tvNumberValue.text = if (viewModel.value.isEmpty()) "0"  else viewModel.value
+        }
+    }
+
+    data class NumberViewModel(
+        val id: String = String.empty(),
+        val name: String = String.empty(),
+        var value: String = String.empty()
+    ) : AnyObject
+
+
     inner class ValueViewHolder(itemView: View) : ItemDetailBaseViewHolder<ValueViewModel>(itemView) {
+
+        init {
+
+            itemView.btnInfo.setOnSafeClickListener {
+                onInfoClick?.invoke(viewModel.id)
+            }
+
+            itemView.btnSend.setOnSafeClickListener {
+                val topicId = viewModel.id
+                onSendClick?.invoke(topicId, viewModel.message)
+            }
+
+        }
 
         private lateinit var viewModel: ValueViewModel
 
         override fun bind(viewModel: ValueViewModel) {
-
+            this.viewModel = viewModel
+            itemView.etMessage.onChange {
+                viewModel.message = it
+            }
+            itemView.tvName.text = viewModel.name
         }
     }
 
     data class ValueViewModel(
         val id: String = String.empty(),
         val name: String = String.empty(),
-        val value: String = String.empty()
+        var value: String = String.empty(),
+        var message: String = String.empty()
     ) : AnyObject
 
     inner class PlusViewHolder(

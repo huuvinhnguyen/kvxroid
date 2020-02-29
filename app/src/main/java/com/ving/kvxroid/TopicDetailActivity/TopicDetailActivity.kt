@@ -24,7 +24,7 @@ class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<Pair<TopicState
 
         var items: ArrayList<AnyObject> = arrayListOf()
         items.add(TopicDetailAdapter.TopicDetailHeaderViewModel(topic?.id ?: "",topic?.name ?: ""))
-        items.add(TopicDetailViewModel(topic?.id ?: "", topic?.topic?:"", topic?.value ?: "", topic?.time?: "", topic?.qos ?: "", ""))
+        items.add(TopicDetailViewModel(topic?.id ?: "", topic?.topic?:"", topic?.value ?: "", topic?.time?: "", topic?.qos ?: "", topic?.type ?: ""))
 
         if (topic?.serverId == String.empty()) {
 

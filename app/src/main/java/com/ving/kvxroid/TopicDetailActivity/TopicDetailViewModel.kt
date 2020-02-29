@@ -9,6 +9,7 @@ data class TopicDetailViewModel(
     val value: String = String.empty(),
     val time: String = String.empty(),
     val qos: String = String.empty(),
+    val type: String = String.empty(),
     val retained: String = String.empty()
 
 ) : AnyObject

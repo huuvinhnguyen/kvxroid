@@ -21,7 +21,9 @@ data class TopicState(
     data class UpdateTopicAction(val unit: Unit = Unit): Action{
         var topic: Topic? = null
     }
-    data class LoadTopicsAction(val unit: Unit = Unit): Action
+    data class LoadTopicsAction(val unit: Unit = Unit): Action {
+        var itemId: String = ""
+    }
     data class AddTopicAction(val unit: Unit = Unit): Action {
         var topic: Topic? = null
     }
@@ -112,7 +114,7 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
         { action ->
 
             (action as? TopicState.LoadTopicsAction)?.let {
-                val topicList = RealmInteractor().getTopics()
+                val topicList = RealmInteractor().getTopics(action.itemId)
                 val topics = topicList.map {
                     Topic(it.id ?: "",
                         it.name ?: "",
@@ -120,7 +122,10 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                         it.value ?: "",
                         it.time ?: "",
                         it.serverId ?: "",
-                        it.type ?: "")
+                        it.type ?: "",
+                        it.qos ?: "",
+                        it.retain ?: "",
+                        it.itemId ?: "")
                 }.toMutableList()
 
                 val stopAllTasksAction = TopicState.StopAllTasksAction()
@@ -148,8 +153,8 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     itemRef.type = it.type
                     itemRef.topic = it.topic
                     itemRef.time = it.time
-                    itemRef.retain = ""
-                    itemRef.itemId = ""
+                    itemRef.retain = it.retain
+                    itemRef.itemId = it.itemId
                     itemRef.qos = it.qos
 
                 }
@@ -284,14 +289,18 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     itemRef.type = it.type
                     itemRef.topic = it.topic
                     itemRef.time = it.time
-                    itemRef.retain = ""
-                    itemRef.itemId = ""
+                    itemRef.retain = it.retain
+                    itemRef.itemId = it.itemId
                     itemRef.qos = it.qos
                 }
 
+
                 val realmInteractor = RealmInteractor()
                 realmInteractor.addTopic(itemRef) {
-                    dispatch(TopicState.LoadTopicsAction())
+                    val itemId = action.topic?.itemId ?: ""
+                    val loadTopicsAction = TopicState.LoadTopicsAction()
+                    loadTopicsAction.itemId = itemId
+                    dispatch(loadTopicsAction)
 //                    dispatch(TopicState.LoadTopicAction())
 
                 }

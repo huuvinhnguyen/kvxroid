@@ -13,12 +13,18 @@ import kotlinx.android.synthetic.main.activity_item_name.*
 import org.rekotlin.StoreSubscriber
 import org.rekotlinrouter.Route
 import org.rekotlinrouter.SetRouteAction
+import org.rekotlinrouter.SetRouteSpecificData
+import java.util.*
 
 class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
     override fun newState(state: ItemState) {
         state.item?.let {
             item = it
+            etName.hint = "Name"
+            etName.setText(item.name)
+
+
         }
         state.item?.imageUrl.also {
 
@@ -32,7 +38,6 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
 
         }
 
-        etName.hint = state.item?.name ?: "Name"
 
     }
 
@@ -51,9 +56,30 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
          initView()
 
         btnSave.setOnSafeClickListener {
-            val action = ItemState.ItemAddAction()
-            action.item = item
-            mainStore.dispatch(action)
+
+            val itemId = intent?.getStringExtra("ITEM_ID") ?: ""
+            if (itemId == "") {
+
+                item.id = UUID.randomUUID().toString()
+
+                val action = ItemState.ItemAddAction()
+                action.item = item
+                mainStore.dispatch(action)
+
+                val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute)
+                val actionData =  SetRouteSpecificData(route = routes as Route, data = item.id)
+                mainStore.dispatch(actionData)
+
+            } else {
+                val action = ItemState.ItemUpdateAction()
+                action.item = item
+                mainStore.dispatch(action)
+
+                val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute)
+                val actionData =  SetRouteSpecificData(route = routes as Route, data = itemId)
+                mainStore.dispatch(actionData)
+
+            }
 
 
             val routes = arrayListOf(itemActivityRoute, itemDetailActivityRoute)
@@ -67,6 +93,13 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
             startActivity(intent)
         }
 
+        val itemId = intent?.getStringExtra("ITEM_ID") ?: ""
+        val action = ItemState.ItemLoadAction()
+        action.id = itemId
+        mainStore.dispatch(action)
+
+
+
     }
 
     private fun initView() {
@@ -78,13 +111,6 @@ class ItemNameActivity : AppCompatActivity(), StoreSubscriber<ItemState> {
         mainStore.subscribe(this){
             it.select { it.itemState }
         }
-
-
-        val action = ItemState.ItemLoadAction()
-        action.id = ""
-        mainStore.dispatch(ItemState.ItemLoadAction())
-
-
     }
 
 
