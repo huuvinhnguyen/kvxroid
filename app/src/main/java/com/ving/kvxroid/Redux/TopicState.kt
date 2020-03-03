@@ -178,14 +178,30 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     val loadTopicAction = TopicState.LoadTopicAction()
                     loadTopicAction.id = action.topic?.id ?: ""
                     dispatch(loadTopicAction)
+
+                    val tasks = getState()?.topicState?.tasks
+                    tasks?.remove(action.topic?.id)
+                    val updateTaskAction = TopicState.UpdateTaskAction()
+                    updateTaskAction.topic = action.topic
+                    dispatch(updateTaskAction)
+
                 }
             }
 
             (action as? TopicState.RemoveTopicAction)?.let {
                 val interactor = RealmInteractor()
-                interactor.deleteTopic(action.id) {
-                    dispatch(TopicState.LoadTopicsAction())
+                val itemId = getState()?.topicState?.topics?.find { it.id == action.id }?.itemId
+
+                itemId?.let { getId ->
+                    interactor.deleteTopic(action.id) {
+                        val loadTopicsAction = TopicState.LoadTopicsAction()
+                        loadTopicsAction.itemId = getId
+                        dispatch(loadTopicsAction)
+                    }
+
                 }
+
+
             }
 
             (action as? TopicState.LoadTopicAction)?.let {
@@ -226,6 +242,8 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     action2.id = it.serverId ?: ""
                     dispatch(action2)
 
+                    val tasks = getState()?.topicState?.tasks
+                    tasks?.remove(it.id)
                     val updateTaskAction = TopicState.UpdateTaskAction()
                     updateTaskAction.topic = it
                     dispatch(updateTaskAction)
@@ -240,41 +258,44 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
             (action as? TopicState.UpdateTaskAction)?.let {
                 val topic = action.topic ?: Topic()
                 val interactor = RealmInteractor()
-                interactor.getServer(topic.serverId) {
-                    val server = Server()
-                    server.id = it?.id ?: ""
-                    server.name = it?.name ?: ""
-                    server.url = it?.url ?: ""
-                    server.user = it?.user ?: ""
-                    server.password = it?.password ?: ""
-                    server.port = it?.port ?: ""
-                    server.sslPort = it?.sslPort ?: ""
+                interactor.getServer(topic.serverId) { serverRealm ->
+                    serverRealm?.let {
 
-                    val state = getState()?.topicState
+                        val server = Server()
+                        server.id = it?.id ?: ""
+                        server.name = it?.name ?: ""
+                        server.url = it?.url ?: ""
+                        server.user = it?.user ?: ""
+                        server.password = it?.password ?: ""
+                        server.port = it?.port ?: ""
+                        server.sslPort = it?.sslPort ?: ""
 
-                    var task = state?.tasks?.get(action.topic?.id)
+                        val state = getState()?.topicState
+
+                        var task = state?.tasks?.get(action.topic?.id)
 
 
-                    if (task != null) {
+                        if (task != null) {
 
-                    } else {
-                        task = TopicConnector()
-                        task.configure(topic, server)
-                        task.didReceiveMessage  = {
-                            if (task.topic?.value != it) {
-                                task.topic?.value = it
+                        } else {
+                            task = TopicConnector()
+                            task.configure(topic, server)
+                            task.didReceiveMessage  = {
+                                if (task.topic?.value != it) {
+                                    task.topic?.value = it
                                     val updateTopicAction = TopicState.UpdateTopicAction()
                                     updateTopicAction.topic = task.topic
                                     dispatch(updateTopicAction)
+                                }
                             }
                         }
+
+                        val fetchTaskAction = TopicState.FetchTaskAction()
+                        fetchTaskAction.topicId = topic.id
+                        fetchTaskAction.task = task
+                        dispatch(fetchTaskAction)
+
                     }
-
-                    val fetchTaskAction = TopicState.FetchTaskAction()
-                    fetchTaskAction.topicId = topic.id
-                    fetchTaskAction.task = task
-                    dispatch(fetchTaskAction)
-
                 }
             }
 

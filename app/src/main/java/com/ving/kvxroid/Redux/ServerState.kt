@@ -108,6 +108,11 @@ fun ServerState.Companion.middleware(): Middleware<AppState> = { dispatch, getSt
                         val loadServerAction = ServerState.LoadServerAction()
                         loadServerAction.id = it
                         dispatch(loadServerAction)
+
+                        val topicId = getState()?.topicState?.topics?.find { it.serverId == action.server?.id }?.id ?: ""
+                        val loadTopicAction = TopicState.LoadTopicAction()
+                        loadTopicAction.id = topicId
+                        dispatch(loadTopicAction)
                     }
                 }
             }
