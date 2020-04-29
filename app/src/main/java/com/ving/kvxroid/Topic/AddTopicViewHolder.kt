@@ -34,7 +34,9 @@ class TopicViewHolder(
 
     fun bind(viewModel: TopicViewModel, clickListener:  ((String) -> Unit)?) {
         itemView.etName.setText(viewModel.name)
+
         itemView.etName.onChange {
+
             viewModel.name = it
         }
 
@@ -48,15 +50,35 @@ class TopicViewHolder(
             viewModel.type = it
         }
 
-        itemView.btnSelect.setOnClickListener { clickListener?.invoke(viewModel.type)}
+        itemView.btnSelect.setOnClickListener {
+
+            clickListener?.invoke(viewModel.type)
+        }
+
+        itemView.inputName.error = String.empty()
+
+        if (viewModel.name.isEmpty()  && viewModel.isErrorChecked) {
+            itemView.inputName.error = "Please input information!"
+            itemView.inputName.requestFocus()
+        }
+
+        itemView.inputTopic.error = String.empty()
+
+        if (viewModel.topic.isEmpty()  && viewModel.isErrorChecked) {
+            itemView.inputTopic.error = "Please input information!"
+            itemView.inputTopic.requestFocus()
+
+        }
     }
+
 }
 
 data class TopicViewModel(
     var id: String = String.empty(),
     var name: String = String.empty(),
     var topic: String = String.empty(),
-    var type: String = String.empty()
+    var type: String = String.empty(),
+    var isErrorChecked: Boolean = false
 ) : AnyObject
 
 class TopicSaveViewHolder(

@@ -30,6 +30,15 @@
         android:text="35"
         android:textSize="100dp"/>
 
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="left"
+        android:text="now" />
+
     <ImageButton
         android:id="@+id/btnInfo"
         android:layout_width="50dp"
