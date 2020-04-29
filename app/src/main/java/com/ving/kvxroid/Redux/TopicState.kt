@@ -8,6 +8,14 @@ import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.Action
 import org.rekotlin.Middleware
 import org.rekotlin.StateType
+import android.text.format.DateUtils
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.jvm.functions.Function1
+import kotlin.jvm.functions.Function0
+
+
 
 data class TopicState(
     var topic: Topic? = null,
@@ -263,6 +271,10 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                         task.didReceiveMessage  = {
                             if (task.topic?.value != it) {
                                 task.topic?.value = it
+                                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                                val now = System.currentTimeMillis()
+                                val strDate = sdf.format(now)
+                                task.topic?.time = strDate
                                     val updateTopicAction = TopicState.UpdateTopicAction()
                                     updateTopicAction.topic = task.topic
                                     dispatch(updateTopicAction)
@@ -274,6 +286,23 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     fetchTaskAction.topicId = topic.id
                     fetchTaskAction.task = task
                     dispatch(fetchTaskAction)
+
+
+
+
+//                    try {
+//                        val time = sdf.parse("2016-01-24T16:00:00.000Z").getTime()
+//                        val now = System.currentTimeMillis()
+//                        val ago = DateUtils.getRelativeTimeSpanString(
+//                            time,
+//                            now,
+//                            DateUtils.MINUTE_IN_MILLIS
+//                        )
+//                    } catch (e: ParseException) {
+//                        e.printStackTrace()
+//                    }
+
+                    //https://stackoverflow.com/questions/18607096/getting-time-difference-with-string-like-a-minute-ago-or-an-hour-ago-on-andr
 
                 }
             }
