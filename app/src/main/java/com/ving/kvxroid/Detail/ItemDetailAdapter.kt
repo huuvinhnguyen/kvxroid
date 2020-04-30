@@ -27,6 +27,8 @@ import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.btnInfo
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvValue
+import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvTime
+
 import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.tvName as tvName1
 
@@ -200,13 +202,15 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             this.viewModel = viewModel
             itemView.textView.text = viewModel.name
             itemView.tvValue.text = viewModel.value
+            itemView.tvTime.text = viewModel.time
         }
     }
 
     data class SwitchViewModel(
         val id: String = String.empty(),
         val name: String = String.empty(),
-        val value: String = String.empty()
+        val value: String = String.empty(),
+        val time: String = String.empty()
     ) : AnyObject
 
 
@@ -225,13 +229,15 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             this.viewModel = viewModel
             itemView.tvName.text = viewModel.name
             itemView.tvNumberValue.text = if (viewModel.value.isEmpty()) "0"  else viewModel.value
+            itemView.tvTime.text = viewModel.time
         }
     }
 
     data class NumberViewModel(
         val id: String = String.empty(),
         val name: String = String.empty(),
-        var value: String = String.empty()
+        var value: String = String.empty(),
+        var time: String = String.empty()
     ) : AnyObject
 
 
@@ -258,6 +264,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
                 viewModel.message = it
             }
             itemView.tvName.text = viewModel.name
+            itemView.tvTime.text = viewModel.time
         }
     }
 
@@ -265,7 +272,8 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         val id: String = String.empty(),
         val name: String = String.empty(),
         var value: String = String.empty(),
-        var message: String = String.empty()
+        var message: String = String.empty(),
+        var time: String = String.empty()
     ) : AnyObject
 
     inner class GaugeViewHolder(itemView: View) : ItemDetailBaseViewHolder<GaugeViewModel>(itemView) {

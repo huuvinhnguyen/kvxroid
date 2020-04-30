@@ -8,6 +8,14 @@ import com.ving.kvxroid.Services.TopicConnector
 import org.rekotlin.Action
 import org.rekotlin.Middleware
 import org.rekotlin.StateType
+import android.text.format.DateUtils
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.jvm.functions.Function1
+import kotlin.jvm.functions.Function0
+
+
 
 data class TopicState(
     var topic: Topic? = null,
@@ -178,30 +186,14 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     val loadTopicAction = TopicState.LoadTopicAction()
                     loadTopicAction.id = action.topic?.id ?: ""
                     dispatch(loadTopicAction)
-
-                    val tasks = getState()?.topicState?.tasks
-                    tasks?.remove(action.topic?.id)
-                    val updateTaskAction = TopicState.UpdateTaskAction()
-                    updateTaskAction.topic = action.topic
-                    dispatch(updateTaskAction)
-
                 }
             }
 
             (action as? TopicState.RemoveTopicAction)?.let {
                 val interactor = RealmInteractor()
-                val itemId = getState()?.topicState?.topics?.find { it.id == action.id }?.itemId
-
-                itemId?.let { getId ->
-                    interactor.deleteTopic(action.id) {
-                        val loadTopicsAction = TopicState.LoadTopicsAction()
-                        loadTopicsAction.itemId = getId
-                        dispatch(loadTopicsAction)
-                    }
-
+                interactor.deleteTopic(action.id) {
+                    dispatch(TopicState.LoadTopicsAction())
                 }
-
-
             }
 
             (action as? TopicState.LoadTopicAction)?.let {
@@ -258,44 +250,45 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
             (action as? TopicState.UpdateTaskAction)?.let {
                 val topic = action.topic ?: Topic()
                 val interactor = RealmInteractor()
-                interactor.getServer(topic.serverId) { serverRealm ->
-                    serverRealm?.let {
+                interactor.getServer(topic.serverId) {
+                    val server = Server()
+                    server.id = it?.id ?: ""
+                    server.name = it?.name ?: ""
+                    server.url = it?.url ?: ""
+                    server.user = it?.user ?: ""
+                    server.password = it?.password ?: ""
+                    server.port = it?.port ?: ""
+                    server.sslPort = it?.sslPort ?: ""
 
-                        val server = Server()
-                        server.id = it?.id ?: ""
-                        server.name = it?.name ?: ""
-                        server.url = it?.url ?: ""
-                        server.user = it?.user ?: ""
-                        server.password = it?.password ?: ""
-                        server.port = it?.port ?: ""
-                        server.sslPort = it?.sslPort ?: ""
+                    val state = getState()?.topicState
 
-                        val state = getState()?.topicState
-
-                        var task = state?.tasks?.get(action.topic?.id)
+                    var task = state?.tasks?.get(action.topic?.id)
 
 
-                        if (task != null) {
+                    if (task != null) {
 
-                        } else {
-                            task = TopicConnector()
-                            task.configure(topic, server)
-                            task.didReceiveMessage  = {
-                                if (task.topic?.value != it) {
-                                    task.topic?.value = it
+                    } else {
+                        task = TopicConnector()
+                        task.configure(topic, server)
+                        task.didReceiveMessage  = {
+                            if (task.topic?.value != it) {
+                                task.topic?.value = it
+                                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                                val now = System.currentTimeMillis()
+                                val strDate = sdf.format(now)
+                                task.topic?.time = strDate
                                     val updateTopicAction = TopicState.UpdateTopicAction()
                                     updateTopicAction.topic = task.topic
                                     dispatch(updateTopicAction)
-                                }
                             }
                         }
-
-                        val fetchTaskAction = TopicState.FetchTaskAction()
-                        fetchTaskAction.topicId = topic.id
-                        fetchTaskAction.task = task
-                        dispatch(fetchTaskAction)
-
                     }
+
+                    val fetchTaskAction = TopicState.FetchTaskAction()
+                    fetchTaskAction.topicId = topic.id
+                    fetchTaskAction.task = task
+                    dispatch(fetchTaskAction)
+
                 }
             }
 

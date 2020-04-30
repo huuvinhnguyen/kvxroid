@@ -89,4 +89,8 @@ class AddTopicAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Ada
         notifyDataSetChanged()
     }
 
+    fun reload() {
+        notifyDataSetChanged()
+    }
+
 }

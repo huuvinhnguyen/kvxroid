@@ -131,6 +131,13 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
     private fun handleSaveClick(information: String) {
 
+        if(validate()) {
+
+        } else {
+            adapter.reload()
+            return
+        }
+
         topic.name = topicViewModel.name
         topic.topic = topicViewModel.topic
         topic.type = topicViewModel.type
@@ -182,5 +189,19 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         finish()
 
 
+    }
+
+    private fun validate(): Boolean {
+        if(topicViewModel.name.isEmpty()) {
+            topicViewModel.isErrorChecked = true
+            return false
+        }
+
+        if(topicViewModel.topic.isEmpty()) {
+            topicViewModel.isErrorChecked = true
+            return false
+        }
+
+        return true
     }
 }
