@@ -9,15 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
-        >
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputName"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Name">
+            android:hint="Name"
+            >
             <EditText
                 android:id="@+id/etName"
                 android:layout_width="wrap_content"
@@ -32,7 +32,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_arrow_down_circle" />
+            android:src="@drawable/ic_arrow_down_circle"
+            />
 
     </LinearLayout>
 
@@ -41,7 +42,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="User">
+        android:hint="User"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
         <EditText
             android:id="@+id/etUser"
             android:layout_width="match_parent"
@@ -57,7 +59,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password">
+        android:hint="Password"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
@@ -71,7 +74,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Server">
+        android:hint="Server"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
         <EditText
             android:id="@+id/etServer"
             android:layout_width="match_parent"
@@ -86,7 +90,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Port">
+        android:hint="Port"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <EditText
             android:id="@+id/etPort"
@@ -101,7 +106,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ssl port">
+        android:hint="ssl port"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <EditText
             android:id="@+id/etSslPort"
@@ -118,6 +124,7 @@
         android:layout_height="70dp"
         android:layout_gravity="right"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_save" />
+        android:src="@drawable/ic_save"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
 </LinearLayout>

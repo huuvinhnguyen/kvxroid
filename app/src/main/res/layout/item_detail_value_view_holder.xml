@@ -25,21 +25,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/etMessage"
-            android:layout_width="200dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputMessage"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Message" />
+            android:hint="Message">
+            <EditText
+                android:id="@+id/etMessage"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="Message" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <ImageButton
             android:id="@+id/btnSend"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="right"
-            android:src="@drawable/ic_send" />
+            android:src="@drawable/ic_send"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"/>
 
     </LinearLayout>
 

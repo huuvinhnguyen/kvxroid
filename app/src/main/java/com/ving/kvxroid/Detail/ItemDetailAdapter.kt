@@ -1,5 +1,8 @@
 package com.ving.kvxroid.Detail
 
+import android.os.Handler
+import android.os.Looper
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
 import kotlinx.android.synthetic.main.item_detail_chart_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_gauge_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_gauge_view_holder.view.tvName
+import kotlinx.android.synthetic.main.item_detail_gauge_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_number_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.*
@@ -30,6 +34,8 @@ import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvValu
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvTime
 
 import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.*
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.tvName as tvName1
 
 class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<ItemDetailBaseViewHolder<*>>() {
@@ -184,6 +190,15 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
 
         private lateinit var viewModel: SwitchViewModel
 
+        private lateinit var mainHandler: Handler
+
+        private val updateTextTask = object : Runnable {
+            override fun run() {
+                loadTime(viewModel.time)
+                mainHandler.postDelayed(this, 10)
+            }
+        }
+
         init {
 
             itemView.btnInfo.setOnSafeClickListener {
@@ -202,8 +217,40 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             this.viewModel = viewModel
             itemView.textView.text = viewModel.name
             itemView.tvValue.text = viewModel.value
-            itemView.tvTime.text = viewModel.time
+            itemView.tvTime.text = ""
+
+
+//            mainHandler = Handler(Looper.getMainLooper())
+//
+//            mainHandler.removeCallbacks(updateTextTask)
+//
+//            mainHandler.post(updateTextTask)
+
+
+
+
         }
+
+
+        private fun loadTime(time: String) {
+            try {
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+                val time = sdf.parse(time).getTime()
+                val now = System.currentTimeMillis()
+                val ago = DateUtils.getRelativeTimeSpanString(
+                    time,
+                    now,
+                    DateUtils.SECOND_IN_MILLIS
+                )
+                itemView.tvTime.text = ago
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+
+        }
+
+
     }
 
     data class SwitchViewModel(
@@ -295,6 +342,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             val value = viewModel.value?.toFloatOrNull() ?: 0F
             itemView.gaugeView.speedTo(value, 4000)
             itemView.tvName.text = viewModel.name
+            itemView.tvTime .text = viewModel.time
 
 
         }
@@ -304,7 +352,8 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         val id: String = String.empty(),
         val name: String = String.empty(),
         var value: String = String.empty(),
-        var message: String = String.empty()
+        var message: String = String.empty(),
+        var time: String = String.empty()
     ) : AnyObject
 
     inner class PlusViewHolder(
@@ -336,3 +385,4 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         }
     }
 }
+
