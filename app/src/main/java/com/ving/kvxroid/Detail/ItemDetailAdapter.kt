@@ -20,6 +20,8 @@ import com.ving.kvxroid.extensions.empty
 import com.ving.kvxroid.extensions.onChange
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
 import kotlinx.android.synthetic.main.item_detail_chart_view_holder.view.*
+import kotlinx.android.synthetic.main.item_detail_gauge_view_holder.view.*
+import kotlinx.android.synthetic.main.item_detail_gauge_view_holder.view.tvName
 import kotlinx.android.synthetic.main.item_detail_number_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.*
@@ -42,6 +44,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         private const val TYPE_FOOTER = 6
         private const val TYPE_VALUE = 7
         private const val TYPE_NUMBER = 8
+        private const val TYPE_GAUGE = 9
 
     }
 
@@ -103,6 +106,14 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
 
             }
 
+            TYPE_GAUGE -> {
+
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_detail_gauge_view_holder, parent, false)
+                return GaugeViewHolder(view)
+
+            }
+
 
             else -> throw IllegalArgumentException("Invalid view type")
 
@@ -123,6 +134,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             is ChartViewHolder ->   viewHolder.bind(element as ItemDetailChartViewModel)
             is ChartLineViewHolder -> viewHolder.bind(element as ItemLineChartViewModel)
             is NumberViewHolder -> viewHolder.bind(element as NumberViewModel)
+            is GaugeViewHolder -> viewHolder.bind(element as GaugeViewModel)
 
             else -> throw IllegalArgumentException()
         }
@@ -139,6 +151,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             is ItemDetailChartViewModel -> TYPE_CHART
             is ItemLineChartViewModel -> TYPE_CHART_LINE
             is NumberViewModel -> TYPE_NUMBER
+            is GaugeViewModel -> TYPE_GAUGE
 
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
@@ -261,6 +274,37 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         var value: String = String.empty(),
         var message: String = String.empty(),
         var time: String = String.empty()
+    ) : AnyObject
+
+    inner class GaugeViewHolder(itemView: View) : ItemDetailBaseViewHolder<GaugeViewModel>(itemView) {
+
+        init {
+
+            itemView.btnInfo.setOnSafeClickListener {
+                onInfoClick?.invoke(viewModel.id)
+            }
+
+
+        }
+
+        private lateinit var viewModel: GaugeViewModel
+
+        override fun bind(viewModel: GaugeViewModel) {
+            this.viewModel = viewModel
+            itemView.gaugeView.unit = "°C"
+            val value = viewModel.value?.toFloatOrNull() ?: 0F
+            itemView.gaugeView.speedTo(value, 4000)
+            itemView.tvName.text = viewModel.name
+
+
+        }
+    }
+
+    data class GaugeViewModel(
+        val id: String = String.empty(),
+        val name: String = String.empty(),
+        var value: String = String.empty(),
+        var message: String = String.empty()
     ) : AnyObject
 
     inner class PlusViewHolder(

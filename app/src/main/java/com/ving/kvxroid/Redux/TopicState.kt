@@ -234,6 +234,8 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     action2.id = it.serverId ?: ""
                     dispatch(action2)
 
+                    val tasks = getState()?.topicState?.tasks
+                    tasks?.remove(it.id)
                     val updateTaskAction = TopicState.UpdateTaskAction()
                     updateTaskAction.topic = it
                     dispatch(updateTaskAction)
@@ -286,23 +288,6 @@ fun TopicState.Companion.middleware(): Middleware<AppState> = { dispatch, getSta
                     fetchTaskAction.topicId = topic.id
                     fetchTaskAction.task = task
                     dispatch(fetchTaskAction)
-
-
-
-
-//                    try {
-//                        val time = sdf.parse("2016-01-24T16:00:00.000Z").getTime()
-//                        val now = System.currentTimeMillis()
-//                        val ago = DateUtils.getRelativeTimeSpanString(
-//                            time,
-//                            now,
-//                            DateUtils.MINUTE_IN_MILLIS
-//                        )
-//                    } catch (e: ParseException) {
-//                        e.printStackTrace()
-//                    }
-
-                    //https://stackoverflow.com/questions/18607096/getting-time-difference-with-string-like-a-minute-ago-or-an-hour-ago-on-andr
 
                 }
             }

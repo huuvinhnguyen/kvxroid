@@ -33,9 +33,10 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
         val list = state.topics?.map {
             when(it.type) {
-                "switch" -> ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value, it.time)
-                "value" -> ItemDetailAdapter.ValueViewModel(it.id, it.name, it.value, it.time)
-                "number" -> ItemDetailAdapter.NumberViewModel(it.id, it.name, it.value, it.time)
+                "switch" -> ItemDetailAdapter.SwitchViewModel(it.id, it.name, it.value)
+                "value" -> ItemDetailAdapter.ValueViewModel(it.id, it.name, it.value)
+                "number" -> ItemDetailAdapter.NumberViewModel(it.id, it.name, it.value)
+                "gauge" -> ItemDetailAdapter.GaugeViewModel(it.id, it.name, it.value)
                 else -> throw IllegalArgumentException("Invalid type")
             }
         } ?: emptyList()

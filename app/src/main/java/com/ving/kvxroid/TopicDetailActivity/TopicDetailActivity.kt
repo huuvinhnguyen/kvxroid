@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Models.Topic
 import com.ving.kvxroid.R
 import com.ving.kvxroid.Redux.ServerState
 import com.ving.kvxroid.Redux.TopicState
@@ -19,12 +20,12 @@ import org.rekotlin.StoreSubscriber
 class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<Pair<TopicState, ServerState>> {
 
     override fun newState(state: Pair<TopicState, ServerState>) {
-        val topic = state.first.topic
+        val topic = state.first.topic ?: Topic()
         val server = state.second.server
 
         var items: ArrayList<AnyObject> = arrayListOf()
-        items.add(TopicDetailAdapter.TopicDetailHeaderViewModel(topic?.id ?: "",topic?.name ?: ""))
-        items.add(TopicDetailViewModel(topic?.id ?: "", topic?.topic?:"", topic?.value ?: "", topic?.time?: "", topic?.qos ?: "", topic?.type ?: ""))
+        items.add(TopicDetailAdapter.TopicDetailHeaderViewModel(topic.id, topic.name))
+        items.add(TopicDetailViewModel(topic.id, topic.topic, topic.value, topic.time, topic.qos, topic.type, topic.retain ))
 
         if (topic?.serverId == String.empty()) {
 

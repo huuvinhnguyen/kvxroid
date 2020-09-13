@@ -168,7 +168,17 @@ class AddTopicActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
 
             Mode.Edit -> {
 
-                val topic = Topic( mode.topicId, topic.name , topic.topic , topic.value, "", topic.serverId, topic.type, topicQosViewModel.value, topicRetainViewModel.value)
+                val topic = Topic(
+                    mode.topicId,
+                    topic.name,
+                    topic.topic,
+                    topic.value,
+                    "",
+                    topic.serverId,
+                    topic.type,
+                    topicQosViewModel.value,
+                    topicRetainViewModel.value,
+                    topic.itemId)
                 val action = TopicState.UpdateTopicAction()
                 action.topic = topic
                 mainStore.dispatch(action)
