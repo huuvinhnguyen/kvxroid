@@ -24,7 +24,13 @@ class TopicDetailActivity : AppCompatActivity(), StoreSubscriber<Pair<TopicState
         val server = state.second.server
 
         var items: ArrayList<AnyObject> = arrayListOf()
+
         items.add(TopicDetailAdapter.TopicDetailHeaderViewModel(topic.id, topic.name))
+
+        if (topic.type == "gauge") {
+            items.add(TopicDetailAdapter.GaugeViewModel(topic.id, name = topic.name, value = topic.value))
+
+        }
         items.add(TopicDetailViewModel(topic.id, topic.topic, topic.value, topic.time, topic.qos, topic.type, topic.retain ))
 
         if (topic?.serverId == String.empty()) {

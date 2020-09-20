@@ -22,6 +22,8 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+
     }
     buildTypes {
         release {
@@ -63,6 +65,8 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'org.rekotlinrouter:rekotlin-router:0.1.9'
     implementation 'com.github.anastr:speedviewlib:1.5.2'
+    implementation 'com.mikhaellopez:circularimageview:4.2.0'
+
 
 
 
