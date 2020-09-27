@@ -201,7 +201,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         }
     }
 
-    inner class GaugeViewHolder(itemView: View) : TopicDetailBaseViewHolder<GaugeViewModel>(itemView) {
+        inner class GaugeViewHolder(itemView: View) : TopicDetailBaseViewHolder<GaugeViewModel>(itemView) {
 
         init {
 
@@ -219,7 +219,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             itemView.gaugeView.unit = "°C"
             val value = viewModel.value?.toFloatOrNull() ?: 0F
             itemView.gaugeView.speedTo(value, 4000)
-            itemView.tvName.text = viewModel.name
+//            itemView.tvName.text = viewModel.name
 
 
         }

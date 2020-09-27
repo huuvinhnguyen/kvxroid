@@ -255,6 +255,8 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             itemView.btnSend.setOnSafeClickListener {
                 val topicId = viewModel.id
                 onSendClick?.invoke(topicId, viewModel.message)
+                itemView.etMessage.isFocusable = false
+
             }
 
         }
