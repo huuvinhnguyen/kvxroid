@@ -29,7 +29,8 @@
         android:ems="10"
         android:inputType="textEmailAddress"
         android:textSize="@dimen/font_medium_size"
-        android:text="Header " />
+        android:text="Header "
+        android:visibility="gone"/>
 
     <com.github.anastr.speedviewlib.SpeedView
         android:id="@+id/gaugeView"
@@ -41,7 +42,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="right"
-        android:src="@drawable/ic_info" />
+        android:src="@drawable/ic_info"
+        android:visibility="gone"/>
 
 
 </LinearLayout>

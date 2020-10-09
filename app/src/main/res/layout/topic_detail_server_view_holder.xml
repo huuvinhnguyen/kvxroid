@@ -167,6 +167,6 @@
         android:layout_height="70dp"
         android:layout_gravity="right"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_log_out" />
+        android:src="@drawable/ic_delete" />
 </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -9,6 +9,7 @@ import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Common.hideKeyboard
 import com.ving.kvxroid.extensions.empty
 import com.ving.kvxroid.extensions.onChange
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
@@ -255,7 +256,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             itemView.btnSend.setOnSafeClickListener {
                 val topicId = viewModel.id
                 onSendClick?.invoke(topicId, viewModel.message)
-                itemView.etMessage.isFocusable = false
+                itemView.etMessage.hideKeyboard()
 
             }
 
@@ -342,3 +343,4 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         }
     }
 }
+
