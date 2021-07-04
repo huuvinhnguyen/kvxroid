@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView android:clickable="true"
+    android:focusable="true"
+    android:checkable="true"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/view_holder_margin"
+    android:layout_marginRight="@dimen/view_holder_margin"
+    android:layout_marginLeft="@dimen/view_holder_margin"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:paddingLeft="@dimen/screen_padding"
-    android:paddingRight="@dimen/screen_padding">
+    android:paddingRight="@dimen/screen_padding"
+    android:layout_gravity="center">
 
     <TextView
         android:id="@+id/tvServer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/font_max_size"
         android:text="TextView"
         android:textSize="@dimen/font_normal_size"/>
     <LinearLayout
@@ -28,3 +40,5 @@
     </LinearLayout>
 
 </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

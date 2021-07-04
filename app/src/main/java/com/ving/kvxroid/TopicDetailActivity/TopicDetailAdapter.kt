@@ -8,10 +8,12 @@ import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import com.ving.kvxroid.AnyObject
 import com.ving.kvxroid.extensions.empty
+import kotlinx.android.synthetic.main.topic_detail_gauge_view_holder.view.*
 import kotlinx.android.synthetic.main.topic_detail_footer_view_holder.view.imageButton
 import kotlinx.android.synthetic.main.topic_detail_header_view_holder.view.*
 import kotlinx.android.synthetic.main.topic_detail_login_view_holder.view.*
 import kotlinx.android.synthetic.main.topic_detail_server_view_holder.view.*
+import kotlinx.android.synthetic.main.topic_detail_server_view_holder.view.tvName
 import kotlinx.android.synthetic.main.topic_detail_view_holder.view.*
 
 class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<TopicDetailBaseViewHolder<*>>() {
@@ -22,6 +24,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
         private const val TYPE_SERVER = 1
         private const val TYPE_SIGNIN = 3
         private const val TYPE_FOOTER = 4
+        private const val TYPE_GAUGE = 5
     }
 
     private var data: List<Any> = emptyList()
@@ -34,7 +37,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
     var onTrashClick: ((String) -> Unit)? = null
     var onEditTopicClick: ((String) -> Unit)? = null
     var onEditServerClick: ((String) -> Unit)? = null
-
+    var onInfoClick: ((String) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicDetailBaseViewHolder<*> {
@@ -68,6 +71,13 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
                     .inflate(R.layout.topic_detail_footer_view_holder, parent, false)
                 return TopicDetailFooterViewHolder(view)
             }
+
+            TYPE_GAUGE -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.topic_detail_gauge_view_holder, parent, false)
+                return GaugeViewHolder(view)
+
+            }
             else -> throw IllegalArgumentException("Invalid view type")
 
         }
@@ -84,6 +94,8 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             is TopicDetailServerViewHolder -> viewHolder.bind2(element as TopicDetailServerViewModel, onLogoutClick)
             is TopicDetailLoginViewHolder -> viewHolder.bind2(element as TopicDetailLoginViewModel, onLoginClick)
             is TopicDetailFooterViewHolder -> viewHolder.bind(element as TopicDetailFooterViewModel)
+            is GaugeViewHolder -> viewHolder.bind(element as GaugeViewModel)
+
             else -> throw IllegalArgumentException()
         }
     }
@@ -96,6 +108,7 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
             is TopicDetailServerViewModel -> TYPE_SERVER
             is TopicDetailLoginViewModel -> TYPE_SIGNIN
             is TopicDetailFooterViewModel -> TYPE_FOOTER
+            is GaugeViewModel -> TYPE_GAUGE
             else -> throw IllegalArgumentException("Invalid type of data " + position)
         }
     }
@@ -187,6 +200,37 @@ class TopicDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.
 
         }
     }
+
+        inner class GaugeViewHolder(itemView: View) : TopicDetailBaseViewHolder<GaugeViewModel>(itemView) {
+
+        init {
+
+            itemView.btnInfo.setOnSafeClickListener {
+                //onInfoClick?.invoke(viewModel.id)
+            }
+
+
+        }
+
+        private lateinit var viewModel: GaugeViewModel
+
+        override fun bind(viewModel: GaugeViewModel) {
+            this.viewModel = viewModel
+            itemView.gaugeView.unit = "°C"
+            val value = viewModel.value?.toFloatOrNull() ?: 0F
+            itemView.gaugeView.speedTo(value, 4000)
+//            itemView.tvName.text = viewModel.name
+
+
+        }
+    }
+
+    data class GaugeViewModel(
+        val id: String = String.empty(),
+        val name: String = String.empty(),
+        var value: String = String.empty(),
+        var message: String = String.empty()
+    ) : AnyObject
 
 
     data class TopicDetailHeaderViewModel(

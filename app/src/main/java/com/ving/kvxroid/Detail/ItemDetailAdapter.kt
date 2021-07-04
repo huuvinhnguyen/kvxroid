@@ -4,24 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IValueFormatter
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.bumptech.glide.Glide
 import com.ving.kvxroid.R
 import com.ving.kvxroid.setOnSafeClickListener
 import kotlinx.android.extensions.LayoutContainer
 import com.ving.kvxroid.AnyObject
+import com.ving.kvxroid.Common.hideKeyboard
 import com.ving.kvxroid.extensions.empty
 import com.ving.kvxroid.extensions.onChange
 import kotlinx.android.synthetic.main.activity_item_detail_header.view.textView
-import kotlinx.android.synthetic.main.item_detail_chart_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_gauge_view_holder.view.*
-import kotlinx.android.synthetic.main.item_detail_gauge_view_holder.view.tvName
+import kotlinx.android.synthetic.main.topic_detail_gauge_view_holder.view.*
+import kotlinx.android.synthetic.main.topic_detail_gauge_view_holder.view.tvName
 import kotlinx.android.synthetic.main.item_detail_number_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_plus_view_holder.view.*
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.*
@@ -30,7 +24,8 @@ import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvValu
 import kotlinx.android.synthetic.main.item_detail_switch_view_holder.view.tvTime
 
 import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.*
-import kotlinx.android.synthetic.main.item_detail_value_view_holder.view.tvName as tvName1
+import kotlinx.android.synthetic.main.list_item_grid_movie.view.*
+import kotlinx.android.synthetic.main.list_item_grid_movie.view.imageView
 
 class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.Adapter<ItemDetailBaseViewHolder<*>>() {
 
@@ -177,6 +172,15 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
 
         override fun bind(viewModel: ItemDetailHeaderViewModel) {
             itemView.textView.text = viewModel.title
+            Glide.with(itemView)  //2
+                .load(viewModel.imageUrl) //3
+                .centerCrop() //4
+                .placeholder(R.drawable.ic_image_place_holder) //5
+                .error(R.drawable.ic_broken_image) //6
+                .fallback(R.drawable.ic_no_image) //7
+                .circleCrop()
+                .into(itemView.imageView) //8
+
         }
     }
 
@@ -252,6 +256,8 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
             itemView.btnSend.setOnSafeClickListener {
                 val topicId = viewModel.id
                 onSendClick?.invoke(topicId, viewModel.message)
+                itemView.etMessage.hideKeyboard()
+
             }
 
         }
@@ -280,7 +286,7 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
 
         init {
 
-            itemView.btnInfo.setOnSafeClickListener {
+            itemView.setOnSafeClickListener {
                 onInfoClick?.invoke(viewModel.id)
             }
 
@@ -291,10 +297,11 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
 
         override fun bind(viewModel: GaugeViewModel) {
             this.viewModel = viewModel
-            itemView.gaugeView.unit = "°C"
+//            itemView.gaugeView.unit = "°C"
             val value = viewModel.value?.toFloatOrNull() ?: 0F
-            itemView.gaugeView.speedTo(value, 4000)
+//            itemView.gaugeView.speedTo(value, 4000)
             itemView.tvName.text = viewModel.name
+            itemView.tvValue.text = if (viewModel.value.isEmpty()) "0"  else viewModel.value
 
 
         }
@@ -336,3 +343,4 @@ class ItemDetailAdapter(private val items: ArrayList<AnyObject>): RecyclerView.A
         }
     }
 }
+

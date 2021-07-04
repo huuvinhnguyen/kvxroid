@@ -26,8 +26,9 @@ class ItemDetailActivity : AppCompatActivity(), StoreSubscriber<TopicState> {
         val id = intent?.getStringExtra("ITEM_ID") ?: ""
 
         val itemName = mainStore.state.itemState.items.find { it.id == id }?.name ?: ""
+        var imageUrl =  mainStore.state.itemState.items.find { it.id == id }?.imageUrl ?: ""
 
-        items.add(ItemDetailHeaderViewModel(itemName))
+        items.add(ItemDetailHeaderViewModel(itemName, imageUrl))
 
 
 
